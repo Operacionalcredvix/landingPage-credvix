@@ -1,0 +1,291 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #fff;
+}
+.bg-gray-50 {
+    background-color: #f8f9fa;
+}
+.bg-credvix-orange { background-color: #F37021; }
+.text-credvix-orange { color: #F37021; }
+.border-credvix-orange { border-color: #F37021; }
+.bg-help-purple { background-color: #4A246D; }
+.text-help-purple { color: #4A246D; }
+.ring-help-purple:focus { outline-color: #4A246D; }
+.scroll-smooth { scroll-behavior: smooth; }
+
+/* --- Estilos de Componentes Globais --- */
+.nav-link {
+    color: #4B5563;
+    font-weight: 600;
+    transition-property: color;
+    transition-duration: 300ms;
+}
+.nav-link:hover {
+    color: #4A246D;
+}
+
+.section-title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 800;
+    color: #4A246D;
+    margin-bottom: 1rem;
+}
+@media (min-width: 768px) {
+    .section-title {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+    }
+}
+.section-subtitle {
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+    color: #4B5563;
+    margin-bottom: 3rem;
+}
+.cta-button {
+    font-weight: bold;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    display: inline-block;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+.cta-button:hover {
+    transform: scale(1.05);
+}
+
+/* --- Estilos de Animação --- */
+.animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+.animate-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Seta do Acordeão do FAQ --- */
+details > summary {
+    list-style: none;
+}
+details > summary::-webkit-details-marker {
+    display: none;
+}
+details > summary::after {
+    content: '+';
+    float: right;
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 1;
+    transition: transform 0.3s ease;
+    color: #4A246D;
+}
+details[open] > summary::after {
+    transform: rotate(45deg);
+}
+
+/* --- Estilos do Slider Swiper --- */
+.swiper {
+    width: 100%;
+    height: 500px;
+}
+
+@media (min-width: 768px) {
+    .swiper {
+        height: 550px;
+    }
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    color: #fff;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.swiper-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.slide-content {
+    position: relative;
+    z-index: 2;
+    padding: 1rem;
+    max-width: 800px;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    opacity: 1;
+}
+
+.swiper-pagination-bullet {
+    background: rgba(255, 255, 255, 0.8);
+    opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #F37021;
+}
+
+/* --- Seção Como Funciona --- */
+.step-icon-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+.step-icon {
+    background-color: #F37021;
+    color: white;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+.step-number {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(25%, -25%);
+    background-color: #4A246D;
+    color: white;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: bold;
+    border: 4px solid #f8f9fa;
+}
+
+/* --- Estilos do Rodapé --- */
+.footer-bg {
+    background-color: #212529;
+}
+
+.footer-brand-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: white;
+}
+.footer-brand-credvix {
+    background-color: #F37021;
+}
+.footer-brand-help {
+    background-color: #4A246D;
+}
+.social-icon {
+    color: #adb5bd;
+    transition: color 0.3s;
+}
+.social-icon:hover {
+    color: #fff;
+}
+
+/* --- Página Quem Somos --- */
+.value-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.value-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* --- Efeito de Hover na Imagem do Card da Loja --- */
+.store-card-image-wrapper {
+    overflow: hidden;
+    height: 12rem;
+    background-color: #f0f0f0;
+}
+
+.store-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+
+.store-card-image-wrapper:hover .store-card-image {
+    transform: scale(1.05);
+    filter: brightness(1.05);
+}
+
+/* --- Card de Especialista --- */
+.specialist-card {
+    text-align: center;
+}
+.specialist-photo {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 9999px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    margin-bottom: 1rem;
+    object-fit: cover;
+}
+.specialist-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+}
+.specialist-role {
+    color: #4A246D;
+    font-weight: 600;
+}
+
+/* --- Botão do Instagram --- */
+.instagram-btn {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    transition: opacity 0.3s;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.instagram-btn:hover {
+    opacity: 0.9;
+}
+
+/* Estilos adicionais para o modal de currículo */
+#upload-modal {
+    transition: opacity 0.3s ease;
+}
+#upload-modal .cta-button {
+    padding: 0.75rem 1.5rem;
+}
