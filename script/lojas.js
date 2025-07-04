@@ -1,22 +1,5 @@
 const stores = [
-    {
-        name: 'Credvix Glória',
-        state: 'ES',
-        address: 'Avenida Carlos Lindenberg, 7032 - Glória, Vila Velha - ES',
-        phone: '(27) 3534-1552',
-        whatsapp: '5527992818843',
-        imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Credvix+Glória',
-        instagramUrl: 'https://www.instagram.com/credvix.gloria'
-    },
-    {
-        name: 'Help! Cariacica',
-        state: 'ES',
-        address: 'Av. Expedito Garcia, 123 - Campo Grande, Cariacica - ES',
-        phone: '(27) 1234-5678',
-        whatsapp: '5527912345678',
-        imageUrl: 'cariacica.jpg',
-        instagramUrl: 'https://www.instagram.com/help.cariacica/'
-    },
+ 
     {
         name: 'Vitória - Jeronimo Monteiro',
         state: 'ES',
@@ -37,7 +20,7 @@ const stores = [
         lat: -20.319,
         lng: -40.337,
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Vitória+Praia+do+Canto',
-        instagramUrl: '#'
+        instagramUrl: 'https://www.instagram.com/lojahelp.vitoria'
     },
     { 
         name: 'Credvix Vila Velha',
@@ -368,8 +351,8 @@ const stores = [
         name: 'Cariacica - Expedito Garcia', 
         state: 'ES', 
         address: 'Avenida Expedito Garcia, 516 - Loja 02 - Campo Grande _ Cariacica - ES', 
-        phone: '(27) 99689-293', 
-        whatsapp: '552799689293', 
+        phone: '', 
+        whatsapp: '5527996989293', 
         lat: -20.341, 
         lng: -40.388, 
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Cariacica+EG', 
