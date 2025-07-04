@@ -20,11 +20,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
     });
 
-    // --- DADOS DAS LOJAS ---
-    const stores = [
-        { name: 'Credvix Glória', state: 'ES', address: 'Avenida Carlos Lindenberg, 7032 - Glória, Vila Velha - ES', phone: '(27) 3534-1552', whatsapp: '5527992818843', imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Credvix+Glória', instagramUrl: '#' },
-        // ... (seus outros dados de lojas permanecem iguais)
-    ];
+    // --- DADOS DAS LOJAS AGORA FICA NO SCRIP DE LOJAS.JS ---
+
 
     // --- ELEMENTOS DO DOM ---
     const stateSelect = document.getElementById('state-select');
@@ -159,14 +156,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         function createJobCard(job) {
             return `
-                <div class="bg-white rounded-lg shadow-md p-6 border flex flex-col md:flex-row justify-between items-start md:items-center animate-on-scroll">
-                    <div>
-                        <h3 class="text-xl font-bold text-help-purple">${job.title}</h3>
-                        <p class="text-gray-600 font-semibold">${job.storeName}</p>
-                        <p class="text-gray-500 text-sm mt-2">${job.description}</p>
-                    </div>
-                    <div class="mt-4 md:mt-0 md:ml-6 text-right flex-shrink-0">
+                <div class="bg-white rounded-lg shadow-md p-6 border flex flex-col h-full animate-on-scroll">
+                    <div class="flex-grow">
                         <span class="inline-block bg-credvix-orange text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">${job.type}</span>
+                        <h3 class="text-lg font-bold text-help-purple">${job.title}</h3>
+                        <p class="text-gray-600 font-semibold text-sm">${job.storeName}</p>
+                        <p class="text-gray-500 text-sm mt-2">${job.description || ''}</p>
+                    </div>
+                    <div class="mt-4">
                         <button class="apply-btn block w-full text-center bg-help-purple text-white font-semibold px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors" data-job-title="${job.title}" data-store-name="${job.storeName}">
                             Candidatar-se
                         </button>
