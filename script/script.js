@@ -1,6 +1,3 @@
-// Configurações
-const googleSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT2lunjtU5EiVIVkwWBMK574TAoIYKMqWlTAvy1LyD0tvd0yHqTVL6CxkFyGRSk2PVm-N9ezp4aU-Qm/pub?gid=0&single=true&output=csv';
-const googleAppScriptURL = 'https://script.google.com/macros/s/AKfycbxJakKZOH_kaWU2o0WRy1VR9XZaXYuEixFWeyr7AxVAb8chzHSo0wQhAtchQw2yK7BEww/exec';
 
 document.addEventListener('DOMContentLoaded', async function() {
     // --- INICIALIZAÇÃO DO SWIPER ---
@@ -20,9 +17,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         },
     });
 
-    // --- DADOS DAS LOJAS AGORA FICA NO SCRIP DE LOJAS.JS ---
-
-
     // --- ELEMENTOS DO DOM ---
     const stateSelect = document.getElementById('state-select');
     const searchInput = document.getElementById('search-input');
@@ -30,6 +24,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const noStoresMessage = document.getElementById('no-stores-message');
     const initialStorePrompt = document.getElementById('initial-store-prompt');
     const jobLocationSelect = document.getElementById('job-location-select');
+    const jobTitleSelect = document.getElementById('job-title-select'); // ID ATUALIZADO
     const jobList = document.getElementById('job-list');
     const noJobsMessage = document.getElementById('no-jobs-message');
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -146,7 +141,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return lines.map(line => {
                     const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
                     return { title: values[0], storeName: values[1], state: values[2], type: values[3], description: values[4] };
-                }).filter(job => job.title);
+                }).filter(job => job.title); // Apenas valida se o título existe
             } catch (error) {
                 console.error("Erro ao processar vagas:", error);
                 jobList.innerHTML = `<p class="text-red-500 text-center">Não foi possível carregar as vagas. Tente novamente mais tarde.</p>`;
@@ -171,12 +166,16 @@ document.addEventListener('DOMContentLoaded', async function() {
                 </div>
             `;
         }
-
-        function displayJobs(allJobs, stateFilter = 'todos') {
+        
+        // Função de exibição MODIFICADA para filtrar pelo TÍTULO
+        function displayJobs(allJobs, stateFilter = 'todos', titleFilter = 'todos') {
             jobList.innerHTML = '';
-            const filteredJobs = (stateFilter === 'todos')
-                ? allJobs
-                : allJobs.filter(job => job.state === stateFilter);
+
+            const filteredJobs = allJobs.filter(job => {
+                const matchesState = (stateFilter === 'todos') || (job.state === stateFilter);
+                const matchesTitle = (titleFilter === 'todos') || (job.title === titleFilter); // LÓGICA ALTERADA
+                return matchesState && matchesTitle;
+            });
             
             if (filteredJobs.length > 0) {
                 noJobsMessage.classList.add('hidden');
@@ -190,7 +189,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             observeElements();
         }
 
-        function populateJobsFilter(jobs) {
+        function populateJobsStateFilter(jobs) {
             const jobStates = [...new Set(jobs.map(job => job.state))].filter(Boolean);
             jobStates.sort();
             
@@ -201,6 +200,21 @@ document.addEventListener('DOMContentLoaded', async function() {
                 option.value = state;
                 option.textContent = state;
                 jobLocationSelect.appendChild(option);
+            });
+        }
+        
+        // Função MODIFICADA para popular o filtro de TÍTULO da vaga
+        function populateJobTitlesFilter(jobs) {
+            const jobTitles = [...new Set(jobs.map(job => job.title))].filter(Boolean);
+            jobTitles.sort();
+            
+            jobTitleSelect.innerHTML = '<option value="todos">Todas as Vagas</option>';
+
+            jobTitles.forEach(title => {
+                const option = document.createElement('option');
+                option.value = title;
+                option.textContent = title;
+                jobTitleSelect.appendChild(option);
             });
         }
 
@@ -234,49 +248,35 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         }
 
-        // Implementação aprimorada do envio de currículo
         uploadForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validação do arquivo
             const file = cvFileInput.files[0];
             if (!file) {
                 alert("Por favor, selecione um arquivo.");
                 return;
             }
             
-            // Verificar tamanho do arquivo (5MB máximo)
             if (file.size > 5 * 1024 * 1024) {
                 alert("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
                 return;
             }
             
-            // Verificar tipo de arquivo
             const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
             if (!validTypes.includes(file.type)) {
                 alert("Por favor, envie um arquivo nos formatos PDF, DOC ou DOCX.");
                 return;
             }
             
-            // Obter dados do formulário
             const jobTitle = this.dataset.jobTitle;
             const storeName = this.dataset.storeName;
             const candidateName = document.getElementById('candidate-name').value;
             const candidateEmail = document.getElementById('candidate-email').value;
             const candidatePhone = document.getElementById('candidate-phone').value;
             
-            // Mostrar status de processamento
             modalContentForm.classList.add('hidden');
             modalContentStatus.classList.remove('hidden');
-            modalContentStatus.innerHTML = `
-                <div class="animate-pulse flex flex-col items-center">
-                    <svg class="animate-spin h-8 w-8 text-help-purple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="text-lg">Processando seu currículo...</p>
-                </div>
-            `;
+            modalContentStatus.innerHTML = `<div class="animate-pulse flex flex-col items-center"><svg class="animate-spin h-8 w-8 text-help-purple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="text-lg">Processando seu currículo...</p></div>`;
 
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -296,15 +296,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     candidatePhone: candidatePhone
                 };
 
-                modalContentStatus.innerHTML = `
-                    <div class="animate-pulse flex flex-col items-center">
-                        <svg class="animate-spin h-8 w-8 text-help-purple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        <p class="text-lg">Enviando seu currículo...</p>
-                    </div>
-                `;
+                modalContentStatus.innerHTML = `<div class="animate-pulse flex flex-col items-center"><svg class="animate-spin h-8 w-8 text-help-purple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="text-lg">Enviando seu currículo...</p></div>`;
 
                 fetch(googleAppScriptURL, {
                     method: 'POST',
@@ -314,15 +306,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        modalContentStatus.innerHTML = `
-                            <div class="flex flex-col items-center">
-                                <svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                </svg>
-                                <p class="text-green-600 font-bold text-xl mb-2">Currículo enviado com sucesso!</p>
-                                <p class="text-sm text-gray-500">Agradecemos seu interesse. Entraremos em contato em breve.</p>
-                            </div>
-                        `;
+                        modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><p class="text-green-600 font-bold text-xl mb-2">Currículo enviado com sucesso!</p><p class="text-sm text-gray-500">Agradecemos seu interesse. Entraremos em contato em breve.</p></div>`;
                     } else {
                         throw new Error(data.message || 'O servidor retornou um erro.');
                     }
@@ -330,30 +314,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 })
                 .catch(error => {
                     console.error('Erro no upload:', error);
-                    modalContentStatus.innerHTML = `
-                        <div class="flex flex-col items-center">
-                            <svg class="h-12 w-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                            <p class="text-red-600 font-bold text-xl mb-2">Ocorreu um erro</p>
-                            <p class="text-sm text-gray-500 mb-4">Não foi possível enviar seu currículo. Por favor, tente novamente.</p>
-                            <button onclick="location.reload()" class="text-help-purple font-semibold">Tentar novamente</button>
-                        </div>
-                    `;
+                    modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><p class="text-red-600 font-bold text-xl mb-2">Ocorreu um erro</p><p class="text-sm text-gray-500 mb-4">Não foi possível enviar seu currículo. Por favor, tente novamente.</p><button onclick="location.reload()" class="text-help-purple font-semibold">Tentar novamente</button></div>`;
                 });
             };
             
             reader.onerror = function() {
-                modalContentStatus.innerHTML = `
-                    <div class="flex flex-col items-center">
-                        <svg class="h-12 w-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        <p class="text-red-600 font-bold text-xl mb-2">Erro ao ler o arquivo</p>
-                        <p class="text-sm text-gray-500">O arquivo selecionado não pôde ser lido. Por favor, tente outro arquivo.</p>
-                        <button onclick="modalContentForm.classList.remove('hidden'); modalContentStatus.classList.add('hidden')" class="text-help-purple font-semibold mt-4">Voltar</button>
-                    </div>
-                `;
+                modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><p class="text-red-600 font-bold text-xl mb-2">Erro ao ler o arquivo</p><p class="text-sm text-gray-500">O arquivo selecionado não pôde ser lido. Por favor, tente outro arquivo.</p><button onclick="modalContentForm.classList.remove('hidden'); modalContentStatus.classList.add('hidden')" class="text-help-purple font-semibold mt-4">Voltar</button></div>`;
             };
         });
 
@@ -384,15 +350,28 @@ document.addEventListener('DOMContentLoaded', async function() {
             populateStoreDropdown();
             updateDisplayedStores();
             
-            // Lógica das Vagas
+            // Lógica das Vagas MODIFICADA
             const jobs = await fetchJobsFromSheet();
             if (jobs.length > 0) {
-                populateJobsFilter(jobs);
-                displayJobs(jobs);
-                jobLocationSelect.addEventListener('change', (e) => displayJobs(jobs, e.target.value));
+                populateJobsStateFilter(jobs);
+                populateJobTitlesFilter(jobs); // Popula o filtro de TÍTULO
+                
+                // Exibe os jobs iniciais (todos)
+                displayJobs(jobs, 'todos', 'todos');
+
+                // Função central para atualizar a exibição
+                const updateJobDisplay = () => {
+                    const selectedState = jobLocationSelect.value;
+                    const selectedTitle = jobTitleSelect.value; // Pega o valor do filtro de título
+                    displayJobs(jobs, selectedState, selectedTitle);
+                };
+
+                // Adiciona os listeners para ambos os filtros
+                jobLocationSelect.addEventListener('change', updateJobDisplay);
+                jobTitleSelect.addEventListener('change', updateJobDisplay);
             }
             
-            // Adiciona os listeners de eventos
+            // Adiciona os listeners de eventos das lojas
             stateSelect.addEventListener('change', updateDisplayedStores);
             searchInput.addEventListener('input', updateDisplayedStores);
 
