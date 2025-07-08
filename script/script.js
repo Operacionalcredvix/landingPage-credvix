@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             const filteredJobs = allJobs.filter(job => {
                 const matchesState = (stateFilter === 'todos') || (job.state === stateFilter);
-                const matchesTitle = (titleFilter === 'todos') || (job.title === titleFilter); // LÓGICA ALTERADA
+                const matchesTitle = (titleFilter === 'todos') || (job.title === titleFilter);
                 return matchesState && matchesTitle;
             });
             
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         }
         
-        // Função MODIFICADA para popular o filtro de TÍTULO da vaga
+        // Função para popular o filtro de TÍTULO da vaga
         function populateJobTitlesFilter(jobs) {
             const jobTitles = [...new Set(jobs.map(job => job.title))].filter(Boolean);
             jobTitles.sort();
