@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', async function() {
     // --- INICIALIZAÇÃO DO SWIPER ---
     const swiper = new Swiper('.hero-swiper', {
@@ -24,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const noStoresMessage = document.getElementById('no-stores-message');
     const initialStorePrompt = document.getElementById('initial-store-prompt');
     const jobLocationSelect = document.getElementById('job-location-select');
-    const jobTitleSelect = document.getElementById('job-title-select'); // ID ATUALIZADO
+    const jobTitleSelect = document.getElementById('job-title-select');
     const jobList = document.getElementById('job-list');
     const noJobsMessage = document.getElementById('no-jobs-message');
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -94,6 +93,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             const stateFilter = stateSelect.value;
             const searchTerm = searchInput.value.toLowerCase();
 
+            if (!stores) return; // Proteção para caso o arquivo de lojas não carregue
+
             const filteredStores = stores.filter(store => {
                 const matchesState = (stateFilter === 'todos') || (store.state === stateFilter);
                 const matchesSearch = store.name.toLowerCase().includes(searchTerm) ||
@@ -118,6 +119,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         function populateStoreDropdown() {
+            if (!stores) return; // Proteção
             const availableStates = [...new Set(stores.map(store => store.state))].sort();
             availableStates.forEach(state => {
                 const option = document.createElement('option');
@@ -141,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return lines.map(line => {
                     const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
                     return { title: values[0], storeName: values[1], state: values[2], type: values[3], description: values[4] };
-                }).filter(job => job.title); // Apenas valida se o título existe
+                }).filter(job => job.title);
             } catch (error) {
                 console.error("Erro ao processar vagas:", error);
                 jobList.innerHTML = `<p class="text-red-500 text-center">Não foi possível carregar as vagas. Tente novamente mais tarde.</p>`;
@@ -153,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             return `
                 <div class="bg-white rounded-lg shadow-md p-6 border flex flex-col h-full animate-on-scroll">
                     <div class="flex-grow">
-                        <span class="inline-block bg-credvix-orange text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">${job.type}</span>
+                        <span class="inline-block bg-credvix-orange text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">${job.type || ''}</span>
                         <h3 class="text-lg font-bold text-help-purple">${job.title}</h3>
                         <p class="text-gray-600 font-semibold text-sm">${job.storeName}</p>
                         <p class="text-gray-500 text-sm mt-2">${job.description || ''}</p>
@@ -167,7 +169,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             `;
         }
         
-        // Função de exibição MODIFICADA para filtrar pelo TÍTULO
         function displayJobs(allJobs, stateFilter = 'todos', titleFilter = 'todos') {
             jobList.innerHTML = '';
 
@@ -190,11 +191,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         function populateJobsStateFilter(jobs) {
-            const jobStates = [...new Set(jobs.map(job => job.state))].filter(Boolean);
-            jobStates.sort();
-            
+            const jobStates = [...new Set(jobs.map(job => job.state))].filter(Boolean).sort();
             jobLocationSelect.innerHTML = '<option value="todos">Todos os Estados</option>';
-
             jobStates.forEach(state => {
                 const option = document.createElement('option');
                 option.value = state;
@@ -203,13 +201,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             });
         }
         
-        // Função para popular o filtro de TÍTULO da vaga
         function populateJobTitlesFilter(jobs) {
-            const jobTitles = [...new Set(jobs.map(job => job.title))].filter(Boolean);
-            jobTitles.sort();
-            
+            const jobTitles = [...new Set(jobs.map(job => job.title))].filter(Boolean).sort();
             jobTitleSelect.innerHTML = '<option value="todos">Todas as Vagas</option>';
-
             jobTitles.forEach(title => {
                 const option = document.createElement('option');
                 option.value = title;
@@ -233,9 +227,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         function closeModal() {
             uploadModal.classList.add('hidden');
             uploadModal.classList.remove('flex');
-            uploadForm.reset();
-            modalContentForm.classList.remove('hidden');
-            modalContentStatus.classList.add('hidden');
         }
 
         function addApplyButtonListeners() {
@@ -256,12 +247,10 @@ document.addEventListener('DOMContentLoaded', async function() {
                 alert("Por favor, selecione um arquivo.");
                 return;
             }
-            
             if (file.size > 5 * 1024 * 1024) {
                 alert("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
                 return;
             }
-            
             const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
             if (!validTypes.includes(file.type)) {
                 alert("Por favor, envie um arquivo nos formatos PDF, DOC ou DOCX.");
@@ -296,11 +285,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                     candidatePhone: candidatePhone
                 };
 
+                // **LINHA DE DEBUG ADICIONADA**
+                // console.log("Enviando para o Google Apps Script. Payload:", JSON.stringify(payload));
+
                 modalContentStatus.innerHTML = `<div class="animate-pulse flex flex-col items-center"><svg class="animate-spin h-8 w-8 text-help-purple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="text-lg">Enviando seu currículo...</p></div>`;
 
                 fetch(googleAppScriptURL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors', // Adicionado para evitar possíveis problemas de CORS
                     body: JSON.stringify(payload)
                 })
                 .then(response => response.json())
@@ -350,32 +342,27 @@ document.addEventListener('DOMContentLoaded', async function() {
             populateStoreDropdown();
             updateDisplayedStores();
             
-            // Lógica das Vagas MODIFICADA
+            // Lógica das Vagas
             const jobs = await fetchJobsFromSheet();
             if (jobs.length > 0) {
                 populateJobsStateFilter(jobs);
-                populateJobTitlesFilter(jobs); // Popula o filtro de TÍTULO
+                populateJobTitlesFilter(jobs);
                 
-                // Exibe os jobs iniciais (todos)
                 displayJobs(jobs, 'todos', 'todos');
 
-                // Função central para atualizar a exibição
                 const updateJobDisplay = () => {
                     const selectedState = jobLocationSelect.value;
-                    const selectedTitle = jobTitleSelect.value; // Pega o valor do filtro de título
+                    const selectedTitle = jobTitleSelect.value;
                     displayJobs(jobs, selectedState, selectedTitle);
                 };
 
-                // Adiciona os listeners para ambos os filtros
                 jobLocationSelect.addEventListener('change', updateJobDisplay);
                 jobTitleSelect.addEventListener('change', updateJobDisplay);
             }
             
-            // Adiciona os listeners de eventos das lojas
             stateSelect.addEventListener('change', updateDisplayedStores);
             searchInput.addEventListener('input', updateDisplayedStores);
 
-            // Ativa as animações de scroll
             observeElements();
         }
 
