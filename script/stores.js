@@ -1,4 +1,5 @@
-const stores = [
+
+export const stores = [
  
     {
         name: 'Vitória - Jeronimo Monteiro',
@@ -66,7 +67,6 @@ const stores = [
         imageUrl: 'Help Vila Velha.jpg', 
          instagramUrl: 'https://instagram.com/lojahelp.vilavelha' 
     },
-
     { 
         name: 'Serra - Pq Jacaraípe', 
         state: 'ES', 
@@ -78,7 +78,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Serra+Jacaraípe', 
         instagramUrl: 'https://www.instagram.com/lojahelp.jacaraipe/' 
     },
-
     { 
         name: 'Aracruz - Centro', 
         state: 'ES', 
@@ -90,7 +89,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Aracruz+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp.aracruz/' 
     },
-
     { 
         name: 'Ipatinga - Centro', 
         state: 'MG', 
@@ -102,7 +100,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Ipatinga+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp_ipatinga/' 
     },
-
     { 
         name: 'Cachoeiro de Itapemirim - Centro', 
         state: 'ES', 
@@ -114,7 +111,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Cachoeiro+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp.cachoeiro/' 
     },
-
     { 
         name: 'Colatina - Centro', 
         state: 'ES', 
@@ -126,7 +122,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Colatina+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp.colatina/' 
     },
-
     { 
         name: 'Nova Venecia - Centro', 
         state: 'ES', 
@@ -138,7 +133,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Nova+Venecia', 
         instagramUrl: 'https://www.instagram.com/lojahelp.novavenecia/' 
     },
-
     { 
         name: 'Eunápolis - Centro', 
         state: 'BA', 
@@ -150,7 +144,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Eunápolis+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp.eunapolis/' 
     },
-
     { 
         name: 'Brasília - Taguatinga', 
         state: 'DF', 
@@ -162,7 +155,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Brasília+Taguatinga', 
         instagramUrl: 'https://www.instagram.com/lojahelp.taguatinga/' 
     },
-
     { 
         name: 'Cuiabá - Centro-Norte', 
         state: 'MT', 
@@ -174,7 +166,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Cuiabá+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp.cuiaba/' 
     },
-
     { 
         name: 'Várzea Grande - Centro Norte', 
         state: 'MT', 
@@ -186,7 +177,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Várzea+Grande', 
         instagramUrl: 'https://www.instagram.com/lojahelp.varzea' 
     },
-
     { 
         name: 'Rondópolis - Centro', 
         state: 'MT', 
@@ -198,7 +188,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Rondonópolis', 
         instagramUrl: 'https://www.instagram.com/lojahelp.rondonopolis/' 
     },
-
     { 
         name: 'Águas Lindas de Goiás', 
         state: 'GO', 
@@ -210,7 +199,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Águas+Lindas', 
         instagramUrl: 'https://instagram.com/lojahelp.aguaslindas/' 
     },
-
     { 
         name: 'Linhares - Centro', 
         state: 'ES', 
@@ -222,7 +210,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Linhares+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp.linhares/' 
     },
-
     { 
         name: 'Guarapari - Centro', 
         state: 'ES', 
@@ -234,7 +221,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Guarapari+Centro', 
         instagramUrl: 'https://www.instagram.com/lojahelp_guarapari/' 
     },
-
     { 
         name: 'Credvix Cariacica', 
         state: 'ES', 
@@ -246,7 +232,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Credvix+Cariacica', 
         instagramUrl: 'https://www.instagram.com/credvix.cariacica/' 
     },
-
     { 
         name: 'São Mateus - Centro', 
         state: 'ES', 
@@ -258,7 +243,6 @@ const stores = [
         imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=São+Mateus', 
         instagramUrl: 'https://www.instagram.com/lojahelp.saomateus/' 
     },
-
     { 
         name: 'Serra - Laranjeiras II', 
         state: 'ES', 
