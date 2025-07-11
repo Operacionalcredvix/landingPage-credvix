@@ -1,40 +1,49 @@
+
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #fff;
+    background-color: #fdfdfd; 
+    color: #374151; 
 }
+
+/* --- Paleta de Cores e Temas --- */
 .bg-gray-50 {
-    background-color: #f8f9fa;
+    background-color: #f9fafb; 
 }
 .bg-credvix-orange { background-color: #F37021; }
 .text-credvix-orange { color: #F37021; }
 .border-credvix-orange { border-color: #F37021; }
 .bg-help-purple { background-color: #4A246D; }
 .text-help-purple { color: #4A246D; }
-.ring-help-purple:focus { outline-color: #4A246D; }
+.ring-help-purple:focus {
+    outline-color: #4A246D;
+    box-shadow: 0 0 0 3px rgba(74, 36, 109, 0.3);
+}
 .scroll-smooth { scroll-behavior: smooth; }
 
-/* --- Estilos de Componentes Globais --- */
+/* --- Componentes Globais --- */
 .nav-link {
     color: #4B5563;
-    font-weight: 600;
-    transition-property: color;
-    transition-duration: 300ms;
+    font-weight: 500; 
+    transition: color 0.3s ease;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
 }
 .nav-link:hover {
     color: #4A246D;
+    border-bottom-color: #F37021;
 }
 
 .section-title {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
+    font-size: 2.125rem; 
+    line-height: 2.5rem;
     font-weight: 800;
     color: #4A246D;
     margin-bottom: 1rem;
 }
 @media (min-width: 768px) {
     .section-title {
-        font-size: 2.25rem;
-        line-height: 2.5rem;
+        font-size: 2.75rem;
+        line-height: 1.2;
     }
 }
 .section-subtitle {
@@ -42,35 +51,43 @@ body {
     margin-left: auto;
     margin-right: auto;
     color: #4B5563;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem; /* Mais espaçamento */
+    font-size: 1.125rem;
+    line-height: 1.75rem;
 }
 .cta-button {
     font-weight: bold;
-    padding-left: 2rem;
-    padding-right: 2rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding: 0.875rem 2.5rem; /* Ligeiramente maior */
     border-radius: 0.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 14px 0 rgba(0,0,0,0.1);
     display: inline-block;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 .cta-button:hover {
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 rgba(0,0,0,0.15);
 }
 
-/* --- Estilos de Animação --- */
+/* --- Animações --- */
 .animate-on-scroll {
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    /* Animação mais sutil: sobe menos e aumenta ligeiramente */
+    transform: translateY(20px) scale(0.98);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 .animate-on-scroll.is-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
-/* --- Seta do Acordeão do FAQ --- */
+/* --- Acordeão do FAQ --- */
+details {
+    border: 1px solid #e5e7eb;
+    transition: background-color 0.3s ease;
+}
+details:hover {
+    background-color: #f9fafb;
+}
 details > summary {
     list-style: none;
 }
@@ -81,26 +98,24 @@ details > summary::after {
     content: '+';
     float: right;
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: 400; /* Mais fino */
     line-height: 1;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease-in-out;
     color: #4A246D;
+}
+details[open] {
+    border-color: #F37021;
 }
 details[open] > summary::after {
     transform: rotate(45deg);
 }
 
-/* --- Estilos do Slider Swiper --- */
+/* --- Slider Swiper --- */
 .swiper {
     width: 100%;
     height: 500px;
 }
-
-@media (min-width: 768px) {
-    .swiper {
-        height: 550px;
-    }
-}
+@media (min-width: 768px) { .swiper { height: 550px; } }
 
 .swiper-slide {
     text-align: center;
@@ -113,179 +128,167 @@ details[open] > summary::after {
     align-items: center;
     position: relative;
 }
-
 .swiper-slide::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2)); /* Gradiente para melhor legibilidade */
     z-index: 1;
 }
+.slide-content { position: relative; z-index: 2; padding: 1rem; max-width: 800px; }
+.swiper-button-next, .swiper-button-prev { color: #fff; opacity: 0.7; transition: opacity 0.3s, transform 0.3s; }
+.swiper-button-next:hover, .swiper-button-prev:hover { opacity: 1; transform: scale(1.1); }
+.swiper-pagination-bullet { background: rgba(255, 255, 255, 0.8); opacity: 1; }
+.swiper-pagination-bullet-active { background-color: #F37021; transform: scale(1.2); }
 
-.slide-content {
-    position: relative;
-    z-index: 2;
-    padding: 1rem;
-    max-width: 800px;
-}
-
-.swiper-button-next,
-.swiper-button-prev {
-    color: #fff;
-    opacity: 0.7;
-    transition: opacity 0.3s;
-}
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-    opacity: 1;
-}
-
-.swiper-pagination-bullet {
-    background: rgba(255, 255, 255, 0.8);
-    opacity: 1;
-}
-
-.swiper-pagination-bullet-active {
-    background-color: #F37021;
-}
-
-/* --- Seção Como Funciona --- */
-.step-icon-wrapper {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 1rem;
-}
-.step-icon {
-    background-color: #F37021;
-    color: white;
-    width: 7rem;
-    height: 7rem;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-}
-.step-number {
-    position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(25%, -25%);
-    background-color: #4A246D;
-    color: white;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 9999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    font-weight: bold;
-    border: 4px solid #f8f9fa;
-}
-
-/* --- Estilos do Rodapé --- */
-.footer-bg {
-    background-color: #212529;
-}
-
-.footer-brand-btn {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-weight: 600;
-    color: white;
-}
-.footer-brand-credvix {
-    background-color: #F37021;
-}
-.footer-brand-help {
-    background-color: #4A246D;
-}
-.social-icon {
-    color: #adb5bd;
-    transition: color 0.3s;
-}
-.social-icon:hover {
-    color: #fff;
-}
-
-/* --- Página Quem Somos --- */
+/* --- Card de Valores --- */
 .value-card {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.value-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 .value-icon {
     font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    /* Ícones com fundo para destaque */
+    background-color: rgba(243, 112, 33, 0.1);
+    color: #F37021;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* --- Efeito de Hover na Imagem do Card da Loja --- */
+/* --- Imagem do Card de Loja (Store Card) --- */
 .store-card-image-wrapper {
     overflow: hidden;
     height: 12rem;
-    background-color: #f0f0f0;
+    background-color: #e5e7eb;
+    border-radius: 1rem 1rem 0 0; 
 }
-
 .store-card-image {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover; 
     transition: transform 0.4s ease, filter 0.4s ease;
 }
-
 .store-card-image-wrapper:hover .store-card-image {
     transform: scale(1.05);
-    filter: brightness(1.05);
 }
 
-/* --- Card de Especialista --- */
-.specialist-card {
-    text-align: center;
+/* --- Rodapé --- */
+.footer-bg {
+    background-color: #1f2937; 
 }
-.specialist-photo {
-    width: 10rem;
-    height: 10rem;
-    border-radius: 9999px;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-    margin-bottom: 1rem;
-    object-fit: cover;
-}
-.specialist-name {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: #1f2937;
-}
-.specialist-role {
-    color: #4A246D;
-    font-weight: 600;
-}
+.social-icon { color: #9ca3af; transition: color 0.3s, transform 0.3s; }
+.social-icon:hover { color: #fff; transform: scale(1.1); }
 
 /* --- Botão do Instagram --- */
 .instagram-btn {
     background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
-    transition: opacity 0.3s;
-    padding: 0.5rem;
+    transition: transform 0.3s, opacity 0.3s;
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
 }
-.instagram-btn:hover {
-    opacity: 0.9;
+.instagram-btn:hover { opacity: 0.9; transform: scale(1.05); }
+
+/* --- Estilização dos Filtros (Selects) --- */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
 }
 
-/* Estilos adicionais para o modal de currículo */
-#upload-modal {
-    transition: opacity 0.3s ease;
+/* --- Modal --- */
+#upload-modal { transition: opacity 0.3s ease; }
+#upload-modal .cta-button { padding: 0.75rem 1.5rem; }
+
+/* Contêiner da imagem de fundo para o parallax */
+.slide-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
 }
-#upload-modal .cta-button {
-    padding: 0.75rem 1.5rem;
+
+/* Animação para o conteúdo do slide */
+.slide-content > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.slide-content.slide-content-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Adicionando um atraso (delay) para cada elemento aparecer em sequência */
+.slide-content.slide-content-visible h1 {
+    transition-delay: 0.2s;
+}
+.slide-content.slide-content-visible p {
+    transition-delay: 0.4s;
+}
+.slide-content.slide-content-visible .cta-button {
+    transition-delay: 0.6s;
+}
+
+
+/* Estilização da Paginação como Barra de Progresso */
+.swiper-pagination.hero-pagination {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    height: 3px; /* Altura da barra de progresso */
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.swiper-pagination-progressbar-fill {
+    background-color: #F37021; /* Cor da barra de progresso */
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+/* Deixando os botões de navegação mais elegantes */
+.swiper-button-next,
+.swiper-button-prev {
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    transform: scale(1.05);
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 18px; /* Ícone da seta menor */
 }

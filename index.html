@@ -57,38 +57,46 @@
         <section class="relative">
             <div class="swiper hero-swiper">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide" style="background-image: url('img/banner.jpg');">
+                    <div class="swiper-slide">
+                        <div class="slide-background" style="background-image: url('img/banner.jpg');"
+                            data-swiper-parallax="-23%"></div>
                         <div class="slide-content">
-                            <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight">Antecipe seu Saldo do FGTS
-                            </h1>
-                            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90">Encontre uma loja mais
-                                próxima de você</p>
-                            <a href="#encontre" class="cta-button bg-help-purple text-white">Quero Aproveitar</a>
+                            <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight" data-swiper-parallax="-300">
+                                Antecipe seu Saldo do FGTS</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90" data-swiper-parallax="-200">
+                                Encontre uma loja mais próxima de você</p>
+                            <a href="#encontre" class="cta-button bg-help-purple text-white"
+                                data-swiper-parallax="-100">Quero Aproveitar</a>
                         </div>
                     </div>
-                    <div class="swiper-slide" style="background-image: url('img/nossahistoria.jpg');">
+                    <div class="swiper-slide">
+                        <div class="slide-background" style="background-image: url('img/nossahistoria.jpg');"
+                            data-swiper-parallax="-23%"></div>
                         <div class="slide-content">
-                            <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight">Premiados Top de Vendas 2024
-                            </h1>
-                            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90">Nosso compromisso com a
-                                excelência é reconhecido</p>
-                            <a href="#quem-somos" class="cta-button bg-white text-help-purple">Conheça Nossa
-                                História</a>
+                            <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight" data-swiper-parallax="-300">
+                                Premiados Top de Vendas 2024</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90" data-swiper-parallax="-200">
+                                Nosso compromisso com a excelência é reconhecido</p>
+                            <a href="#quem-somos" class="cta-button bg-white text-help-purple"
+                                data-swiper-parallax="-100">Conheça Nossa História</a>
                         </div>
                     </div>
-                    <div class="swiper-slide" style="background-image: url('img/trabalhe-conosco.jpg');">
+                    <div class="swiper-slide">
+                        <div class="slide-background" style="background-image: url('img/trabalhe-conosco.jpg');"
+                            data-swiper-parallax="-23%"></div>
                         <div class="slide-content">
-                            <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight">Trabalhe Conosco</h1>
-                            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90">Nosso compromisso com a
-                                excelência é reconhecido. Venha participar da nossa Equipe!</p>
-                            <a href="#trabalhe-conosco" class="cta-button bg-white text-help-purple">Trabalhe
-                                Conosco</a>
+                            <h1 class="text-3xl md:text-5xl font-bold mb-4 leading-tight" data-swiper-parallax="-300">
+                                Trabalhe Conosco</h1>
+                            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8 opacity-90" data-swiper-parallax="-200">
+                                Venha participar da nossa Equipe!</p>
+                            <a href="#trabalhe-conosco" class="cta-button bg-white text-help-purple"
+                                data-swiper-parallax="-100">Trabalhe Conosco</a>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-pagination hero-pagination"></div>
                 <div class="swiper-button-prev hero-nav-prev"></div>
                 <div class="swiper-button-next hero-nav-next"></div>
+                <div class="swiper-pagination hero-pagination"></div>
             </div>
         </section>
 
@@ -112,33 +120,63 @@
                             clientes através de um serviço personalizado e eficiente.</p>
                     </div>
                 </div>
+
                 <div class="text-center mt-16 md:mt-24">
                     <h2 class="section-title animate-on-scroll">Nossos Valores</h2>
                     <p class="section-subtitle animate-on-scroll">Trabalhamos com respeito, honestidade, dedicação,
-                        comprometimento, profissionalismo, humildade e transparência em busca do desenvolvimento das
-                        pessoas.</p>
+                        comprometimento, profissionalismo e transparência em busca do desenvolvimento das pessoas.
+                    </p>
                     <div
-                        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 max-w-6xl mx-auto animate-on-scroll">
+                        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 max-w-6xl mx-auto animate-on-scroll">
                         <div class="value-card">
-                            <div class="value-icon">🤝</div><span class="font-semibold">Respeito</span>
+                            <div class="value-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div><span class="font-semibold">Respeito</span>
                         </div>
                         <div class="value-card">
-                            <div class="value-icon">💎</div><span class="font-semibold">Honestidade</span>
+                            <div class="value-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div><span class="font-semibold">Honestidade</span>
                         </div>
                         <div class="value-card">
-                            <div class="value-icon">❤️</div><span class="font-semibold">Dedicação</span>
+                            <div class="value-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                            </div><span class="font-semibold">Dedicação</span>
                         </div>
                         <div class="value-card">
-                            <div class="value-icon">🔗</div><span class="font-semibold">Comprometimento</span>
+                            <div class="value-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                            </div><span class="font-semibold">Comprometimento</span>
                         </div>
                         <div class="value-card">
-                            <div class="value-icon">🏆</div><span class="font-semibold">Profissionalismo</span>
+                            <div class="value-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div><span class="font-semibold">Profissionalismo</span>
                         </div>
-                        <div class="value-card">
-                            <div class="value-icon">🌱</div><span class="font-semibold">Humildade</span>
-                        </div>
+
                     </div>
                 </div>
+            </div>
             </div>
         </section>
 
@@ -413,7 +451,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-  <script type="module" src="script/main.js"></script>
+    <script type="module" src="script/main.js"></script>
 </body>
 
 </html>
