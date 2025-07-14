@@ -1,5 +1,5 @@
 // Caminho: script/main.js
-import { initSwiper } from './swiper.js';
+import { initSwiper, initTestimonialSwiper } from './swiper.js';
 import { initStoreLocator } from './storeLocator.js';
 import { initJobBoard } from './jobBoard.js';
 import { initModalHandler } from './modalHandler.js';
@@ -10,6 +10,7 @@ function initializePage() {
 
     // Módulos que carregam instantaneamente
     initSwiper();
+    initTestimonialSwiper();
     initStoreLocator();
     initModalHandler();
     observeElements();

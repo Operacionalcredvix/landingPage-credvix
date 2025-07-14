@@ -294,3 +294,54 @@ select {
 .swiper-button-prev::after {
     font-size: 18px; /* Ícone da seta menor */
 }
+
+
+.testimonial-nav-next { right: -10px; }
+.testimonial-nav-prev { left: -10px; }
+
+@media (max-width: 768px) {
+    .testimonial-nav-next, .testimonial-nav-prev {
+        display: none; /* Esconde as setas em telas pequenas */
+    }
+}
+
+.testimonial-pagination .swiper-pagination-bullet {
+    background-color: #4A246D;
+    opacity: 0.4;
+    transition: all 0.3s ease;
+}
+
+.testimonial-pagination .swiper-pagination-bullet-active {
+    opacity: 1;
+    transform: scale(1.2);
+    background-color: #F37021;
+}
+
+/* Estilização da navegação do carrossel de depoimentos */
+.testimonial-nav-next,
+.testimonial-nav-prev {
+    color: #4A246D; /* Cor roxa da Help! */
+    top: 50%;
+    transform: translateY(-70%); /* Ajuste para centralizar com o card */
+}
+
+.testimonial-nav-next { right: -10px; }
+.testimonial-nav-prev { left: -10px; }
+
+@media (max-width: 768px) {
+    .testimonial-nav-next, .testimonial-nav-prev {
+        display: none; /* Esconde as setas em telas pequenas */
+    }
+}
+
+.testimonial-pagination .swiper-pagination-bullet {
+    background-color: #4A246D; /* Cor roxa da Help! */
+    opacity: 0.4;
+    transition: all 0.3s ease;
+}
+
+.testimonial-pagination .swiper-pagination-bullet-active {
+    opacity: 1;
+    transform: scale(1.2);
+    background-color: #F37021; /* Cor laranja no item ativo */
+}
