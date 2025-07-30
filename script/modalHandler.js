@@ -10,11 +10,12 @@ const modalContentForm = document.getElementById('modal-content-form');
 const modalContentStatus = document.getElementById('modal-content-status');
 
 // Função para abrir o modal
-export function openUploadModal(jobTitle, storeName) {
+export function openUploadModal(jobTitle, storeName, jobId) {
     if (uploadModal) {
         modalJobTitle.textContent = `${jobTitle} - ${storeName}`;
         uploadForm.dataset.jobTitle = jobTitle;
         uploadForm.dataset.storeName = storeName;
+        uploadForm.dataset.jobId = jobId;
         modalContentForm.classList.remove('hidden');
         modalContentStatus.classList.add('hidden');
         uploadForm.reset();
@@ -100,6 +101,7 @@ async function handleFormSubmit(e) {
     e.preventDefault();
 
     // Coletar dados do formulário
+    const jobId = e.currentTarget.dataset.jobId;
     const file = cvFileInput.files[0];
     const jobTitle = e.currentTarget.dataset.jobTitle;
     const storeName = e.currentTarget.dataset.storeName;
@@ -135,6 +137,7 @@ async function handleFormSubmit(e) {
 
         // Registrar candidato
         await registerCandidate({
+            vaga_id: jobId,
             nome_completo: candidateName,
             email: candidateEmail,
             telefone: candidatePhone,

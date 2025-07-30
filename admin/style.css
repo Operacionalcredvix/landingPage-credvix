@@ -107,3 +107,32 @@ td .status-inactive { color: var(--error-color); font-weight: bold; }
 .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
 input:checked + .slider { background-color: var(--success-color); }
 input:checked + .slider:before { transform: translateX(22px); }
+
+/* Estilos para os novos campos do formulário */
+.form-field-full {
+    margin-top: 20px;
+}
+.form-field-full label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+#job-category {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+/* Estilo para o badge da categoria na tabela */
+.category-badge {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+}

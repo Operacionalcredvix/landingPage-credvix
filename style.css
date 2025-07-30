@@ -411,3 +411,33 @@ select {
     background-color: #f9fafb;
 }
 
+/* Estilos para o card de vaga no site público */
+.job-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.category-indicator {
+    font-size: 0.7rem;         
+    font-weight: 600;
+    padding: 3px 10px;          
+    border-radius: 12px;       
+    border: 1px solid;
+    white-space: nowrap;       
+    flex-shrink: 0;            
+    line-height: 1.5;          
+}
+
+.category-open {
+    color: #28a745;
+    border-color: #28a745;
+    background-color: #e9f7ef;
+}
+
+.category-talent {
+    color: #1e40af; /* Um azul escuro e profissional para o texto */
+    border-color: #3b82f6; /* Um azul um pouco mais vivo para a borda */
+    background-color: #dbeafe; /* Um fundo azul bem claro para dar contraste */
+}

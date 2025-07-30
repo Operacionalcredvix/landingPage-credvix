@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,11 @@
     <link rel="icon" type="image/png" href="../img/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 </head>
+
 <body>
 
     <div id="login-container">
-        <img src="../img/favicon.png" alt="Logo Credvix" class="logo">
+        <img src="../Logo Credvix Oficial.png" alt="Logo Credvix" class="logo">
         <h2>Acesso ao Dashboard</h2>
         <form id="login-form">
             <input type="email" id="email" placeholder="Digite seu e-mail" required>
@@ -30,7 +32,7 @@
             <nav>
                 <ul>
                     <li class="active"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
-                    </ul>
+                </ul>
             </nav>
             <div class="sidebar-footer">
                 <button id="logout-btn"><span class="material-icons">logout</span> Sair</button>
@@ -62,13 +64,15 @@
             </section>
 
             <section class="job-list-container">
-                 <h2>Lista de Vagas</h2>
+                <h2>Lista de Vagas</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>Título</th>
-                            <th>Loja</th>
+                            <th>Vaga / Local</th>
+                            <th>Categoria</th>
+                            <th>Candidaturas</th>
                             <th>Status</th>
+                            <th>Datas</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -84,15 +88,33 @@
             <h2 id="modal-title">Criar Nova Vaga</h2>
             <form id="job-form">
                 <input type="hidden" id="job-id">
+
                 <div class="form-grid">
                     <input type="text" id="job-title" placeholder="Título da Vaga" required>
                     <input type="text" id="job-storeName" placeholder="Nome da Loja" required>
                 </div>
-                 <div class="form-grid">
+
+                <div class="form-grid">
+                    <input type="text" id="job-city" placeholder="Cidade" required>
                     <input type="text" id="job-state" placeholder="Estado (ex: ES)" required>
+                </div>
+
+                <div class="form-field-full">
                     <input type="text" id="job-type" placeholder="Tipo (ex: Tempo Integral)" required>
                 </div>
-                <textarea id="job-description" placeholder="Descrição da Vaga" rows="4"></textarea>
+
+                <div class="form-field-full">
+                    <textarea id="job-description" placeholder="Descrição da Vaga" rows="4"></textarea>
+                </div>
+
+                <div class="form-field-full">
+                    <label for="job-category">Categoria da Vaga</label>
+                    <select id="job-category" required>
+                        <option value="Aberta">Vaga Aberta</option>
+                        <option value="Banco de Talentos">Banco de Talentos</option>
+                    </select>
+                </div>
+
                 <div class="form-footer">
                     <label class="toggle-switch">
                         <input type="checkbox" id="job-is_active" checked>
@@ -107,7 +129,8 @@
             </form>
         </div>
     </div>
-    
+
     <script type="module" src="admin.js"></script>
 </body>
+
 </html>

@@ -1,11 +1,8 @@
-// Caminho: admin/admin.js
 
 // Importa o cliente Supabase do diretório principal do script
 import { supabase } from '../script/supabase-client.js';
 
 // --- ELEMENTOS DO DOM ---
-// É uma boa prática declarar todas as referências a elementos do HTML no início.
-
 // Autenticação
 const loginContainer = document.getElementById('login-container');
 const dashboard = document.getElementById('dashboard');
@@ -35,12 +32,10 @@ const inactiveJobsStat = document.getElementById('inactive-jobs-stat');
 
 // --- FUNÇÕES AUXILIARES DE UI ---
 
-/** Abre o modal de criação/edição de vaga. */
 function openModal() {
     jobModalOverlay.classList.remove('hidden');
 }
 
-/** Fecha o modal de criação/edição de vaga. */
 function closeModal() {
     jobModalOverlay.classList.add('hidden');
 }
@@ -48,97 +43,103 @@ function closeModal() {
 
 // --- FUNÇÕES PRINCIPAIS (CRUD de Vagas) ---
 
-/**
- * Busca as vagas no Supabase, atualiza as estatísticas e
- * renderiza a tabela na tela.
- */
 async function loadJobs() {
     loadingMessage.classList.remove('hidden');
     jobListTbody.innerHTML = '';
 
-    const { data: jobs, error } = await supabase
-        .from('vagas')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data: jobs, error } = await supabase.rpc('get_vaga_stats');
 
     loadingMessage.classList.add('hidden');
 
     if (error) {
-        console.error('Erro ao carregar vagas:', error.message);
-        alert('Não foi possível carregar as vagas.');
+        console.error('Erro ao carregar estatísticas das vagas:', error.message);
+        alert('Não foi possível carregar os dados das vagas.');
         return;
     }
 
-    // Atualiza os cartões de estatísticas
     totalJobsStat.textContent = jobs.length;
     activeJobsStat.textContent = jobs.filter(j => j.is_active).length;
     inactiveJobsStat.textContent = jobs.filter(j => !j.is_active).length;
 
-    // Popula a tabela com as vagas
     jobs.forEach(job => {
         const row = document.createElement('tr');
+
+        const creationDate = new Date(job.created_at).toLocaleDateString('pt-BR');
+        const inactivationDate = job.inactivated_at ? new Date(job.inactivated_at).toLocaleDateString('pt-BR') : '---';
+
         row.innerHTML = `
-            <td><strong>${job.title}</strong><br><small>${job.state}</small></td>
-            <td>${job.storeName}</td>
+    <td>
+        <strong>${job.title}</strong><br>
+        <small>${job.storename || 'N/A'} | ${job.city || ''}, ${job.state || ''}</small>
+    </td>
+    <td><span class="category-badge">${job.job_category}</span></td>
+            <td><span class="candidate-count">${job.candidate_count}</span></td>
             <td>
                 <span class="${job.is_active ? 'status-active' : 'status-inactive'}">
                     ${job.is_active ? 'Ativa' : 'Inativa'}
                 </span>
             </td>
+            <td>
+                <strong>Criação:</strong> ${creationDate}<br>
+                <strong>Inativação:</strong> ${inactivationDate}
+            </td>
             <td class="actions">
                 <button class="edit-btn" data-id="${job.id}">Editar</button>
-                <button class="delete-btn" data-id="${job.id}">Excluir</button>
+                <button class="delete-btn" data-id="${job.id}" data-candidates="${job.candidate_count}">Excluir</button>
             </td>
         `;
         jobListTbody.appendChild(row);
     });
 
-    // Adiciona eventos aos botões recém-criados de editar e excluir
     document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEdit));
     document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete));
 }
 
-/**
- * Lida com o envio do formulário, seja para criar uma nova vaga
- * ou para atualizar uma existente.
- * @param {Event} event O evento de submit do formulário.
- */
 async function handleFormSubmit(event) {
     event.preventDefault();
     saveBtn.disabled = true;
     saveBtn.textContent = 'Salvando...';
 
+    const jobId = jobIdInput.value;
+    const isNowActive = document.getElementById('job-is_active').checked;
+
     const jobData = {
         title: document.getElementById('job-title').value,
-        storeName: document.getElementById('job-storeName').value,
+        storename: document.getElementById('job-storeName').value,
+        city: document.getElementById('job-city').value,
         state: document.getElementById('job-state').value,
         type: document.getElementById('job-type').value,
         description: document.getElementById('job-description').value,
-        is_active: document.getElementById('job-is_active').checked,
+        job_category: document.getElementById('job-category').value,
+        is_active: isNowActive,
     };
 
-    const jobId = jobIdInput.value;
+    if (jobId) {
+        const { data: vagaAnterior } = await supabase.from('vagas').select('is_active').eq('id', jobId).single();
+        if (vagaAnterior && vagaAnterior.is_active && !isNowActive) {
+            jobData.inactivated_at = new Date();
+        }
+        if (vagaAnterior && !vagaAnterior.is_active && isNowActive) {
+            jobData.inactivated_at = null;
+        }
+    }
 
     const { error } = jobId
-        ? await supabase.from('vagas').update(jobData).eq('id', jobId) // Se tem ID, atualiza
-        : await supabase.from('vagas').insert([jobData]);             // Se não, insere
+        ? await supabase.from('vagas').update(jobData).eq('id', jobId)
+        : await supabase.from('vagas').insert([jobData]);
 
     if (error) {
         console.error('Erro ao salvar vaga:', error.message);
         alert('Ocorreu um erro ao salvar a vaga.');
     } else {
         closeModal();
-        await loadJobs(); // Recarrega a lista para mostrar a alteração
+        await loadJobs();
     }
-    
+
     saveBtn.disabled = false;
     saveBtn.textContent = 'Salvar';
 }
 
-/**
- * Prepara o modal para edição de uma vaga existente.
- * @param {Event} event O evento de clique do botão "Editar".
- */
 async function handleEdit(event) {
     const id = event.target.dataset.id;
     const { data: job, error } = await supabase.from('vagas').select('*').eq('id', id).single();
@@ -152,29 +153,35 @@ async function handleEdit(event) {
     modalTitle.textContent = 'Editar Vaga';
     jobIdInput.value = job.id;
     document.getElementById('job-title').value = job.title;
-    document.getElementById('job-storeName').value = job.storeName;
+    document.getElementById('job-storeName').value = job.storename;
+    // LINHA CORRIGIDA ABAIXO
+    document.getElementById('job-city').value = job.city; 
     document.getElementById('job-state').value = job.state;
     document.getElementById('job-type').value = job.type;
     document.getElementById('job-description').value = job.description;
+    document.getElementById('job-category').value = job.job_category;
     document.getElementById('job-is_active').checked = job.is_active;
 
     openModal();
 }
 
-/**
- * Exclui uma vaga após confirmação do usuário.
- * @param {Event} event O evento de clique do botão "Excluir".
- */
 async function handleDelete(event) {
     const id = event.target.dataset.id;
-    if (confirm('Tem certeza que deseja excluir esta vaga? Esta ação não pode ser desfeita.')) {
+    const candidateCount = parseInt(event.target.dataset.candidates, 10);
+
+    if (candidateCount > 0) {
+        alert(`Não é possível excluir esta vaga, pois ela possui ${candidateCount} candidatura(s).\n\nPara removê-la da lista pública, você pode desativá-la no menu "Editar".`);
+        return;
+    }
+
+    if (confirm('Tem certeza que deseja excluir esta vaga permanentemente? Esta ação não pode ser desfeita.')) {
         const { error } = await supabase.from('vagas').delete().eq('id', id);
 
         if (error) {
             console.error('Erro ao excluir vaga:', error.message);
             alert('Ocorreu um erro ao excluir a vaga.');
         } else {
-            await loadJobs(); // Recarrega a lista para remover a vaga da tela
+            await loadJobs();
         }
     }
 }
@@ -182,72 +189,55 @@ async function handleDelete(event) {
 
 // --- FUNÇÕES DE AUTENTICAÇÃO ---
 
-/** Mostra o dashboard e carrega os dados iniciais. */
 function showDashboard() {
     loginContainer.classList.add('hidden');
     dashboard.classList.remove('hidden');
     loadJobs();
 }
 
-/**
- * Tenta autenticar o usuário com email e senha no Supabase.
- * @param {Event} event O evento de submit do formulário de login.
- */
 async function handleLogin(event) {
     event.preventDefault();
     loginError.textContent = '';
-
     const { error } = await supabase.auth.signInWithPassword({
         email: emailInput.value,
         password: passwordInput.value,
     });
-
     if (error) {
         loginError.textContent = 'E-mail ou senha inválidos.';
     }
-    // Se o login for bem-sucedido, onAuthStateChange cuidará de mostrar o dashboard.
 }
 
-/** Desconecta o usuário do Supabase. */
 async function handleLogout() {
     await supabase.auth.signOut();
-    // onAuthStateChange cuidará de mostrar a tela de login.
 }
 
 
 // --- INICIALIZAÇÃO E EVENTOS ---
-// Adiciona todos os listeners de eventos quando o script é carregado.
 
-// Eventos de Autenticação
 loginForm.addEventListener('submit', handleLogin);
 logoutBtn.addEventListener('click', handleLogout);
 
-// Eventos do Modal e Formulário
 newJobBtn.addEventListener('click', () => {
     jobForm.reset();
     jobIdInput.value = '';
     modalTitle.textContent = 'Criar Nova Vaga';
     document.getElementById('job-is_active').checked = true;
+    document.getElementById('job-category').value = 'Aberta'; // Define "Aberta" como padrão ao criar
     openModal();
 });
 
 cancelBtn.addEventListener('click', closeModal);
 jobModalOverlay.addEventListener('click', (e) => {
-    // Fecha o modal apenas se o clique for no fundo escuro, não no formulário
     if (e.target === jobModalOverlay) {
         closeModal();
     }
 });
 jobForm.addEventListener('submit', handleFormSubmit);
 
-// Listener principal de autenticação do Supabase
-// Este é o ponto de entrada que verifica se o usuário está logado ou não.
 supabase.auth.onAuthStateChange((_event, session) => {
     if (session) {
-        // Se existe uma sessão (usuário logado), mostra o dashboard
         showDashboard();
     } else {
-        // Se não existe sessão, mostra a tela de login
         dashboard.classList.add('hidden');
         loginContainer.classList.remove('hidden');
     }
