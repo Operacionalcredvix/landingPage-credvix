@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Vagas - Credvix</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div id="login-container">
+        <img src="../img/favicon.png" alt="Logo Credvix" class="logo">
+        <h2>Acesso ao Dashboard</h2>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Digite seu e-mail" required>
+            <input type="password" id="password" placeholder="Digite sua senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <p id="login-error" class="error-message"></p>
+    </div>
+
+    <div id="dashboard" class="hidden">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../img/favicon.png" alt="Logo" class="sidebar-logo">
+                <h3>Credvix Admin</h3>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
+                    </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn"><span class="material-icons">logout</span> Sair</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <h1>Gestão de Vagas</h1>
+                <button id="new-job-btn">+ Criar Nova Vaga</button>
+            </header>
+
+            <section class="stats-cards">
+                <div class="card">
+                    <h4>Total de Vagas</h4>
+                    <p id="total-jobs-stat">0</p>
+                    <span class="material-icons card-icon">workspaces</span>
+                </div>
+                <div class="card">
+                    <h4>Vagas Ativas</h4>
+                    <p id="active-jobs-stat">0</p>
+                    <span class="material-icons card-icon">thumb_up</span>
+                </div>
+                <div class="card">
+                    <h4>Vagas Inativas</h4>
+                    <p id="inactive-jobs-stat">0</p>
+                    <span class="material-icons card-icon">thumb_down</span>
+                </div>
+            </section>
+
+            <section class="job-list-container">
+                 <h2>Lista de Vagas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Loja</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="job-list-tbody"></tbody>
+                </table>
+                <p id="loading-message">Carregando vagas...</p>
+            </section>
+        </main>
+    </div>
+
+    <div id="job-modal-overlay" class="hidden">
+        <div id="job-modal">
+            <h2 id="modal-title">Criar Nova Vaga</h2>
+            <form id="job-form">
+                <input type="hidden" id="job-id">
+                <div class="form-grid">
+                    <input type="text" id="job-title" placeholder="Título da Vaga" required>
+                    <input type="text" id="job-storeName" placeholder="Nome da Loja" required>
+                </div>
+                 <div class="form-grid">
+                    <input type="text" id="job-state" placeholder="Estado (ex: ES)" required>
+                    <input type="text" id="job-type" placeholder="Tipo (ex: Tempo Integral)" required>
+                </div>
+                <textarea id="job-description" placeholder="Descrição da Vaga" rows="4"></textarea>
+                <div class="form-footer">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="job-is_active" checked>
+                        <span class="slider"></span>
+                        Vaga Ativa
+                    </label>
+                    <div class="modal-actions">
+                        <button type="button" id="cancel-btn">Cancelar</button>
+                        <button type="submit" id="save-btn">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
