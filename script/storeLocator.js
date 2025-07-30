@@ -6,13 +6,12 @@ function createStoreCard(store) {
     const whatsappNumber = store.whatsapp.replace(/\D/g, '');
     const whatsappMessage = encodeURIComponent(`Oi, encontrei a loja ${store.name} pelo site e gostaria de mais informações!`);
     const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
-    let finalImageUrl = store.imageUrl;
-    if (!finalImageUrl.startsWith('http') && !finalImageUrl.startsWith('/')) {
-        finalImageUrl = `img/${finalImageUrl}`;
-    }
+
+    // A lógica da imagem foi removida daqui.
+
     return `
         <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl overflow-hidden flex flex-col transform hover:-translate-y-1 transition-all duration-300 animate-on-scroll border">
-            <div class="store-card-image-wrapper"><img src="${finalImageUrl}" alt="Foto da loja ${store.name}" class="store-card-image" onerror="this.onerror=null;this.src='https://placehold.co/400x300/e2e8f0/4a5568?text=Imagem+Indisponível';"></div>
+            
             <div class="p-6 flex flex-col flex-grow">
                 <div class="flex justify-between items-start mb-4"><h3 class="text-xl font-bold text-gray-800 pr-2">${store.name}</h3><span class="bg-help-purple text-white text-xs font-bold px-2 py-1 rounded-md flex-shrink-0">${store.state}</span></div>
                 <div class="space-y-3 text-gray-600 flex-grow">
