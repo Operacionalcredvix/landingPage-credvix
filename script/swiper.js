@@ -1,4 +1,4 @@
-// operacionalcredvix/landingpage-credvix/landingPage-credvix-812d02c25eaf7b792d58cd7e1fb4295b944f0a13/script/swiper.js
+
 export function initSwiper() {
     new Swiper('.hero-swiper', {
         // --- Efeitos e Transições ---
