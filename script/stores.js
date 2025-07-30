@@ -9,7 +9,7 @@ export const stores = [
         whatsapp: '5527992913463',
         lat: -20.319,
         lng: -40.337,
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Vitória+JM',
+       
         instagramUrl: 'https://www.instagram.com/lojahelp.centrovitoria/'
     },
     {
@@ -20,7 +20,7 @@ export const stores = [
         whatsapp: '5527992913463',
         lat: -20.319,
         lng: -40.337,
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Vitória+Praia+do+Canto',
+   
         instagramUrl: 'https://www.instagram.com/lojahelp.vitoria'
     },
     { 
@@ -31,7 +31,7 @@ export const stores = [
         whatsapp: '552730720889',
         lat: -20.328,
         lng: -40.295,
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Credvix+Vila+Velha',
+  
         instagramUrl: 'https://www.instagram.com/credvixvv/'
     },
     { 
@@ -42,7 +42,7 @@ export const stores = [
         whatsapp: '5527992818843', 
         lat: -20.338, 
         lng: -40.320, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Credvix+Glória', 
+
         instagramUrl: 'https://www.instagram.com/credvix.gloria' 
     },
     { 
@@ -53,7 +53,7 @@ export const stores = [
         whatsapp: '552733406225', 
         lat: -20.329, 
         lng: -40.292, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Credvix+Champagnat', 
+    
         instagramUrl: 'https://www.instagram.com/credvixvv/' 
     },
     { 
@@ -64,7 +64,7 @@ export const stores = [
         whatsapp: '552730720889', 
         lat: -20.328, 
         lng: -40.295, 
-        imageUrl: 'Help Vila Velha.jpg', 
+
          instagramUrl: 'https://instagram.com/lojahelp.vilavelha' 
     },
     { 
@@ -75,7 +75,7 @@ export const stores = [
         whatsapp: '5527999895020', 
         lat: -20.125, 
         lng: -40.188, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Serra+Jacaraípe', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.jacaraipe/' 
     },
     { 
@@ -86,7 +86,7 @@ export const stores = [
         whatsapp: '5527996673076', 
         lat: -19.820, 
         lng: -40.274, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Aracruz+Centro', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.aracruz/' 
     },
     { 
@@ -97,7 +97,7 @@ export const stores = [
         whatsapp: '5533988802256', 
         lat: -19.477, 
         lng: -42.531, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Ipatinga+Centro', 
+ 
         instagramUrl: 'https://www.instagram.com/lojahelp_ipatinga/' 
     },
     { 
@@ -108,7 +108,7 @@ export const stores = [
         whatsapp: '5528998861895', 
         lat: -20.846, 
         lng: -41.114, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Cachoeiro+Centro', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.cachoeiro/' 
     },
     { 
@@ -119,7 +119,7 @@ export const stores = [
         whatsapp: '552731207771', 
         lat: -19.538, 
         lng: -40.631, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Colatina+Centro', 
+ 
         instagramUrl: 'https://www.instagram.com/lojahelp.colatina/' 
     },
     { 
@@ -130,7 +130,7 @@ export const stores = [
         whatsapp: '5527995022489', 
         lat: -18.711, 
         lng: -40.402, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Nova+Venecia', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.novavenecia/' 
     },
     { 
@@ -141,7 +141,7 @@ export const stores = [
         whatsapp: '55739812190', 
         lat: -16.372, 
         lng: -39.584, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Eunápolis+Centro', 
+    
         instagramUrl: 'https://www.instagram.com/lojahelp.eunapolis/' 
     },
     { 
@@ -152,7 +152,7 @@ export const stores = [
         whatsapp: '556199250225', 
         lat: -15.833, 
         lng: -48.056, 
-        imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Brasília+Taguatinga', 
+  
         instagramUrl: 'https://www.instagram.com/lojahelp.taguatinga/' 
     },
     { 
@@ -163,7 +163,7 @@ export const stores = [
         whatsapp: '556530411256', 
         lat: -15.596, 
         lng: -56.098, 
-        imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Cuiabá+Centro', 
+  
         instagramUrl: 'https://www.instagram.com/lojahelp.cuiaba/' 
     },
     { 
@@ -174,7 +174,7 @@ export const stores = [
         whatsapp: '556599021389', 
         lat: -15.647, 
         lng: -56.133, 
-        imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Várzea+Grande', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.varzea' 
     },
     { 
@@ -185,7 +185,7 @@ export const stores = [
         whatsapp: '556699394502', 
         lat: -16.471, 
         lng: -54.636, 
-        imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Rondonópolis', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.rondonopolis/' 
     },
     { 
@@ -196,7 +196,7 @@ export const stores = [
         whatsapp: '556196266093', 
         lat: -15.766, 
         lng: -48.282, 
-        imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Águas+Lindas', 
+
         instagramUrl: 'https://instagram.com/lojahelp.aguaslindas/' 
     },
     { 
@@ -207,7 +207,7 @@ export const stores = [
         whatsapp: '552731519710', 
         lat: -19.391, 
         lng: -40.072, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Linhares+Centro', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.linhares/' 
     },
     { 
@@ -218,7 +218,7 @@ export const stores = [
         whatsapp: '5527995812857', 
         lat: -20.667, 
         lng: -40.497, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Guarapari+Centro', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp_guarapari/' 
     },
     { 
@@ -229,7 +229,7 @@ export const stores = [
         whatsapp: '552733662210', 
         lat: -20.340, 
         lng: -40.387, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Credvix+Cariacica', 
+
         instagramUrl: 'https://www.instagram.com/credvix.cariacica/' 
     },
     { 
@@ -240,7 +240,7 @@ export const stores = [
         whatsapp: '5527995222380', 
         lat: -18.716, 
         lng: -39.855, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=São+Mateus', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.saomateus/' 
     },
     { 
@@ -251,7 +251,7 @@ export const stores = [
         whatsapp: '552734420253', 
         lat: -20.191, 
         lng: -40.248, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Serra+Laranjeiras', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.laranjeirases/' 
     },
     { 
@@ -262,7 +262,7 @@ export const stores = [
         whatsapp: '5527997040654', 
         lat: -20.190, 
         lng: -40.247, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Serra+Laranjeiras', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.laranjeiras/' 
     },
     { 
@@ -273,7 +273,7 @@ export const stores = [
         whatsapp: '5527998706816', 
         lat: -20.341, 
         lng: -40.388, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Cariacica+CG', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.cariacica/' 
     },
     { 
@@ -284,7 +284,7 @@ export const stores = [
         whatsapp: '557399102018', 
         lat: -17.535, 
         lng: -39.742, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Teixeira+de+Freitas', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.teixeira' 
     },
     { 
@@ -295,7 +295,7 @@ export const stores = [
         whatsapp: '557399588043', 
         lat: -14.787, 
         lng: -39.278, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Itabuna+Centro', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.itabuna/' 
     },
     { 
@@ -306,7 +306,7 @@ export const stores = [
         whatsapp: '55739838397', 
         lat: -16.449, 
         lng: -39.064, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Porto+Seguro', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.portoseguro' 
     },
     { 
@@ -317,7 +317,7 @@ export const stores = [
         whatsapp: '556195569292', 
         lat: -15.819, 
         lng: -48.110, 
-        imageUrl: 'https://placehold.co/400x300/4A246D/ffffff?text=Brasília+Ceilândia', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.ceilandia/' 
     },
     { 
@@ -328,7 +328,7 @@ export const stores = [
         whatsapp: '55336413431', 
         lat: -17.857, 
         lng: -41.505, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Teofilo+Otoni', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.teofilootoni/' 
     },
     { 
@@ -339,7 +339,7 @@ export const stores = [
         whatsapp: '5527996989293', 
         lat: -20.341, 
         lng: -40.388, 
-        imageUrl: 'https://placehold.co/400x300/f37021/ffffff?text=Cariacica+EG', 
+
         instagramUrl: 'https://www.instagram.com/lojahelp.cariacicaes/' 
     }
 
