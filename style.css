@@ -16,10 +16,10 @@ h1, h2, h3, h4, h5, h6 {
 .bg-credvix-orange { background-color: #F37021; }
 .text-credvix-orange { color: #F37021; }
 .border-credvix-orange { border-color: #F37021; }
-.bg-help-purple { background-color: #4A246D; }
-.text-help-purple { color: #4A246D; }
+.bg-help-purple { background-color: #000000; }
+.text-help-purple { color: #000000; }
 .ring-help-purple:focus {
-    outline-color: #4A246D;
+    outline-color: #000000;
     box-shadow: 0 0 0 3px rgba(74, 36, 109, 0.3);
 }
 .scroll-smooth { scroll-behavior: smooth; }
@@ -33,7 +33,7 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 2px solid transparent;
 }
 .nav-link:hover {
-    color: #4A246D;
+    color: #000000;
     border-bottom-color: #F37021;
 }
 
@@ -41,7 +41,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 2.125rem; 
     line-height: 2.5rem;
     font-weight: 800;
-    color: #4A246D;
+    color: #000000;
     margin-bottom: 1rem;
 }
 @media (min-width: 768px) {
@@ -105,7 +105,7 @@ details > summary::after {
     font-weight: 400; /* Mais fino */
     line-height: 1;
     transition: transform 0.3s ease-in-out;
-    color: #4A246D;
+    color: #000000;
 }
 details[open] {
     border-color: #F37021;
@@ -310,7 +310,7 @@ select {
 }
 
 .testimonial-pagination .swiper-pagination-bullet {
-    background-color: #4A246D;
+    background-color: #000000;
     opacity: 0.4;
     transition: all 0.3s ease;
 }
@@ -324,7 +324,7 @@ select {
 /* Estilização da navegação do carrossel de depoimentos */
 .testimonial-nav-next,
 .testimonial-nav-prev {
-    color: #4A246D; /* Cor roxa da Help! */
+    color: #000000; /* Cor roxa da Help! */
     top: 50%;
     transform: translateY(-70%); /* Ajuste para centralizar com o card */
 }
@@ -339,7 +339,7 @@ select {
 }
 
 .testimonial-pagination .swiper-pagination-bullet {
-    background-color: #4A246D; /* Cor roxa da Help! */
+    background-color: #000000; /* Cor roxa da Help! */
     opacity: 0.4;
     transition: all 0.3s ease;
 }
