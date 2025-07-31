@@ -1,6 +1,6 @@
-
-// Importa o cliente Supabase do diretório principal do script
+// Importa o cliente Supabase e a lista de lojas
 import { supabase } from '../script/supabase-client.js';
+import { stores } from '../script/stores.js';
 
 // --- ELEMENTOS DO DOM ---
 // Autenticação
@@ -12,7 +12,14 @@ const passwordInput = document.getElementById('password');
 const loginError = document.getElementById('login-error');
 const logoutBtn = document.getElementById('logout-btn');
 
-// Modal e Formulário
+// --- Navegação e Telas ---
+const mainNav = document.getElementById('main-nav');
+const navVagas = document.getElementById('nav-vagas');
+const navCurriculos = document.getElementById('nav-curriculos');
+const vagasView = document.getElementById('vagas-view');
+const curriculosView = document.getElementById('curriculos-view');
+
+// Elementos da tela de Vagas
 const jobModalOverlay = document.getElementById('job-modal-overlay');
 const jobModal = document.getElementById('job-modal');
 const jobForm = document.getElementById('job-form');
@@ -21,16 +28,55 @@ const jobIdInput = document.getElementById('job-id');
 const newJobBtn = document.getElementById('new-job-btn');
 const cancelBtn = document.getElementById('cancel-btn');
 const saveBtn = document.getElementById('save-btn');
-
-// Lista de Vagas e Estatísticas
 const jobListTbody = document.getElementById('job-list-tbody');
 const loadingMessage = document.getElementById('loading-message');
 const totalJobsStat = document.getElementById('total-jobs-stat');
 const activeJobsStat = document.getElementById('active-jobs-stat');
 const inactiveJobsStat = document.getElementById('inactive-jobs-stat');
 
+// Elementos do Modal de Candidatos
+const candidateModalOverlay = document.getElementById('candidate-modal-overlay');
+const closeCandidateModalBtn = document.getElementById('close-candidate-modal-btn');
+const candidateModalTitle = document.getElementById('candidate-modal-title');
+const loadingCandidatesMessage = document.getElementById('loading-candidates-message');
+const candidateListTbody = document.getElementById('candidate-list-tbody');
 
-// --- FUNÇÕES AUXILIARES DE UI ---
+// Elementos do Modal de Talentos
+const newTalentBtn = document.getElementById('new-talent-btn');
+const talentModalOverlay = document.getElementById('talent-modal-overlay');
+const talentForm = document.getElementById('talent-form');
+const cancelTalentBtn = document.getElementById('cancel-talent-btn');
+const talentStatusMessage = document.getElementById('talent-status-message');
+
+// --- Elementos da tela de Currículos ---
+const storeFilterSelect = document.getElementById('store-filter-select');
+const resumeListTbody = document.getElementById('resume-list-tbody');
+const loadingResumesMessage = document.getElementById('loading-resumes-message');
+const noResumesMessage = document.getElementById('no-resumes-message');
+
+
+// ---  FUNÇÕES DE NAVEGAÇÃO ---
+function showView(viewId) {
+    // Esconde todas as telas
+    vagasView.classList.add('hidden');
+    curriculosView.classList.add('hidden');
+
+    // Remove a classe 'active' de todos os itens do menu
+    navVagas.classList.remove('active');
+    navCurriculos.classList.remove('active');
+
+    // Mostra a tela e ativa o menu correto
+    if (viewId === 'vagas') {
+        vagasView.classList.remove('hidden');
+        navVagas.classList.add('active');
+    } else if (viewId === 'curriculos') {
+        curriculosView.classList.remove('hidden');
+        navCurriculos.classList.add('active');
+    }
+}
+
+
+// --- FUNÇÕES DE VAGAS (JÁ EXISTENTES) ---
 
 function openModal() {
     jobModalOverlay.classList.remove('hidden');
@@ -39,9 +85,6 @@ function openModal() {
 function closeModal() {
     jobModalOverlay.classList.add('hidden');
 }
-
-
-// --- FUNÇÕES PRINCIPAIS (CRUD de Vagas) ---
 
 async function loadJobs() {
     loadingMessage.classList.remove('hidden');
@@ -63,17 +106,21 @@ async function loadJobs() {
 
     jobs.forEach(job => {
         const row = document.createElement('tr');
-
         const creationDate = new Date(job.created_at).toLocaleDateString('pt-BR');
         const inactivationDate = job.inactivated_at ? new Date(job.inactivated_at).toLocaleDateString('pt-BR') : '---';
 
         row.innerHTML = `
-    <td>
-        <strong>${job.title}</strong><br>
-        <small>${job.storename || 'N/A'} | ${job.city || ''}, ${job.state || ''}</small>
-    </td>
-    <td><span class="category-badge">${job.job_category}</span></td>
-            <td><span class="candidate-count">${job.candidate_count}</span></td>
+            <td>
+                <strong>${job.title}</strong><br>
+                <small>${job.storename || 'N/A'} | ${job.city || ''}, ${job.state || ''}</small>
+            </td>
+            <td><span class="category-badge">${job.job_category}</span></td>
+            <td>
+                ${job.candidate_count > 0 
+                    ? `<span class="candidate-count-link" data-job-id="${job.id}" data-job-title="${job.title}">${job.candidate_count}</span>` 
+                    : `<span class="candidate-count-zero">0</span>`
+                }
+            </td>
             <td>
                 <span class="${job.is_active ? 'status-active' : 'status-inactive'}">
                     ${job.is_active ? 'Ativa' : 'Inativa'}
@@ -93,6 +140,13 @@ async function loadJobs() {
 
     document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEdit));
     document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDelete));
+    document.querySelectorAll('.candidate-count-link').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const jobId = e.target.dataset.jobId;
+            const jobTitle = e.target.dataset.jobTitle;
+            openCandidateModal(jobId, jobTitle);
+        });
+    });
 }
 
 async function handleFormSubmit(event) {
@@ -154,7 +208,6 @@ async function handleEdit(event) {
     jobIdInput.value = job.id;
     document.getElementById('job-title').value = job.title;
     document.getElementById('job-storeName').value = job.storename;
-    // LINHA CORRIGIDA ABAIXO
     document.getElementById('job-city').value = job.city; 
     document.getElementById('job-state').value = job.state;
     document.getElementById('job-type').value = job.type;
@@ -186,13 +239,211 @@ async function handleDelete(event) {
     }
 }
 
+// --- FUNÇÕES DO MODAL DE CANDIDATOS (JÁ EXISTENTES) ---
+
+async function openCandidateModal(jobId, jobTitle) {
+    candidateModalTitle.textContent = `Candidatos para: ${jobTitle}`;
+    candidateListTbody.innerHTML = '';
+    loadingCandidatesMessage.classList.remove('hidden');
+    candidateModalOverlay.classList.remove('hidden');
+
+    const { data: candidates, error } = await supabase
+        .from('candidatos')
+        .select('*')
+        .eq('vaga_id', jobId)
+        .order('created_at', { ascending: false });
+
+    loadingCandidatesMessage.classList.add('hidden');
+
+    if (error) {
+        console.error('Erro ao buscar candidatos:', error);
+        candidateListTbody.innerHTML = '<tr><td colspan="3">Erro ao carregar candidatos.</td></tr>';
+        return;
+    }
+
+    if (candidates.length === 0) {
+        candidateListTbody.innerHTML = '<tr><td colspan="3">Nenhum candidato encontrado para esta vaga.</td></tr>';
+        return;
+    }
+
+    candidates.forEach(candidate => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>
+                <strong>${candidate.nome_completo}</strong><br>
+                <small>${candidate.email}</small>
+            </td>
+            <td>${candidate.telefone}</td>
+            <td>
+                <a href="${candidate.curriculo_url}" target="_blank" download class="download-cv-btn">Baixar CV</a>
+            </td>
+        `;
+        candidateListTbody.appendChild(row);
+    });
+}
+
+function closeCandidateModal() {
+    candidateModalOverlay.classList.add('hidden');
+}
+
+// --- FUNÇÕES DO BANCO DE TALENTOS (JÁ EXISTENTES) ---
+
+function openTalentModal() {
+    talentForm.reset();
+    talentStatusMessage.textContent = '';
+    talentModalOverlay.classList.remove('hidden');
+}
+
+function closeTalentModal() {
+    talentModalOverlay.classList.add('hidden');
+}
+
+async function handleTalentFormSubmit(event) {
+    event.preventDefault();
+    const saveBtn = document.getElementById('save-talent-btn');
+    saveBtn.disabled = true;
+    talentStatusMessage.textContent = 'Processando...';
+    talentStatusMessage.style.color = 'blue';
+
+    const { data: talentJob, error: findError } = await supabase
+        .from('vagas')
+        .select('id')
+        .eq('title', 'Banco de Talentos')
+        .single();
+
+    if (findError || !talentJob) {
+        talentStatusMessage.textContent = 'Erro: A vaga "Banco de Talentos" não foi encontrada. Crie-a primeiro.';
+        talentStatusMessage.style.color = 'red';
+        saveBtn.disabled = false;
+        return;
+    }
+
+    const candidateName = document.getElementById('talent-name').value;
+    const candidateEmail = document.getElementById('talent-email').value;
+    const candidatePhone = document.getElementById('talent-phone').value;
+    const cvFile = document.getElementById('talent-cv-file').files[0];
+
+    talentStatusMessage.textContent = 'Enviando currículo...';
+    const fileExt = cvFile.name.split('.').pop();
+    const fileName = `${candidateEmail.split('@')[0]}_${Date.now()}.${fileExt}`;
+    const filePath = `banco-de-talentos/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+        .from('curriculos')
+        .upload(filePath, cvFile);
+
+    if (uploadError) {
+        talentStatusMessage.textContent = `Erro no upload: ${uploadError.message}`;
+        talentStatusMessage.style.color = 'red';
+        saveBtn.disabled = false;
+        return;
+    }
+    
+    talentStatusMessage.textContent = 'Registrando candidato...';
+    const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
+
+    const { error: insertError } = await supabase
+        .from('candidatos')
+        .insert([{
+            vaga_id: talentJob.id,
+            nome_completo: candidateName,
+            email: candidateEmail,
+            telefone: candidatePhone,
+            curriculo_url: urlData.publicUrl,
+            status: 'banco_de_talentos',
+            vaga: 'Banco de Talentos',
+            loja: 'N/A'
+        }]);
+
+    if (insertError) {
+        talentStatusMessage.textContent = `Erro ao salvar: ${insertError.message}`;
+        talentStatusMessage.style.color = 'red';
+        saveBtn.disabled = false;
+        return;
+    }
+
+    talentStatusMessage.textContent = 'Candidato salvo com sucesso!';
+    talentStatusMessage.style.color = 'green';
+    
+    setTimeout(() => {
+        closeTalentModal();
+        loadJobs();
+    }, 2000);
+}
+
+
+// --- NOVO: FUNÇÕES DA TELA DE CURRÍCULOS ---
+
+function populateStoreFilter() {
+    const storeNames = [...new Set(stores.map(store => store.name))].sort();
+    storeNames.forEach(name => {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        storeFilterSelect.appendChild(option);
+    });
+}
+
+async function loadResumesByStore() {
+    const selectedStore = storeFilterSelect.value;
+    loadingResumesMessage.classList.remove('hidden');
+    noResumesMessage.classList.add('hidden');
+    resumeListTbody.innerHTML = '';
+
+    let query = supabase.from('candidatos').select('*').order('created_at', { ascending: false });
+
+    // Se uma loja específica for selecionada, adiciona o filtro
+    if (selectedStore !== 'todos') {
+        query = query.eq('loja', selectedStore);
+    }
+    
+    const { data: resumes, error } = await query;
+
+    loadingResumesMessage.classList.add('hidden');
+    
+    if (error) {
+        console.error('Erro ao buscar currículos:', error);
+        noResumesMessage.textContent = 'Ocorreu um erro ao carregar os currículos.';
+        noResumesMessage.classList.remove('hidden');
+        return;
+    }
+
+    if (resumes.length === 0) {
+        noResumesMessage.textContent = 'Nenhum currículo encontrado para o filtro selecionado.';
+        noResumesMessage.classList.remove('hidden');
+        return;
+    }
+
+    resumes.forEach(resume => {
+        const row = document.createElement('tr');
+        const applicationDate = new Date(resume.created_at).toLocaleDateString('pt-BR');
+        
+        row.innerHTML = `
+            <td>
+                <strong>${resume.nome_completo}</strong><br>
+                <small>${resume.email} / ${resume.telefone}</small>
+            </td>
+            <td>${resume.loja || 'N/A'}</td>
+            <td>${applicationDate}</td>
+            <td>
+                <a href="${resume.curriculo_url}" target="_blank" download class="download-cv-btn">Baixar</a>
+            </td>
+        `;
+        resumeListTbody.appendChild(row);
+    });
+}
+
 
 // --- FUNÇÕES DE AUTENTICAÇÃO ---
 
 function showDashboard() {
     loginContainer.classList.add('hidden');
     dashboard.classList.remove('hidden');
+    // Funções de inicialização
     loadJobs();
+    populateStoreFilter();
+    loadResumesByStore();
+    showView('vagas'); // Define a tela inicial
 }
 
 async function handleLogin(event) {
@@ -214,26 +465,47 @@ async function handleLogout() {
 
 // --- INICIALIZAÇÃO E EVENTOS ---
 
+// Eventos de login/logout
 loginForm.addEventListener('submit', handleLogin);
 logoutBtn.addEventListener('click', handleLogout);
 
+// Eventos de navegação principal
+navVagas.addEventListener('click', (e) => { e.preventDefault(); showView('vagas'); });
+navCurriculos.addEventListener('click', (e) => { e.preventDefault(); showView('curriculos'); });
+
+// Eventos do modal de vagas
 newJobBtn.addEventListener('click', () => {
     jobForm.reset();
     jobIdInput.value = '';
     modalTitle.textContent = 'Criar Nova Vaga';
     document.getElementById('job-is_active').checked = true;
-    document.getElementById('job-category').value = 'Aberta'; // Define "Aberta" como padrão ao criar
+    document.getElementById('job-category').value = 'Aberta';
     openModal();
 });
-
 cancelBtn.addEventListener('click', closeModal);
 jobModalOverlay.addEventListener('click', (e) => {
-    if (e.target === jobModalOverlay) {
-        closeModal();
-    }
+    if (e.target === jobModalOverlay) closeModal();
 });
 jobForm.addEventListener('submit', handleFormSubmit);
 
+// Eventos do modal de candidatos
+closeCandidateModalBtn.addEventListener('click', closeCandidateModal);
+candidateModalOverlay.addEventListener('click', (e) => {
+    if (e.target === candidateModalOverlay) closeCandidateModal();
+});
+
+// Eventos do modal de talentos
+newTalentBtn.addEventListener('click', openTalentModal);
+cancelTalentBtn.addEventListener('click', closeTalentModal);
+talentModalOverlay.addEventListener('click', (e) => {
+    if (e.target === talentModalOverlay) closeTalentModal();
+});
+talentForm.addEventListener('submit', handleTalentFormSubmit);
+
+// Evento do filtro de currículos
+storeFilterSelect.addEventListener('change', loadResumesByStore);
+
+// Gerenciador de estado de autenticação
 supabase.auth.onAuthStateChange((_event, session) => {
     if (session) {
         showDashboard();
