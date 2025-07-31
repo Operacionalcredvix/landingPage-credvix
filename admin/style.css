@@ -161,7 +161,8 @@ body {
     font-size: 2rem;
 }
 
-.main-content header button {
+.main-content header button,
+.main-content header div button {
     background-color: var(--secondary-color);
     color: white;
     border: none;
@@ -171,7 +172,16 @@ body {
     cursor: pointer;
 }
 
-/* --- Cartões e Tabela --- */
+.main-content header div {
+    display: flex;
+    gap: 10px;
+}
+
+#new-talent-btn {
+    background-color: var(--primary-color);
+}
+
+/* --- Cartões e Tabelas --- */
 .stats-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -208,7 +218,8 @@ body {
 }
 
 .job-list-container,
-.resume-list-container {
+.resume-list-container,
+.store-list-container {
     background-color: var(--card-background);
     padding: 20px;
     border-radius: 8px;
@@ -216,7 +227,8 @@ body {
 }
 
 .job-list-container h2,
-.resume-list-container h2 {
+.resume-list-container h2,
+.store-list-container h2 {
     margin-top: 0;
 }
 
@@ -257,41 +269,48 @@ td .status-inactive {
     color: white;
 }
 
-.actions .edit-btn {
+.actions .edit-btn,
+.actions .edit-store-btn {
     background-color: #17a2b8;
 }
 
-.actions .delete-btn {
+.actions .delete-btn,
+.actions .delete-store-btn {
     background-color: #dc3545;
 }
 
-/* --- Modal --- */
+/* --- Modais --- */
 #job-modal-overlay,
-#talent-modal-overlay {
+#talent-modal-overlay,
+#candidate-modal-overlay,
+#store-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 1001;
 }
 
 #job-modal,
-#talent-modal {
+#talent-modal,
+#candidate-modal,
+#store-modal {
     background-color: white;
     padding: 30px;
     border-radius: 8px;
     width: 100%;
-    max-width: 600px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    max-width: 700px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
 }
 
 #modal-title,
-#talent-modal h2 {
+#talent-modal h2,
+#store-modal-title {
     margin-top: 0;
 }
 
@@ -304,7 +323,9 @@ td .status-inactive {
 
 #job-form input,
 #job-form textarea,
-#talent-form input {
+#job-form select,
+#talent-form input,
+#store-form input {
     width: 100%;
     padding: 12px;
     border: 1px solid var(--border-color);
@@ -312,13 +333,16 @@ td .status-inactive {
     box-sizing: border-box;
 }
 
-#job-form textarea {
+.form-field-full {
     grid-column: 1 / -1;
+}
+
+#job-form textarea {
     resize: vertical;
 }
 
 .form-footer,
-#talent-form .modal-actions {
+.modal-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -330,12 +354,14 @@ td .status-inactive {
 }
 
 #cancel-btn,
-#cancel-talent-btn {
+#cancel-talent-btn,
+#cancel-store-btn {
     background-color: #6c757d;
 }
 
 #save-btn,
-#save-talent-btn {
+#save-talent-btn,
+#save-store-btn {
     background-color: var(--secondary-color);
 }
 
@@ -356,7 +382,7 @@ td .status-inactive {
 }
 
 .slider {
-    position: fixed;
+    position: relative;
     width: 50px;
     height: 28px;
     background-color: #ccc;
@@ -384,11 +410,7 @@ input:checked+.slider:before {
     transform: translateX(22px);
 }
 
-/* Estilos para os novos campos do formulário */
-.form-field-full {
-    margin-top: 20px;
-}
-
+/* Campos de formulário */
 .form-field-full label,
 #talent-form label {
     display: block;
@@ -397,20 +419,12 @@ input:checked+.slider:before {
     color: #333;
 }
 
-#job-category {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: #fff;
-}
-
 #talent-status-message {
     margin-top: 15px;
     font-weight: bold;
 }
 
-/* Estilo para o badge da categoria na tabela */
+/* Badges e Links */
 .category-badge {
     background-color: var(--primary-color);
     color: white;
@@ -421,17 +435,6 @@ input:checked+.slider:before {
     display: inline-block;
 }
 
-/* Ajuste no header para os botões */
-.main-content header div {
-    display: flex;
-    gap: 10px;
-}
-
-#new-talent-btn {
-    background-color: var(--primary-color);
-}
-
-/* Estilos para o link de contagem de candidaturas */
 .candidate-count-link {
     cursor: pointer;
     font-weight: bold;
@@ -448,29 +451,7 @@ input:checked+.slider:before {
     color: var(--text-color);
 }
 
-/* --- Modal de Candidatos --- */
-#candidate-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1001;
-}
-
-#candidate-modal {
-    background-color: white;
-    padding: 25px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 700px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
-}
-
+/* Modal de Candidatos */
 .candidate-modal-header {
     display: flex;
     justify-content: space-between;
@@ -498,13 +479,6 @@ input:checked+.slider:before {
     border-collapse: collapse;
 }
 
-#candidate-list-table th,
-#candidate-list-table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
 #candidate-list-table .download-cv-btn,
 .resume-list-container .download-cv-btn {
     background-color: var(--success-color);
@@ -516,7 +490,7 @@ input:checked+.slider:before {
     display: inline-block;
 }
 
-/* NOVO: Estilos para a Tela de Currículos */
+/* Tela de Currículos */
 .resume-filter-container {
     background-color: var(--card-background);
     padding: 20px;

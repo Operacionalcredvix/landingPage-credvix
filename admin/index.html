@@ -33,6 +33,7 @@
                 <ul id="main-nav">
                     <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
                     <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a></li>
+                    <li id="nav-lojas"><a href="#"><span class="material-icons">store</span> Lojas</a></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -49,7 +50,6 @@
                         <button id="new-job-btn">+ Criar Nova Vaga</button>
                     </div>
                 </header>
-
                 <section class="stats-cards">
                     <div class="card">
                         <h4>Total de Vagas</h4>
@@ -67,7 +67,6 @@
                         <span class="material-icons card-icon">thumb_down</span>
                     </div>
                 </section>
-
                 <section class="job-list-container">
                     <h2>Lista de Vagas</h2>
                     <table>
@@ -114,7 +113,28 @@
                     <p id="no-resumes-message" class="hidden">Nenhum currículo encontrado para o filtro selecionado.</p>
                 </section>
             </div>
-
+            
+            <div id="lojas-view" class="hidden">
+                <header>
+                    <h1>Gestão de Lojas</h1>
+                    <button id="new-store-btn">+ Criar Nova Loja</button>
+                </header>
+                <section class="store-list-container">
+                    <h2>Lista de Lojas</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome da Loja</th>
+                                <th>Cidade / Estado</th>
+                                <th>Vagas Vinculadas</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="store-list-tbody"></tbody>
+                    </table>
+                    <p id="loading-stores-message">Carregando lojas...</p>
+                </section>
+            </div>
         </main>
     </div>
 
@@ -149,8 +169,7 @@
                 <div class="form-footer">
                     <label class="toggle-switch">
                         <input type="checkbox" id="job-is_active" checked>
-                        <span class="slider"></span>
-                        Vaga Ativa
+                        <span class="slider"></span> Vaga Ativa
                     </label>
                     <div class="modal-actions">
                         <button type="button" id="cancel-btn">Cancelar</button>
@@ -177,8 +196,7 @@
                             <th>Currículo</th>
                         </tr>
                     </thead>
-                    <tbody id="candidate-list-tbody">
-                    </tbody>
+                    <tbody id="candidate-list-tbody"></tbody>
                 </table>
             </div>
         </div>
@@ -201,8 +219,35 @@
             </form>
         </div>
     </div>
+    
+    <div id="store-modal-overlay" class="hidden">
+        <div id="store-modal">
+            <h2 id="store-modal-title">Criar Nova Loja</h2>
+            <form id="store-form">
+                <input type="hidden" id="store-id">
+                <div class="form-grid">
+                    <input type="text" id="store-name" placeholder="Nome da Loja" required>
+                    <input type="text" id="store-city" placeholder="Cidade" required>
+                </div>
+                <div class="form-grid">
+                    <input type="text" id="store-state" placeholder="Estado (ex: ES)" required>
+                    <input type="text" id="store-phone" placeholder="Telefone">
+                </div>
+                <div class="form-field-full">
+                    <input type="text" id="store-address" placeholder="Endereço Completo">
+                </div>
+                <div class="form-grid">
+                    <input type="text" id="store-whatsapp" placeholder="Nº de WhatsApp (ex: 5527999999999)">
+                    <input type="text" id="store-instagram" placeholder="URL do Instagram">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-store-btn">Cancelar</button>
+                    <button type="submit" id="save-store-btn">Salvar Loja</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script type="module" src="admin.js"></script>
 </body>
-
 </html>
