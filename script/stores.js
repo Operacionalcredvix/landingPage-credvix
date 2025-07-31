@@ -1,9 +1,9 @@
-
 export const stores = [
  
     {
         name: 'Vitória - Jeronimo Monteiro',
         state: 'ES',
+        city: 'Vitória',
         address: 'Rua Gonçalves Ledo, 57 - Centro, Vitória - ES',
         phone: '(27) 3233-4660',
         whatsapp: '5527992913463',
@@ -15,6 +15,7 @@ export const stores = [
     {
         name: 'Vitória - Praia do Canto',
         state: 'ES',
+        city: 'Vitória',
         address: 'Rua Joaquim Lírio, 100 - Praia do Canto, Vitória - ES',
         phone: '(27) 3233-4660',
         whatsapp: '5527992913463',
@@ -26,6 +27,7 @@ export const stores = [
     { 
         name: 'Credvix Vila Velha',
         state: 'ES',
+        city: 'Vila Velha',
         address: 'Avenida Jeronimo Monteiro, 1291 - Edifício Elaine - Loja 01 - Centro - VV',
         phone: '(27) 3072-0889',
         whatsapp: '552730720889',
@@ -37,6 +39,7 @@ export const stores = [
     { 
         name: 'Credvix Glória', 
         state: 'ES', 
+        city: 'Vila Velha',
         address: 'Avenida Carlos Lindenberg, 7032 - Glória, Vila Velha - ES', 
         phone: '(27) 3534-1552',
         whatsapp: '5527992818843', 
@@ -48,6 +51,7 @@ export const stores = [
     { 
         name: 'Credvix Champagnat', 
         state: 'ES', 
+        city: 'Vila Velha',
         address: 'Avenida Champagnat, 11089 - Centro, Vila Velha - ES', 
         phone: '(27) 3340-6225', 
         whatsapp: '552733406225', 
@@ -59,6 +63,7 @@ export const stores = [
     { 
         name: 'Vila Velha - Centro', 
         state: 'ES', 
+        city: 'Vila Velha',
         address: 'Avenida Jeronimo Monteiro, 1291 - Edifício Elaine - Loja 01 - Centro - VV', 
         phone: '(27) 3072-0889', 
         whatsapp: '552730720889', 
@@ -70,6 +75,7 @@ export const stores = [
     { 
         name: 'Serra - Pq Jacaraípe', 
         state: 'ES', 
+        city: 'Serra',
         address: 'Rua Abido Saadi , 715 - Loja 01 - Parque Jacaraípe - Serra - ES', 
         phone: '(27) 3064-4648', 
         whatsapp: '5527999895020', 
@@ -81,6 +87,7 @@ export const stores = [
     { 
         name: 'Aracruz - Centro', 
         state: 'ES', 
+        city: 'Aracruz',
         address: 'Rua Professor Lobo, 40 - Centro - Aracruz - ES', 
         phone: '(27) 3256-1938', 
         whatsapp: '5527996673076', 
@@ -92,6 +99,7 @@ export const stores = [
     { 
         name: 'Ipatinga - Centro', 
         state: 'MG', 
+        city: 'Ipatinga',
         address: 'Rua Mariana, 120, . loja 06 - Centro - Ipatinga - CEP: 35,160-018', 
         phone: '(31) 3668-5399', 
         whatsapp: '5533988802256', 
@@ -103,6 +111,7 @@ export const stores = [
     { 
         name: 'Cachoeiro de Itapemirim - Centro', 
         state: 'ES', 
+        city: 'Cachoeiro de Itapemirim',
         address: 'Rua 25 de Março, 40- Centro - Cachoeiro do Itapemirim - ES', 
         phone: '(28) 3028-8946', 
         whatsapp: '5528998861895', 
@@ -114,6 +123,7 @@ export const stores = [
     { 
         name: 'Colatina - Centro', 
         state: 'ES', 
+        city: 'Colatina',
         address: 'Avenida Getulio Vargas, 426 -Centro - Colatina - ES', 
         phone: '(27) 3120-7771', 
         whatsapp: '552731207771', 
@@ -125,6 +135,7 @@ export const stores = [
     { 
         name: 'Nova Venecia - Centro', 
         state: 'ES', 
+        city: 'Nova Venécia',
         address: 'Praça Jones dos Santos Neves, 20 - Loja 05 - Centro - Nova Venecia - ES', 
         phone: '(27) 4042-1727', 
         whatsapp: '5527995022489', 
@@ -136,6 +147,7 @@ export const stores = [
     { 
         name: 'Eunápolis - Centro', 
         state: 'BA', 
+        city: 'Eunápolis',
         address: 'Avenida D Pedro II, 539 - Centro - Eunapolis - BA', 
         phone: '(73) 3281-2220', 
         whatsapp: '55739812190', 
@@ -147,6 +159,7 @@ export const stores = [
     { 
         name: 'Brasília - Taguatinga', 
         state: 'DF', 
+        city: 'Brasília',
         address: 'C 2 - lt 12 - lOJA 04 - Edificio Diva Maria - Taguatinga - Brasilia - Distrito F', 
         phone: '(61) 3522-1899', 
         whatsapp: '556199250225', 
@@ -158,6 +171,7 @@ export const stores = [
     { 
         name: 'Cuiabá - Centro-Norte', 
         state: 'MT', 
+        city: 'Cuiabá',
         address: 'Rua Barão de Melgaço, 3508 - Edificio Irene - Loja 02 - Centro - Cuiabá', 
         phone: '(65) 4052-9370', 
         whatsapp: '556530411256', 
@@ -169,6 +183,7 @@ export const stores = [
     { 
         name: 'Várzea Grande - Centro Norte', 
         state: 'MT', 
+        city: 'Várzea Grande',
         address: 'Rua Couto de Magalhaes, 999 - Centro Norte - Varzea Grande - MT', 
         phone: '(65) 3029-7279', 
         whatsapp: '556599021389', 
@@ -178,8 +193,9 @@ export const stores = [
         instagramUrl: 'https://www.instagram.com/lojahelp.varzea' 
     },
     { 
-        name: 'Rondópolis - Centro', 
+        name: 'Rondonópolis - Centro', 
         state: 'MT', 
+        city: 'Rondonópolis',
         address: 'Rua Reze de Maio, 347 - Esquina Av Amazonas 1012 - Centro - Rondonópolis', 
         phone: '(66) 3022-6946', 
         whatsapp: '556699394502', 
@@ -191,6 +207,7 @@ export const stores = [
     { 
         name: 'Águas Lindas de Goiás', 
         state: 'GO', 
+        city: 'Águas Lindas de Goiás',
         address: 'Q 12 - LT 10 - lOJA 02 - Jardim Brasilia - Águas Lindas de Goias - GO', 
         phone: '(61) 4040-4568', 
         whatsapp: '556196266093', 
@@ -202,6 +219,7 @@ export const stores = [
     { 
         name: 'Linhares - Centro', 
         state: 'ES', 
+        city: 'Linhares',
         address: 'Avenida Augusto Calmom, 1121 - Loja 06 - Centro - Linhares - ES', 
         phone: '(27) 3153-5756', 
         whatsapp: '552731519710', 
@@ -213,6 +231,7 @@ export const stores = [
     { 
         name: 'Guarapari - Centro', 
         state: 'ES', 
+        city: 'Guarapari',
         address: 'Rua Getulio Vargas, 272 - Edificio Olimpo - Loja 02 - Centro - Guarapari', 
         phone: '(27) 3125-1595', 
         whatsapp: '5527995812857', 
@@ -224,6 +243,7 @@ export const stores = [
     { 
         name: 'Credvix Cariacica', 
         state: 'ES', 
+        city: 'Cariacica',
         address: 'Avenida Expedito Garcia, 165 - Campo Grande - Cariacica - ES', 
         phone: '(27) 99662-210', 
         whatsapp: '552733662210', 
@@ -235,6 +255,7 @@ export const stores = [
     { 
         name: 'São Mateus - Centro', 
         state: 'ES', 
+        city: 'São Mateus',
         address: 'Avenida Jones dos Santos Neves, 421 - Loja 04 - Centro - São Mateus - ES', 
         phone: '(27) 3118-1764', 
         whatsapp: '5527995222380', 
@@ -246,6 +267,7 @@ export const stores = [
     { 
         name: 'Serra - Laranjeiras II', 
         state: 'ES', 
+        city: 'Serra',
         address: 'Avenida Primeira Avenida, 302 - Loja C - Serra - ES', 
         phone: '(27) 3442-0253', 
         whatsapp: '552734420253', 
@@ -257,6 +279,7 @@ export const stores = [
     { 
         name: 'Serra - Laranjeiras', 
         state: 'ES', 
+        city: 'Serra',
         address: 'Rua Tiradentes, 100 - Lojas 01 e 02 - Parque Residencial Laranjeiras - Se', 
         phone: '(27) 3070-1094', 
         whatsapp: '5527997040654', 
@@ -268,6 +291,7 @@ export const stores = [
     { 
         name: 'Cariacica - Campo Grande', 
         state: 'ES', 
+        city: 'Cariacica',
         address: 'Avenida Expedito Garcia, 516 - Loja 02 - Campo Grande. _ Cariacica - ES', 
         phone: '(27) 2141-7561', 
         whatsapp: '5527998706816', 
@@ -279,6 +303,7 @@ export const stores = [
     { 
         name: 'Teixeira de Freitas - Centro', 
         state: 'BA', 
+        city: 'Teixeira de Freitas',
         address: 'Rua Antonio Simplicio de Barros, 268 - Loja 01 - Centro - Teixeira de Fre', 
         phone: '(73) 3016-2019', 
         whatsapp: '557399102018', 
@@ -290,6 +315,7 @@ export const stores = [
     { 
         name: 'Itabuna - Centro', 
         state: 'BA', 
+        city: 'Itabuna',
         address: 'Rua Paulino Vieira, 211 - Centro - Itabuna - BA', 
         phone: '(73) 3015-318', 
         whatsapp: '557399588043', 
@@ -301,6 +327,7 @@ export const stores = [
     { 
         name: 'Porto Seguro - Centro', 
         state: 'BA', 
+        city: 'Porto Seguro',
         address: 'Travessa Manoel Cancela, 170 - Lojas 05 e 06 - Centro - Porto Seguro - B', 
         phone: '(73) 3199-0680', 
         whatsapp: '55739838397', 
@@ -312,6 +339,7 @@ export const stores = [
     { 
         name: 'Brasília - Ceilândia Sul', 
         state: 'DF', 
+        city: 'Brasília',
         address: 'QNNM 1 - Conjunto H - LT 38 - LJ 02 - Ceilandia Brasilia - DF', 
         phone: '(61) 3689-1009', 
         whatsapp: '556195569292', 
@@ -323,6 +351,7 @@ export const stores = [
     { 
         name: 'Teofilo Otoni - Centro', 
         state: 'MG', 
+        city: 'Teófilo Otoni',
         address: 'Rua Antonio Alves Benjamim, 253, . Loja 03 - Centro - teófilo Otoni - MG', 
         phone: '(33) 3641-3431', 
         whatsapp: '55336413431', 
@@ -334,6 +363,7 @@ export const stores = [
     { 
         name: 'Cariacica - Expedito Garcia', 
         state: 'ES', 
+        city: 'Cariacica',
         address: 'Avenida Expedito Garcia, 516 - Loja 02 - Campo Grande _ Cariacica - ES', 
         phone: '', 
         whatsapp: '5527996989293', 

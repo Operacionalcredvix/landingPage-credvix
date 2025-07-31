@@ -55,17 +55,14 @@ const loadingResumesMessage = document.getElementById('loading-resumes-message')
 const noResumesMessage = document.getElementById('no-resumes-message');
 
 
-// ---  FUNÇÕES DE NAVEGAÇÃO ---
+// --- FUNÇÕES DE NAVEGAÇÃO ---
 function showView(viewId) {
-    // Esconde todas as telas
     vagasView.classList.add('hidden');
     curriculosView.classList.add('hidden');
 
-    // Remove a classe 'active' de todos os itens do menu
     navVagas.classList.remove('active');
     navCurriculos.classList.remove('active');
 
-    // Mostra a tela e ativa o menu correto
     if (viewId === 'vagas') {
         vagasView.classList.remove('hidden');
         navVagas.classList.add('active');
@@ -76,7 +73,7 @@ function showView(viewId) {
 }
 
 
-// --- FUNÇÕES DE VAGAS (JÁ EXISTENTES) ---
+// --- FUNÇÕES DE VAGAS ---
 
 function openModal() {
     jobModalOverlay.classList.remove('hidden');
@@ -239,7 +236,8 @@ async function handleDelete(event) {
     }
 }
 
-// --- FUNÇÕES DO MODAL DE CANDIDATOS (JÁ EXISTENTES) ---
+
+// --- FUNÇÕES DO MODAL DE CANDIDATOS ---
 
 async function openCandidateModal(jobId, jobTitle) {
     candidateModalTitle.textContent = `Candidatos para: ${jobTitle}`;
@@ -286,7 +284,8 @@ function closeCandidateModal() {
     candidateModalOverlay.classList.add('hidden');
 }
 
-// --- FUNÇÕES DO BANCO DE TALENTOS (JÁ EXISTENTES) ---
+
+// --- FUNÇÕES DO BANCO DE TALENTOS ---
 
 function openTalentModal() {
     talentForm.reset();
@@ -372,29 +371,49 @@ async function handleTalentFormSubmit(event) {
 }
 
 
-// --- NOVO: FUNÇÕES DA TELA DE CURRÍCULOS ---
+// --- FUNÇÕES DA TELA DE CURRÍCULOS ---
 
 function populateStoreFilter() {
-    const storeNames = [...new Set(stores.map(store => store.name))].sort();
-    storeNames.forEach(name => {
+    // MODIFICADO: Usa o campo "city" para obter cidades únicas
+    const cities = [...new Set(stores.map(store => store.city))].sort();
+    
+    // Limpa opções antigas antes de adicionar novas
+    storeFilterSelect.innerHTML = '<option value="todos">Todas as Cidades</option>';
+    
+    cities.forEach(city => {
         const option = document.createElement('option');
-        option.value = name;
-        option.textContent = name;
+        option.value = city;
+        option.textContent = city;
         storeFilterSelect.appendChild(option);
     });
 }
 
 async function loadResumesByStore() {
-    const selectedStore = storeFilterSelect.value;
+    // MODIFICADO: Agora filtra por cidade
+    const selectedCity = storeFilterSelect.value;
     loadingResumesMessage.classList.remove('hidden');
     noResumesMessage.classList.add('hidden');
     resumeListTbody.innerHTML = '';
 
     let query = supabase.from('candidatos').select('*').order('created_at', { ascending: false });
 
-    // Se uma loja específica for selecionada, adiciona o filtro
-    if (selectedStore !== 'todos') {
-        query = query.eq('loja', selectedStore);
+    if (selectedCity !== 'todos') {
+        // Encontra todos os nomes de loja para a cidade selecionada
+        const storeNamesInCity = stores
+            .filter(store => store.city === selectedCity)
+            .map(store => store.name);
+        
+        // Se encontrarmos lojas, filtramos por elas.
+        if (storeNamesInCity.length > 0) {
+            // Usa o filtro 'in' para buscar currículos onde a coluna 'loja'
+            // corresponde a qualquer um dos nomes de loja da cidade.
+            query = query.in('loja', storeNamesInCity);
+        } else {
+            // Se nenhuma loja for encontrada para a cidade (improvável), não retorna nada.
+            resumeListTbody.innerHTML = '<tr><td colspan="4">Nenhuma loja encontrada para esta cidade.</td></tr>';
+            loadingResumesMessage.classList.add('hidden');
+            return;
+        }
     }
     
     const { data: resumes, error } = await query;
@@ -443,7 +462,7 @@ function showDashboard() {
     loadJobs();
     populateStoreFilter();
     loadResumesByStore();
-    showView('vagas'); // Define a tela inicial
+    showView('vagas');
 }
 
 async function handleLogin(event) {
@@ -465,15 +484,12 @@ async function handleLogout() {
 
 // --- INICIALIZAÇÃO E EVENTOS ---
 
-// Eventos de login/logout
 loginForm.addEventListener('submit', handleLogin);
 logoutBtn.addEventListener('click', handleLogout);
 
-// Eventos de navegação principal
 navVagas.addEventListener('click', (e) => { e.preventDefault(); showView('vagas'); });
 navCurriculos.addEventListener('click', (e) => { e.preventDefault(); showView('curriculos'); });
 
-// Eventos do modal de vagas
 newJobBtn.addEventListener('click', () => {
     jobForm.reset();
     jobIdInput.value = '';
@@ -488,13 +504,11 @@ jobModalOverlay.addEventListener('click', (e) => {
 });
 jobForm.addEventListener('submit', handleFormSubmit);
 
-// Eventos do modal de candidatos
 closeCandidateModalBtn.addEventListener('click', closeCandidateModal);
 candidateModalOverlay.addEventListener('click', (e) => {
     if (e.target === candidateModalOverlay) closeCandidateModal();
 });
 
-// Eventos do modal de talentos
 newTalentBtn.addEventListener('click', openTalentModal);
 cancelTalentBtn.addEventListener('click', closeTalentModal);
 talentModalOverlay.addEventListener('click', (e) => {
@@ -502,10 +516,8 @@ talentModalOverlay.addEventListener('click', (e) => {
 });
 talentForm.addEventListener('submit', handleTalentFormSubmit);
 
-// Evento do filtro de currículos
 storeFilterSelect.addEventListener('change', loadResumesByStore);
 
-// Gerenciador de estado de autenticação
 supabase.auth.onAuthStateChange((_event, session) => {
     if (session) {
         showDashboard();
