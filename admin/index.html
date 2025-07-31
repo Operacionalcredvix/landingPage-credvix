@@ -92,9 +92,9 @@
                     <h1>Banco de Currículos</h1>
                 </header>
                 <section class="resume-filter-container">
-                    <label for="store-filter-select">Filtrar por Loja:</label>
+                    <label for="store-filter-select">Filtrar por Cidade:</label>
                     <select id="store-filter-select">
-                        <option value="todos">Todas as Lojas</option>
+                        <option value="todos">Todas as Cidades</option>
                     </select>
                 </section>
                 <section class="resume-list-container">
@@ -125,7 +125,9 @@
                 <input type="hidden" id="job-id">
                 <div class="form-grid">
                     <input type="text" id="job-title" placeholder="Título da Vaga" required>
-                    <input type="text" id="job-storeName" placeholder="Nome da Loja" required>
+                    <select id="job-storeName" required>
+                        <option value="" disabled selected>Selecione a Loja</option>
+                    </select>
                 </div>
                 <div class="form-grid">
                     <input type="text" id="job-city" placeholder="Cidade" required>
