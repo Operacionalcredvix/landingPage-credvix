@@ -1,9 +1,11 @@
+// Importa o createClient da biblioteca do Supabase
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const supabaseUrl = 'https://czgyhiwermtezvbktozv.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6Z3loaXdlcm10ZXp2Ymt0b3p2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4MTM1MDgsImV4cCI6MjA2OTM4OTUwOH0.vb7LlQVxNrLzNTwXJoejfuABWTpkro4cPOzVwyTAloE';
+// Importa as nossas chaves do arquivo de configuração seguro
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+// Cria e exporta o cliente Supabase usando as variáveis importadas
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: {
         autoRefreshToken: true,
         persistSession: true,
