@@ -1,7 +1,5 @@
 import { supabase } from './supabase-client.js';
-import { stores } from './stores.js';
 
-// Elementos do DOM
 const uploadModal = document.getElementById('upload-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const modalJobTitle = document.getElementById('modal-job-title');
@@ -10,7 +8,6 @@ const cvFileInput = document.getElementById('cv-file');
 const modalContentForm = document.getElementById('modal-content-form');
 const modalContentStatus = document.getElementById('modal-content-status');
 
-// Função para abrir o modal
 export function openUploadModal(jobTitle, storeName, jobId) {
     if (uploadModal) {
         modalJobTitle.textContent = `${jobTitle} - ${storeName}`;
@@ -25,7 +22,6 @@ export function openUploadModal(jobTitle, storeName, jobId) {
     }
 }
 
-// Função para fechar o modal
 function closeModal() {
     if (uploadModal) {
         uploadModal.classList.add('hidden');
@@ -33,44 +29,32 @@ function closeModal() {
     }
 }
 
-// Validação do arquivo
 function validateFile(file) {
-    const validTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-    
+    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     if (!file) throw new Error('Por favor, selecione um arquivo.');
     if (file.size > 5 * 1024 * 1024) throw new Error('O arquivo é muito grande. Tamanho máximo: 5MB.');
     if (!validTypes.includes(file.type)) throw new Error('Formato inválido. Use PDF, DOC ou DOCX.');
-    
     return true;
 }
 
-// Upload do arquivo para o Supabase Storage
 async function uploadFile(file, storeName, candidateEmail) {
     const fileExt = file.name.split('.').pop();
     const fileName = `${candidateEmail.split('@')[0]}_${Date.now()}.${fileExt}`;
     const safeStoreName = storeName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
     const filePath = `${safeStoreName}/${fileName}`;
-
-    const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file, { cacheControl: '3600', upsert: false });
+    const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file);
     if (uploadError) throw uploadError;
     return filePath;
 }
 
-// Registrar candidato no banco de dados
 async function registerCandidate(candidateData, filePath) {
     const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
     const { error } = await supabase.from('candidatos').insert([{ ...candidateData, curriculo_url: urlData.publicUrl, status: 'pendente' }]);
     if (error) throw error;
 }
 
-// Handler principal do formulário
 async function handleFormSubmit(e) {
     e.preventDefault();
-
     const jobId = e.currentTarget.dataset.jobId;
     const file = cvFileInput.files[0];
     const jobTitle = e.currentTarget.dataset.jobTitle;
@@ -92,12 +76,9 @@ async function handleFormSubmit(e) {
         validateFile(file);
         const filePath = await uploadFile(file, storeName, candidateEmail);
 
-        // =================================================================
-        // ======================= LÓGICA CORRIGIDA ========================
-        // Encontra a loja no nosso array `stores` para pegar a cidade
-        const storeInfo = stores.find(store => store.name === storeName);
-        const city = storeInfo ? storeInfo.city : null; // Pega a cidade da loja, ou null se não encontrar
-        // =================================================================
+        // Busca os dados da vaga para pegar o city
+        const { data: vaga, error: vagaError } = await supabase.from('vagas').select('*, lojas (city)').eq('id', jobId).single();
+        if (vagaError) throw vagaError;
 
         await registerCandidate({
             vaga_id: jobId,
@@ -106,7 +87,7 @@ async function handleFormSubmit(e) {
             telefone: candidatePhone,
             vaga: jobTitle,
             loja: storeName,
-            city: city // Salva a cidade correta no banco
+            city: vaga.lojas.city 
         }, filePath);
 
         modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><p class="text-green-600 font-bold text-xl mb-2">Currículo enviado com sucesso!</p><p class="text-sm text-gray-500">Agradecemos seu interesse. Entraremos em contato em breve.</p></div>`;
@@ -118,7 +99,6 @@ async function handleFormSubmit(e) {
     }
 }
 
-// Inicialização do modal
 export function initModalHandler() {
     if (!uploadModal) return;
     uploadForm.addEventListener('submit', handleFormSubmit);

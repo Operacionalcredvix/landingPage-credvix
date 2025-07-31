@@ -441,3 +441,34 @@ select {
     border-color: #3b82f6; /* Um azul um pouco mais vivo para a borda */
     background-color: #dbeafe; /* Um fundo azul bem claro para dar contraste */
 }
+
+
+/* Estilos específicos para os botões na seção HERO */
+#hero .cta-button {
+    /* Torna o fundo semitransparente */
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px); /* Efeito de vidro fosco no fundo */
+    -webkit-backdrop-filter: blur(5px); /* Para compatibilidade com Safari */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil */
+
+    /* Empurra o botão um pouco mais para baixo */
+    margin-top: 5rem; /* Equivalente a 'mt-6' no Tailwind */
+}
+
+/* Ajusta a cor do texto para o botão roxo no Hero */
+#hero .cta-button.bg-help-purple {
+    background-color: rgba(74, 36, 109, 0.2); /* Roxo com transparência */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff; /* Garante que o texto fique branco */
+}
+
+
+/* Efeito hover para os botões do Hero */
+#hero .cta-button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+#hero .cta-button.bg-help-purple:hover {
+    background-color: rgba(74, 36, 109, 0.4);
+}

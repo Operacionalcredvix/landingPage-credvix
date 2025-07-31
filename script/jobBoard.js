@@ -3,7 +3,6 @@ import { openUploadModal } from './modalHandler.js';
 import { observeElements } from './animations.js';
 
 async function fetchActiveJobs() {
-    // Agora, a consulta também busca os dados da loja relacionada
     const { data, error } = await supabase
         .from('vagas')
         .select(`
@@ -23,8 +22,7 @@ async function fetchActiveJobs() {
 function createJobCard(job) {
     const categoryClass = job.job_category === 'Banco de Talentos' ? 'category-talent' : 'category-open';
     
-    // Usa o nome da loja que vem da relação com a tabela 'lojas'
-    const storeName = job.lojas ? job.lojas.name : job.storename; // Fallback para o nome antigo, se houver
+    const storeName = job.lojas ? job.lojas.name : job.storename;
     const city = job.lojas ? job.lojas.city : job.city;
     const state = job.lojas ? job.lojas.state : job.state;
 
