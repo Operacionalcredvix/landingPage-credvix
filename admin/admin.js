@@ -270,7 +270,6 @@ async function handleJobFormSubmit(event) {
         description: document.getElementById('job-description').value,
         job_category: document.getElementById('job-category').value,
         is_active: document.getElementById('job-is_active').checked,
-        benefits: document.getElementById('job-benefits')?.value.split('\n').map(b => b.trim()).filter(b => b) || []
     };
     const { error } = jobId ? await supabase.from('vagas').update(jobData).eq('id', jobId) : await supabase.from('vagas').insert([jobData]);
     if (error) { alert('Ocorreu um erro ao salvar a vaga.'); } else { closeJobModal(); await loadJobs(); }
@@ -290,7 +289,6 @@ async function handleEditJob(event) {
     document.getElementById('job-description').value = job.description;
     document.getElementById('job-category').value = job.job_category;
     document.getElementById('job-is_active').checked = job.is_active;
-    if (job.benefits) document.getElementById('job-benefits').value = job.benefits.join('\n');
     openJobModal();
 }
 
