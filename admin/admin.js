@@ -78,7 +78,7 @@ function showView(viewId) {
     const viewMap = {
         'vagas': { view: vagasView, nav: navVagas, loader: loadJobs },
         'curriculos': { view: curriculosView, nav: navCurriculos, loader: loadResumesByStore },
-        'lojas': { view: lojasView, nav: navLojas, loader: loadStoresAndPopulateDropdowns }
+        'lojas': { view: lojasView, nav: navLojas, loader: loadStores }
     };
     if (viewMap[viewId]) {
         viewMap[viewId].view.classList.remove('hidden');
@@ -112,7 +112,7 @@ function showLogin() {
 }
 
 async function initializeDashboard() {
-    await loadStoresAndPopulateDropdowns();
+    await loadStores();
     showView('vagas');
 }
 
@@ -120,51 +120,85 @@ async function initializeDashboard() {
 function openStoreModal() { storeModalOverlay.classList.remove('hidden'); }
 function closeStoreModal() { storeModalOverlay.classList.add('hidden'); storeForm.reset(); storeIdInput.value = ''; }
 
-async function loadStoresAndPopulateDropdowns() {
+async function loadStores() {
     loadingStoresMessage.classList.remove('hidden');
     storeListTbody.innerHTML = '';
     const { data, error } = await supabase.from('lojas').select(`*, vagas(count)`).order('name', { ascending: true });
-    if (error) { console.error("Erro ao carregar lojas:", error); loadingStoresMessage.textContent = "Erro ao carregar lojas."; return; }
+
+    if (error) {
+        console.error("Erro ao carregar lojas:", error);
+        loadingStoresMessage.textContent = "Erro ao carregar lojas.";
+        return;
+    }
+
     loadedStores = data;
-    storeListTbody.innerHTML = '';
-    loadedStores.forEach(store => {
-        const vagaCount = store.vagas[0]?.count || 0;
-        const row = storeListTbody.insertRow();
-        row.innerHTML = `
-    <td><strong>${store.name}</strong></td>
-    <td>${store.city} / ${store.state}</td>
-    <td>${vagaCount}</td>
-    <td class="actions">
-        <button class="edit-store-btn" data-id="${store.id}">
-            <span class="material-icons" style="font-size: 1rem;">edit</span> Editar
-        </button>
-        <button class="delete-store-btn" data-id="${store.id}" data-vagas="${vagaCount}">
-            <span class="material-icons" style="font-size: 1rem;">delete</span> Excluir
-        </button>
-    </td>
-`;
-    });
-    loadingStoresMessage.classList.add('hidden');
-    document.querySelectorAll('.edit-store-btn').forEach(btn => btn.addEventListener('click', handleEditStore));
-    document.querySelectorAll('.delete-store-btn').forEach(btn => btn.addEventListener('click', handleDeleteStore));
+    displayStores();
+
+    // Popula o novo dropdown de filtro de estado
+    const stateFilter = document.getElementById('store-state-filter');
+    const states = [...new Set(loadedStores.map(store => store.state))].sort();
+    stateFilter.innerHTML = '<option value="todos">Todos os Estados</option>';
+    states.forEach(state => stateFilter.add(new Option(state, state)));
+
+    // Popula o dropdown de cidades para a tela de currículos
     const cities = [...new Set(loadedStores.map(store => store.city))].sort();
     storeFilterSelect.innerHTML = '<option value="todos">Todas as Cidades</option>';
     cities.forEach(city => storeFilterSelect.add(new Option(city, city)));
+
+    // Popula o dropdown de lojas no modal de vagas
     const jobStoreSelect = document.getElementById('job-storeName');
     jobStoreSelect.innerHTML = '<option value="" disabled selected>Selecione a Loja</option>';
     loadedStores.forEach(store => jobStoreSelect.add(new Option(store.name, store.id)));
 }
+
+function displayStores() {
+    const searchTerm = document.getElementById('store-search-input').value.toLowerCase();
+    const stateFilter = document.getElementById('store-state-filter').value;
+
+    const filteredStores = loadedStores.filter(store => {
+        const matchesSearch = store.name.toLowerCase().includes(searchTerm);
+        const matchesState = (stateFilter === 'todos') || (store.state === stateFilter);
+        return matchesSearch && matchesState;
+    });
+
+    storeListTbody.innerHTML = '';
+    loadingStoresMessage.classList.add('hidden');
+
+    filteredStores.forEach(store => {
+        const vagaCount = store.vagas[0]?.count || 0;
+        const row = storeListTbody.insertRow();
+        row.innerHTML = `
+            <td><strong>${store.name}</strong></td>
+            <td>${store.city} / ${store.state}</td>
+            <td>${vagaCount}</td>
+            <td class="actions">
+                <button class="edit-store-btn" data-id="${store.id}">
+                    <span class="material-icons" style="font-size: 1.1rem;">edit</span>
+                    <span>Editar</span>
+                </button>
+                <button class="delete-store-btn" data-id="${store.id}" data-vagas="${vagaCount}">
+                    <span class="material-icons" style="font-size: 1.1rem;">delete_outline</span>
+                    <span>Excluir</span>
+                </button>
+            </td>
+        `;
+    });
+
+    document.querySelectorAll('.edit-store-btn').forEach(btn => btn.addEventListener('click', handleEditStore));
+    document.querySelectorAll('.delete-store-btn').forEach(btn => btn.addEventListener('click', handleDeleteStore));
+}
+
 
 async function handleStoreFormSubmit(event) {
     event.preventDefault();
     const storeId = storeIdInput.value;
     const storeData = { name: document.getElementById('store-name').value, city: document.getElementById('store-city').value, state: document.getElementById('store-state').value, address: document.getElementById('store-address').value, phone: document.getElementById('store-phone').value, whatsapp: document.getElementById('store-whatsapp').value, instagram_url: document.getElementById('store-instagram').value };
     const { error } = storeId ? await supabase.from('lojas').update(storeData).eq('id', storeId) : await supabase.from('lojas').insert([storeData]);
-    if (error) { alert("Ocorreu um erro ao salvar a loja."); } else { closeStoreModal(); await loadStoresAndPopulateDropdowns(); }
+    if (error) { alert("Ocorreu um erro ao salvar a loja."); } else { closeStoreModal(); await loadStores(); }
 }
 
 function handleEditStore(event) {
-    const id = event.target.dataset.id;
+    const id = event.currentTarget.dataset.id;
     const store = loadedStores.find(s => s.id == id);
     if (!store) return;
     storeModalTitle.textContent = 'Editar Loja';
@@ -180,12 +214,12 @@ function handleEditStore(event) {
 }
 
 async function handleDeleteStore(event) {
-    const id = event.target.dataset.id;
-    const vagaCount = parseInt(event.target.dataset.vagas, 10);
+    const id = event.currentTarget.dataset.id;
+    const vagaCount = parseInt(event.currentTarget.dataset.vagas, 10);
     if (vagaCount > 0) { alert(`Não é possível excluir esta loja, pois ela possui ${vagaCount} vaga(s) associada(s).`); return; }
     if (confirm('Tem certeza que deseja excluir esta loja?')) {
         const { error } = await supabase.from('lojas').delete().eq('id', id);
-        if (error) { alert("Ocorreu um erro ao excluir a loja."); } else { await loadStoresAndPopulateDropdowns(); }
+        if (error) { alert("Ocorreu um erro ao excluir a loja."); } else { await loadStores(); }
     }
 }
 
@@ -269,14 +303,14 @@ async function handleJobFormSubmit(event) {
         type: document.getElementById('job-type').value,
         description: document.getElementById('job-description').value,
         job_category: document.getElementById('job-category').value,
-        is_active: document.getElementById('job-is_active').checked,
+        is_active: document.getElementById('job-is_active').checked
     };
     const { error } = jobId ? await supabase.from('vagas').update(jobData).eq('id', jobId) : await supabase.from('vagas').insert([jobData]);
-    if (error) { alert('Ocorreu um erro ao salvar a vaga.'); } else { closeJobModal(); await loadJobs(); }
+    if (error) { console.error(error); alert('Ocorreu um erro ao salvar a vaga.'); } else { closeJobModal(); await loadJobs(); }
 }
 
 async function handleEditJob(event) {
-    const id = event.target.dataset.id;
+    const id = event.currentTarget.dataset.id;
     const job = allJobs.find(j => j.id == id);
     if (!job) return;
     jobModalTitle.textContent = 'Editar Vaga';
@@ -293,8 +327,8 @@ async function handleEditJob(event) {
 }
 
 async function handleDeleteJob(event) {
-    const id = event.target.dataset.id;
-    const candidateCount = parseInt(event.target.dataset.candidates, 10);
+    const id = event.currentTarget.dataset.id;
+    const candidateCount = parseInt(event.currentTarget.dataset.candidates, 10);
     if (candidateCount > 0) { alert(`Não é possível excluir esta vaga, pois ela possui ${candidateCount} candidatura(s).`); return; }
     if (confirm('Tem certeza que deseja excluir esta vaga?')) {
         const { error } = await supabase.from('vagas').delete().eq('id', id);
@@ -370,6 +404,11 @@ newTalentBtn.addEventListener('click', openTalentModal);
 cancelTalentBtn.addEventListener('click', closeTalentModal);
 talentModalOverlay.addEventListener('click', (e) => { if (e.target === talentModalOverlay) closeTalentModal(); });
 storeFilterSelect.addEventListener('change', loadResumesByStore);
+
+// Adiciona os listeners para os novos filtros de loja
+document.getElementById('store-search-input').addEventListener('input', displayStores);
+document.getElementById('store-state-filter').addEventListener('change', displayStores);
+
 
 // Preenchimento automático de cidade/estado no modal de vagas
 document.getElementById('job-storeName').addEventListener('change', (e) => {

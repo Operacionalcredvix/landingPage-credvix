@@ -31,8 +31,10 @@
             </div>
             <nav>
                 <ul id="main-nav">
-                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
-                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a></li>
+                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a>
+                    </li>
+                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a>
+                    </li>
                     <li id="nav-lojas"><a href="#"><span class="material-icons">store</span> Lojas</a></li>
                 </ul>
             </nav>
@@ -107,7 +109,7 @@
             </div>
 
             <div id="curriculos-view" class="hidden">
-                 <header>
+                <header>
                     <h1>Banco de Currículos</h1>
                 </header>
                 <section class="resume-filter-container">
@@ -133,12 +135,26 @@
                     <p id="no-resumes-message" class="hidden">Nenhum currículo encontrado.</p>
                 </section>
             </div>
-            
+
             <div id="lojas-view" class="hidden">
                 <header>
                     <h1>Gestão de Lojas</h1>
                     <button id="new-store-btn">+ Criar Nova Loja</button>
                 </header>
+                <!-- Filtro de lojas -->
+                <section class="filter-panel">
+                    <div class="filter-group">
+                        <label for="store-search-input">Buscar por nome</label>
+                        <input type="search" id="store-search-input" placeholder="Digite o nome da loja...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="store-state-filter">Filtrar por Estado</label>
+                        <select id="store-state-filter">
+                            <option value="todos">Todos os Estados</option>
+                        </select>
+                    </div>
+                </section>
+
                 <section class="store-list-container">
                     <h2>Lista de Lojas</h2>
                     <table>
@@ -199,7 +215,7 @@
             </form>
         </div>
     </div>
-    
+
     <div id="candidate-modal-overlay" class="hidden">
         <div id="candidate-modal">
             <div class="candidate-modal-header">
@@ -239,7 +255,7 @@
             </form>
         </div>
     </div>
-    
+
     <div id="store-modal-overlay" class="hidden">
         <div id="store-modal">
             <h2 id="store-modal-title">Criar Nova Loja</h2>
@@ -270,4 +286,5 @@
 
     <script type="module" src="admin.js"></script>
 </body>
+
 </html>

@@ -71,6 +71,9 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px 0 rgba(0,0,0,0.15);
 }
+.material-icons {
+    vertical-align: middle;
+}
 
 /* --- Animações --- */
 .animate-on-scroll {
