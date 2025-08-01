@@ -1,9 +1,10 @@
-// Caminho: script/main.js
+
 import { initSwiper, initTestimonialSwiper } from './swiper.js';
 import { initStoreLocator } from './storeLocator.js';
 import { initJobBoard } from './jobBoard.js';
 import { initModalHandler } from './modalHandler.js';
 import { observeElements } from './animations.js';
+import { loadFooter } from './components.js'; // Importa a função do rodapé
 
 function initializePage() {
     console.log("Página carregando, inicializando módulos...");
@@ -14,9 +15,9 @@ function initializePage() {
     initStoreLocator();
     initModalHandler();
     observeElements();
+    loadFooter(); // Carrega o rodapé
 
     // O mural de vagas agora carrega de forma independente
-    // e não trava a página se falhar.
     initJobBoard();
 
     const yearSpan = document.getElementById('year');
