@@ -1,16 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
+/* Paleta de cores refinada */
 :root {
-    --primary-color: #1f2937;
-    --secondary-color: #F37021;
+    --primary-color: #2563eb; 
+    --secondary-color: #F37021; 
     --background-color: #f8f9fa;
-    --sidebar-bg: #111827;
+    --sidebar-bg: #1f2937; 
     --card-background: #ffffff;
-    --text-color: #343a40;
+    --text-color: #111827; 
     --text-light: #f8f9fa;
-    --border-color: #dee2e6;
-    --error-color: #d32f2f;
-    --success-color: #28a745;
+    --border-color: #e5e7eb;
+    --error-color: #dc2626;
+    --success-color: #16a34a;
 }
 
 body {
@@ -139,14 +140,27 @@ body {
     margin-bottom: 30px;
 }
 
+/* Melhorando a hierarquia do título principal */
 .main-content header h1 {
     margin: 0;
     font-size: 2rem;
+    font-weight: 700; /* Mais peso para o título principal */
+    letter-spacing: -0.02em; /* Deixa o título mais compacto */
 }
 
 .main-content header div {
     display: flex;
     gap: 10px;
+}
+
+/* Aplicando a nova cor primária aos botões de ação */
+.main-content header button, #save-btn, #save-store-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+#new-talent-btn {
+    background-color: var(--secondary-color); /* Usando a cor secundária para uma ação diferente */
 }
 
 .main-content header button {
@@ -182,6 +196,7 @@ body {
 .card h4 {
     margin: 0 0 10px 0;
     color: #6c757d;
+    font-weight: 500; /* Um peso médio para subtítulos */
 }
 
 .card p {
@@ -337,7 +352,6 @@ body {
 
 .detail-item span {
     font-size: 0.8rem;
-    color: #6c757d;
 }
 
 .job-card-footer {
@@ -400,15 +414,6 @@ th {
     font-weight: bold;
 }
 
-.actions button {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    margin-right: 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: white;
-}
 
 /* --- Modais --- */
 #job-modal-overlay,
@@ -546,15 +551,10 @@ th {
 }
 
 .actions button {
-    padding: 6px 12px;
-    font-size: 0.8rem;
-    margin-right: 5px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; 
 }
-
 .actions .edit-btn,
 .actions .edit-store-btn {
     background-color: #17a2b8;

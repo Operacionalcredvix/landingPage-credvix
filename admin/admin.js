@@ -131,14 +131,18 @@ async function loadStoresAndPopulateDropdowns() {
         const vagaCount = store.vagas[0]?.count || 0;
         const row = storeListTbody.insertRow();
         row.innerHTML = `
-            <td><strong>${store.name}</strong></td>
-            <td>${store.city} / ${store.state}</td>
-            <td>${vagaCount}</td>
-            <td class="actions">
-                <button class="edit-store-btn" data-id="${store.id}">Editar</button>
-                <button class="delete-store-btn" data-id="${store.id}" data-vagas="${vagaCount}">Excluir</button>
-            </td>
-        `;
+    <td><strong>${store.name}</strong></td>
+    <td>${store.city} / ${store.state}</td>
+    <td>${vagaCount}</td>
+    <td class="actions">
+        <button class="edit-store-btn" data-id="${store.id}">
+            <span class="material-icons" style="font-size: 1rem;">edit</span> Editar
+        </button>
+        <button class="delete-store-btn" data-id="${store.id}" data-vagas="${vagaCount}">
+            <span class="material-icons" style="font-size: 1rem;">delete</span> Excluir
+        </button>
+    </td>
+`;
     });
     loadingStoresMessage.classList.add('hidden');
     document.querySelectorAll('.edit-store-btn').forEach(btn => btn.addEventListener('click', handleEditStore));
