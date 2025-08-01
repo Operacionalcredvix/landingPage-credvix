@@ -1,7 +1,6 @@
-import { supabase } from './supabase-client.js'; // Usa o Supabase
+import { supabase } from './supabase-client.js';
 import { observeElements } from './animations.js';
 
-// A função createStoreCard permanece a mesma
 function createStoreCard(store) {
     const whatsappNumber = store.whatsapp ? store.whatsapp.replace(/\D/g, '') : '';
     const whatsappMessage = encodeURIComponent(`Oi, encontrei a loja ${store.name} pelo site e gostaria de mais informações!`);

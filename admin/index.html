@@ -67,22 +67,35 @@
                         <span class="material-icons card-icon">thumb_down</span>
                     </div>
                 </section>
+
+                <section class="filter-panel">
+                    <div class="filter-group">
+                        <label for="job-search-input">Buscar Vaga</label>
+                        <input type="search" id="job-search-input" placeholder="Título ou loja...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="job-status-filter">Status</label>
+                        <select id="job-status-filter">
+                            <option value="todas">Todas</option>
+                            <option value="ativas" selected>Apenas Ativas</option>
+                            <option value="inativas">Apenas Inativas</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="job-category-filter">Categoria</label>
+                        <select id="job-category-filter">
+                            <option value="todas">Todas</option>
+                            <option value="Aberta">Vaga Aberta</option>
+                            <option value="Banco de Talentos">Banco de Talentos</option>
+                        </select>
+                    </div>
+                </section>
+
                 <section class="job-list-container">
-                    <h2>Lista de Vagas</h2>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Vaga / Local</th>
-                                <th>Categoria</th>
-                                <th>Candidaturas</th>
-                                <th>Status</th>
-                                <th>Datas</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody id="job-list-tbody"></tbody>
-                    </table>
+                    <div id="job-card-grid" class="job-card-grid">
+                        </div>
                     <p id="loading-message">Carregando vagas...</p>
+                    <p id="no-jobs-message" class="hidden">Nenhuma vaga encontrada para os filtros selecionados.</p>
                 </section>
             </div>
 
@@ -110,7 +123,7 @@
                         <tbody id="resume-list-tbody"></tbody>
                     </table>
                     <p id="loading-resumes-message">Carregando currículos...</p>
-                    <p id="no-resumes-message" class="hidden">Nenhum currículo encontrado para o filtro selecionado.</p>
+                    <p id="no-resumes-message" class="hidden">Nenhum currículo encontrado.</p>
                 </section>
             </div>
             
@@ -159,6 +172,10 @@
                 <div class="form-field-full">
                     <textarea id="job-description" placeholder="Descrição da Vaga" rows="4"></textarea>
                 </div>
+                 <div class="form-field-full">
+                    <label for="job-benefits" class="block text-sm font-medium text-gray-700 mb-1">Benefícios (um por linha)</label>
+                    <textarea id="job-benefits" placeholder="Ex:&#10;Vale Alimentação&#10;Plano de Saúde&#10;TotalPass" rows="4"></textarea>
+                </div>
                 <div class="form-field-full">
                     <label for="job-category">Categoria da Vaga</label>
                     <select id="job-category" required>
@@ -181,26 +198,7 @@
     </div>
     
     <div id="candidate-modal-overlay" class="hidden">
-        <div id="candidate-modal">
-            <div class="candidate-modal-header">
-                <h2 id="candidate-modal-title">Candidatos para a Vaga</h2>
-                <button id="close-candidate-modal-btn">&times;</button>
-            </div>
-            <div id="candidate-modal-body">
-                <p id="loading-candidates-message">Carregando candidatos...</p>
-                <table id="candidate-list-table">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Contato</th>
-                            <th>Currículo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="candidate-list-tbody"></tbody>
-                </table>
-            </div>
         </div>
-    </div>
 
     <div id="talent-modal-overlay" class="hidden">
         <div id="talent-modal">
@@ -250,4 +248,5 @@
 
     <script type="module" src="admin.js"></script>
 </body>
+
 </html>

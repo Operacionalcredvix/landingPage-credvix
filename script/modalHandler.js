@@ -76,7 +76,6 @@ async function handleFormSubmit(e) {
         validateFile(file);
         const filePath = await uploadFile(file, storeName, candidateEmail);
 
-        // Busca os dados da vaga para pegar o city
         const { data: vaga, error: vagaError } = await supabase.from('vagas').select('*, lojas (city)').eq('id', jobId).single();
         if (vagaError) throw vagaError;
 
@@ -87,7 +86,7 @@ async function handleFormSubmit(e) {
             telefone: candidatePhone,
             vaga: jobTitle,
             loja: storeName,
-            city: vaga.lojas.city 
+            city: vaga.lojas ? vaga.lojas.city : null 
         }, filePath);
 
         modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><p class="text-green-600 font-bold text-xl mb-2">Currículo enviado com sucesso!</p><p class="text-sm text-gray-500">Agradecemos seu interesse. Entraremos em contato em breve.</p></div>`;
