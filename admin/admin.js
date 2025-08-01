@@ -1,10 +1,36 @@
 // Importa o cliente Supabase. O arquivo 'stores.js' não é mais necessário aqui.
 import { supabase } from '../script/supabase-client.js';
 
+// Verifica a sessão no início de cada carregamento da página
+function checkSession() {
+    // sessionStorage é limpo quando a aba do navegador é fechada.
+    const sessionActive = sessionStorage.getItem('sessionActive');
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session && !sessionActive) {
+            // Se o Supabase acha que o usuário está logado (via localStorage),
+            // mas nossa "chave" de sessão não existe, força o logout.
+            console.log('Sessão persistente encontrada sem sessão de aba ativa. Fazendo logout.');
+            supabase.auth.signOut();
+        } else if (session && sessionActive) {
+            // Tudo certo, o usuário está logado e na mesma sessão.
+        } else {
+            // Usuário não está logado.
+        }
+    });
+}
+// Roda a verificação assim que o script é carregado
+checkSession();
+// =================================================================
+//
+
 // --- ELEMENTOS DO DOM ---
 const loginContainer = document.getElementById('login-container');
 const dashboard = document.getElementById('dashboard');
 const loginForm = document.getElementById('login-form');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const loginError = document.getElementById('login-error');
 const logoutBtn = document.getElementById('logout-btn');
 
 // Navegação e Telas
@@ -49,6 +75,40 @@ const noResumesMessage = document.getElementById('no-resumes-message');
 // --- ESTADO DA APLICAÇÃO ---
 // Guardaremos as lojas carregadas aqui para reutilizar nos dropdowns
 let loadedStores = [];
+
+// --- FUNÇÕES DE AUTENTICAÇÃO E INICIALIZAÇÃO ---
+async function handleLogin(event) {
+    event.preventDefault();
+    loginError.textContent = '';
+    const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailInput.value,
+        password: passwordInput.value,
+    });
+
+    if (error) {
+        loginError.textContent = 'E-mail ou senha inválidos.';
+    } else if (data.session) {
+        // Se o login for bem-sucedido, define a nossa "chave" de sessão.
+        sessionStorage.setItem('sessionActive', 'true');
+
+        showDashboard();
+    }
+}
+
+async function handleLogout() {
+    await supabase.auth.signOut();
+    // Limpa a nossa "chave" de sessão ao fazer logout manual.
+    sessionStorage.removeItem('sessionActive');
+}
+
+supabase.auth.onAuthStateChange((_event, session) => {
+    if (session && sessionStorage.getItem('sessionActive')) {
+        showDashboard();
+    } else {
+        dashboard.classList.add('hidden');
+        loginContainer.classList.remove('hidden');
+    }
+});
 
 // --- FUNÇÕES DE NAVEGAÇÃO ---
 function showView(viewId) {
