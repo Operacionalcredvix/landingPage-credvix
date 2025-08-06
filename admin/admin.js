@@ -172,11 +172,11 @@ function displayStores() {
             <td>${store.city} / ${store.state}</td>
             <td>${vagaCount}</td>
             <td class="actions">
-                <button class="edit-store-btn" data-id="${store.id}">
+                <button class="btn btn-info edit-store-btn" data-id="${store.id}">
                     <span class="material-icons" style="font-size: 1.1rem;">edit</span>
                     <span>Editar</span>
                 </button>
-                <button class="delete-store-btn" data-id="${store.id}" data-vagas="${vagaCount}">
+                <button class="btn btn-danger delete-store-btn" data-id="${store.id}" data-vagas="${vagaCount}">
                     <span class="material-icons" style="font-size: 1.1rem;">delete_outline</span>
                     <span>Excluir</span>
                 </button>
@@ -355,7 +355,7 @@ async function loadResumesByStore() {
             <td><strong>${resume.nome_completo}</strong><br><small>${resume.email} / ${resume.telefone}</small></td>
             <td>${resume.loja || 'N/A'}</td>
             <td>${applicationDate}</td>
-            <td><a href="${resume.curriculo_url}" target="_blank" download class="download-cv-btn">Baixar</a></td>
+            <td><a href="${resume.curriculo_url}" target="_blank" download class="btn btn-primary">Baixar</a></td>
         `;
     });
 }
