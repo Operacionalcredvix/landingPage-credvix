@@ -79,9 +79,12 @@ body {
     text-align: center;
     margin-bottom: 30px;
 }
-
+.logo {
+    width: 20rem;
+    margin-bottom: 3px;
+}
 .sidebar-logo {
-    width: 50px;
+    width: 1rem;
     margin-bottom: 10px;
 }
 
