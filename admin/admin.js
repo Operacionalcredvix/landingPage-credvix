@@ -25,18 +25,16 @@ const newStoreBtn = document.getElementById('new-store-btn');
 const storeModalOverlay = document.getElementById('store-modal-overlay');
 const storeModalTitle = document.getElementById('store-modal-title');
 const storeForm = document.getElementById('store-form');
-const cancelStoreBtn = document.getElementById('cancel-store-btn');
+const cancelStoreBtn = document.getElementById('store-cancel-btn');
 const storeIdInput = document.getElementById('store-id');
 
 // Elementos da Tela de Vagas
-const jobListTbody = document.getElementById('job-list-tbody');
-const loadingMessage = document.getElementById('loading-message');
 const newJobBtn = document.getElementById('new-job-btn');
 const jobModalOverlay = document.getElementById('job-modal-overlay');
 const jobModalTitle = document.getElementById('modal-title');
 const jobForm = document.getElementById('job-form');
 const jobIdInput = document.getElementById('job-id');
-const cancelBtn = document.getElementById('cancel-btn');
+const cancelJobBtn = document.getElementById('job-cancel-btn');
 const totalJobsStat = document.getElementById('total-jobs-stat');
 const activeJobsStat = document.getElementById('active-jobs-stat');
 const inactiveJobsStat = document.getElementById('inactive-jobs-stat');
@@ -47,19 +45,10 @@ const jobSearchInput = document.getElementById('job-search-input');
 const jobCardGrid = document.getElementById('job-card-grid');
 const noJobsMessage = document.getElementById('no-jobs-message');
 
-// Elementos do Modal de Candidatos
-const candidateModalOverlay = document.getElementById('candidate-modal-overlay');
-const closeCandidateModalBtn = document.getElementById('close-candidate-modal-btn');
-const candidateModalTitle = document.getElementById('candidate-modal-title');
-const candidateListTbody = document.getElementById('candidate-list-tbody');
-
 // Elementos do Banco de Talentos
 const newTalentBtn = document.getElementById('new-talent-btn');
 const talentModalOverlay = document.getElementById('talent-modal-overlay');
-const cancelTalentBtn = document.getElementById('cancel-talent-btn');
-const talentForm = document.getElementById('talent-form');
-const talentStatusMessage = document.getElementById('talent-status-message');
-
+const cancelTalentBtn = document.getElementById('talent-cancel-btn');
 
 // Elementos da Tela de Currículos
 const storeFilterSelect = document.getElementById('store-filter-select');
@@ -74,15 +63,17 @@ let allJobs = [];
 // --- FUNÇÕES DE NAVEGAÇÃO ---
 function showView(viewId) {
     [vagasView, curriculosView, lojasView].forEach(view => view.classList.add('hidden'));
-    [navVagas, navCurriculos, navLojas].forEach(nav => nav.classList.remove('active'));
+    [navVagas, navCurriculos, navLojas].forEach(nav => nav.parentElement.classList.remove('active'));
+
     const viewMap = {
         'vagas': { view: vagasView, nav: navVagas, loader: loadJobs },
         'curriculos': { view: curriculosView, nav: navCurriculos, loader: loadResumesByStore },
         'lojas': { view: lojasView, nav: navLojas, loader: loadStores }
     };
+
     if (viewMap[viewId]) {
         viewMap[viewId].view.classList.remove('hidden');
-        viewMap[viewId].nav.classList.add('active');
+        viewMap[viewId].nav.parentElement.classList.add('active');
         if (viewMap[viewId].loader) viewMap[viewId].loader();
     }
 }
@@ -121,31 +112,27 @@ function openStoreModal() { storeModalOverlay.classList.remove('hidden'); }
 function closeStoreModal() { storeModalOverlay.classList.add('hidden'); storeForm.reset(); storeIdInput.value = ''; }
 
 async function loadStores() {
-    loadingStoresMessage.classList.remove('hidden');
-    storeListTbody.innerHTML = '';
+    storeListTbody.innerHTML = `<p>Carregando lojas...</p>`;
     const { data, error } = await supabase.from('lojas').select(`*, vagas(count)`).order('name', { ascending: true });
 
     if (error) {
         console.error("Erro ao carregar lojas:", error);
-        loadingStoresMessage.textContent = "Erro ao carregar lojas.";
+        storeListTbody.innerHTML = `<p>Erro ao carregar lojas.</p>`;
         return;
     }
 
     loadedStores = data;
     displayStores();
 
-    // Popula o novo dropdown de filtro de estado
     const stateFilter = document.getElementById('store-state-filter');
     const states = [...new Set(loadedStores.map(store => store.state))].sort();
     stateFilter.innerHTML = '<option value="todos">Todos os Estados</option>';
     states.forEach(state => stateFilter.add(new Option(state, state)));
 
-    // Popula o dropdown de cidades para a tela de currículos
     const cities = [...new Set(loadedStores.map(store => store.city))].sort();
     storeFilterSelect.innerHTML = '<option value="todos">Todas as Cidades</option>';
     cities.forEach(city => storeFilterSelect.add(new Option(city, city)));
 
-    // Popula o dropdown de lojas no modal de vagas
     const jobStoreSelect = document.getElementById('job-storeName');
     jobStoreSelect.innerHTML = '<option value="" disabled selected>Selecione a Loja</option>';
     loadedStores.forEach(store => jobStoreSelect.add(new Option(store.name, store.id)));
@@ -155,14 +142,16 @@ function displayStores() {
     const searchTerm = document.getElementById('store-search-input').value.toLowerCase();
     const stateFilter = document.getElementById('store-state-filter').value;
 
-    const filteredStores = loadedStores.filter(store => {
-        const matchesSearch = store.name.toLowerCase().includes(searchTerm);
-        const matchesState = (stateFilter === 'todos') || (store.state === stateFilter);
-        return matchesSearch && matchesState;
-    });
+    const filteredStores = loadedStores.filter(store =>
+        (store.name.toLowerCase().includes(searchTerm)) &&
+        (stateFilter === 'todos' || store.state === stateFilter)
+    );
 
     storeListTbody.innerHTML = '';
-    loadingStoresMessage.classList.add('hidden');
+    if (filteredStores.length === 0) {
+        storeListTbody.innerHTML = `<tr><td colspan="4" style="text-align: center;">Nenhuma loja encontrada.</td></tr>`;
+        return;
+    }
 
     filteredStores.forEach(store => {
         const vagaCount = store.vagas[0]?.count || 0;
@@ -172,11 +161,11 @@ function displayStores() {
             <td>${store.city} / ${store.state}</td>
             <td>${vagaCount}</td>
             <td class="actions">
-                <button class="btn btn-info edit-store-btn" data-id="${store.id}">
+                <button class="btn btn-info js-edit-store" data-id="${store.id}">
                     <span class="material-icons" style="font-size: 1.1rem;">edit</span>
                     <span>Editar</span>
                 </button>
-                <button class="btn btn-danger delete-store-btn" data-id="${store.id}" data-vagas="${vagaCount}">
+                <button class="btn btn-danger js-delete-store" data-id="${store.id}" data-vagas="${vagaCount}">
                     <span class="material-icons" style="font-size: 1.1rem;">delete_outline</span>
                     <span>Excluir</span>
                 </button>
@@ -184,17 +173,28 @@ function displayStores() {
         `;
     });
 
-    document.querySelectorAll('.edit-store-btn').forEach(btn => btn.addEventListener('click', handleEditStore));
-    document.querySelectorAll('.delete-store-btn').forEach(btn => btn.addEventListener('click', handleDeleteStore));
+    document.querySelectorAll('.js-edit-store').forEach(btn => btn.addEventListener('click', handleEditStore));
+    document.querySelectorAll('.js-delete-store').forEach(btn => btn.addEventListener('click', handleDeleteStore));
 }
-
 
 async function handleStoreFormSubmit(event) {
     event.preventDefault();
     const storeId = storeIdInput.value;
-    const storeData = { name: document.getElementById('store-name').value, city: document.getElementById('store-city').value, state: document.getElementById('store-state').value, address: document.getElementById('store-address').value, phone: document.getElementById('store-phone').value, whatsapp: document.getElementById('store-whatsapp').value, instagram_url: document.getElementById('store-instagram').value };
-    const { error } = storeId ? await supabase.from('lojas').update(storeData).eq('id', storeId) : await supabase.from('lojas').insert([storeData]);
-    if (error) { alert("Ocorreu um erro ao salvar a loja."); } else { closeStoreModal(); await loadStores(); }
+    const storeData = {
+        name: document.getElementById('store-name').value,
+        city: document.getElementById('store-city').value,
+        state: document.getElementById('store-state').value,
+        address: document.getElementById('store-address').value,
+        phone: document.getElementById('store-phone').value,
+        whatsapp: document.getElementById('store-whatsapp').value,
+        instagram_url: document.getElementById('store-instagram').value
+    };
+    const { error } = storeId
+        ? await supabase.from('lojas').update(storeData).eq('id', storeId)
+        : await supabase.from('lojas').insert([storeData]);
+
+    if (error) { alert("Ocorreu um erro ao salvar a loja."); }
+    else { closeStoreModal(); await loadStores(); }
 }
 
 function handleEditStore(event) {
@@ -216,10 +216,14 @@ function handleEditStore(event) {
 async function handleDeleteStore(event) {
     const id = event.currentTarget.dataset.id;
     const vagaCount = parseInt(event.currentTarget.dataset.vagas, 10);
-    if (vagaCount > 0) { alert(`Não é possível excluir esta loja, pois ela possui ${vagaCount} vaga(s) associada(s).`); return; }
+    if (vagaCount > 0) {
+        alert(`Não é possível excluir esta loja, pois ela possui ${vagaCount} vaga(s) associada(s).`);
+        return;
+    }
     if (confirm('Tem certeza que deseja excluir esta loja?')) {
         const { error } = await supabase.from('lojas').delete().eq('id', id);
-        if (error) { alert("Ocorreu um erro ao excluir a loja."); } else { await loadStores(); }
+        if (error) { alert("Ocorreu um erro ao excluir a loja."); }
+        else { await loadStores(); }
     }
 }
 
@@ -228,11 +232,10 @@ function openJobModal() { jobModalOverlay.classList.remove('hidden'); }
 function closeJobModal() { jobModalOverlay.classList.add('hidden'); jobForm.reset(); jobIdInput.value = ''; }
 
 async function loadJobs() {
-    loadingMessage.classList.remove('hidden');
-    jobCardGrid.innerHTML = '';
+    jobCardGrid.innerHTML = `<p>Carregando vagas...</p>`;
     noJobsMessage.classList.add('hidden');
     const { data, error } = await supabase.from('vagas').select(`*, lojas(name, city, state), candidatos(count)`).order('created_at', { ascending: false });
-    loadingMessage.classList.add('hidden');
+
     if (error) { console.error('Erro ao carregar vagas:', error.message); return; }
     allJobs = data;
     displayJobs();
@@ -243,6 +246,7 @@ function displayJobs() {
     const categoryFilter = jobCategoryFilter.value;
     const titleFilter = jobTitleFilter.value;
     const searchTerm = jobSearchInput.value.toLowerCase();
+
     const filteredJobs = allJobs.filter(job => {
         const isActive = job.is_active;
         const matchesStatus = (statusFilter === 'todas') || (statusFilter === 'ativas' && isActive) || (statusFilter === 'inativas' && !isActive);
@@ -253,12 +257,18 @@ function displayJobs() {
         const matchesSearch = storeName.includes(searchTerm) || jobTitleText.includes(searchTerm);
         return matchesStatus && matchesCategory && matchesTitle && matchesSearch;
     });
+
     totalJobsStat.textContent = allJobs.length;
     activeJobsStat.textContent = allJobs.filter(j => j.is_active).length;
     inactiveJobsStat.textContent = allJobs.filter(j => !j.is_active).length;
+
     jobCardGrid.innerHTML = '';
-    if (filteredJobs.length === 0) { noJobsMessage.classList.remove('hidden'); return; }
+    if (filteredJobs.length === 0) {
+        noJobsMessage.classList.remove('hidden');
+        return;
+    }
     noJobsMessage.classList.add('hidden');
+
     filteredJobs.forEach(job => {
         const candidateCount = job.candidatos[0]?.count || 0;
         const storeInfo = job.lojas ? `${job.lojas.name}` : 'Loja não vinculada';
@@ -266,7 +276,7 @@ function displayJobs() {
         card.className = 'job-card';
         card.innerHTML = `
             <div class="job-card-header">
-                <div class="job-card-title-section">
+                <div>
                     <h3 class="job-card-title">${job.title}</h3>
                     <p class="job-card-location"><span class="material-icons" style="font-size: 1rem;">store</span>${storeInfo}</p>
                 </div>
@@ -279,14 +289,15 @@ function displayJobs() {
                 </div>
             </div>
             <div class="job-card-footer">
-                <button class="btn btn-info" data-id="${job.id}">Editar</button>
-                    <button class="btn btn-danger" data-id="${job.id}" data-candidates="${candidateCount}">Excluir</button>
+                <button class="btn btn-info js-edit-job" data-id="${job.id}">Editar</button>
+                <button class="btn btn-danger js-delete-job" data-id="${job.id}" data-candidates="${candidateCount}">Excluir</button>
             </div>
         `;
         jobCardGrid.appendChild(card);
     });
-    document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', handleEditJob));
-    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', handleDeleteJob));
+
+    document.querySelectorAll('.js-edit-job').forEach(btn => btn.addEventListener('click', handleEditJob));
+    document.querySelectorAll('.js-delete-job').forEach(btn => btn.addEventListener('click', handleDeleteJob));
 }
 
 async function handleJobFormSubmit(event) {
@@ -305,11 +316,15 @@ async function handleJobFormSubmit(event) {
         job_category: document.getElementById('job-category').value,
         is_active: document.getElementById('job-is_active').checked
     };
-    const { error } = jobId ? await supabase.from('vagas').update(jobData).eq('id', jobId) : await supabase.from('vagas').insert([jobData]);
-    if (error) { console.error(error); alert('Ocorreu um erro ao salvar a vaga.'); } else { closeJobModal(); await loadJobs(); }
+    const { error } = jobId
+        ? await supabase.from('vagas').update(jobData).eq('id', jobId)
+        : await supabase.from('vagas').insert([jobData]);
+
+    if (error) { console.error(error); alert('Ocorreu um erro ao salvar a vaga.'); }
+    else { closeJobModal(); await loadJobs(); }
 }
 
-async function handleEditJob(event) {
+function handleEditJob(event) {
     const id = event.currentTarget.dataset.id;
     const job = allJobs.find(j => j.id == id);
     if (!job) return;
@@ -329,10 +344,14 @@ async function handleEditJob(event) {
 async function handleDeleteJob(event) {
     const id = event.currentTarget.dataset.id;
     const candidateCount = parseInt(event.currentTarget.dataset.candidates, 10);
-    if (candidateCount > 0) { alert(`Não é possível excluir esta vaga, pois ela possui ${candidateCount} candidatura(s).`); return; }
+    if (candidateCount > 0) {
+        alert(`Não é possível excluir esta vaga, pois ela possui ${candidateCount} candidatura(s).`);
+        return;
+    }
     if (confirm('Tem certeza que deseja excluir esta vaga?')) {
         const { error } = await supabase.from('vagas').delete().eq('id', id);
-        if (error) { alert('Ocorreu um erro ao excluir a vaga.'); } else { await loadJobs(); }
+        if (error) { alert('Ocorreu um erro ao excluir a vaga.'); }
+        else { await loadJobs(); }
     }
 }
 
@@ -346,8 +365,16 @@ async function loadResumesByStore() {
     if (selectedCity !== 'todos') query = query.eq('city', selectedCity);
     const { data: resumes, error } = await query;
     loadingResumesMessage.classList.add('hidden');
-    if (error) { noResumesMessage.textContent = 'Ocorreu um erro ao carregar os currículos.'; noResumesMessage.classList.remove('hidden'); return; }
-    if (resumes.length === 0) { noResumesMessage.classList.remove('hidden'); return; }
+
+    if (error) {
+        noResumesMessage.textContent = 'Ocorreu um erro ao carregar os currículos.';
+        noResumesMessage.classList.remove('hidden');
+        return;
+    }
+    if (resumes.length === 0) {
+        noResumesMessage.classList.remove('hidden');
+        return;
+    }
     resumes.forEach(resume => {
         const row = resumeListTbody.insertRow();
         const applicationDate = new Date(resume.created_at).toLocaleDateString('pt-BR');
@@ -383,39 +410,43 @@ supabase.auth.onAuthStateChange((event, session) => {
 });
 
 // --- INICIALIZAÇÃO E EVENTOS ---
-loginForm.addEventListener('submit', handleLogin);
-logoutBtn.addEventListener('click', handleLogout);
-navVagas.addEventListener('click', (e) => { e.preventDefault(); showView('vagas'); });
-navCurriculos.addEventListener('click', (e) => { e.preventDefault(); showView('curriculos'); });
-navLojas.addEventListener('click', (e) => { e.preventDefault(); showView('lojas'); });
-newStoreBtn.addEventListener('click', () => { storeModalTitle.textContent = 'Criar Nova Loja'; storeForm.reset(); storeIdInput.value = ''; openStoreModal(); });
-cancelStoreBtn.addEventListener('click', closeStoreModal);
-storeModalOverlay.addEventListener('click', (e) => { if (e.target === storeModalOverlay) closeStoreModal(); });
-storeForm.addEventListener('submit', handleStoreFormSubmit);
-newJobBtn.addEventListener('click', () => { jobModalTitle.textContent = 'Criar Nova Vaga'; jobForm.reset(); document.getElementById('job-is_active').checked = true; openJobModal(); });
-cancelBtn.addEventListener('click', closeJobModal);
-jobModalOverlay.addEventListener('click', (e) => { if (e.target === jobModalOverlay) closeJobModal(); });
-jobForm.addEventListener('submit', handleJobFormSubmit);
-jobStatusFilter.addEventListener('change', displayJobs);
-jobCategoryFilter.addEventListener('change', displayJobs);
-jobTitleFilter.addEventListener('change', displayJobs);
-jobSearchInput.addEventListener('input', displayJobs);
-newTalentBtn.addEventListener('click', openTalentModal);
-cancelTalentBtn.addEventListener('click', closeTalentModal);
-talentModalOverlay.addEventListener('click', (e) => { if (e.target === talentModalOverlay) closeTalentModal(); });
-storeFilterSelect.addEventListener('change', loadResumesByStore);
+document.addEventListener('DOMContentLoaded', () => {
+    loginForm.addEventListener('submit', handleLogin);
+    logoutBtn.addEventListener('click', handleLogout);
 
-// Adiciona os listeners para os novos filtros de loja
-document.getElementById('store-search-input').addEventListener('input', displayStores);
-document.getElementById('store-state-filter').addEventListener('change', displayStores);
+    navVagas.addEventListener('click', (e) => { e.preventDefault(); showView('vagas'); });
+    navCurriculos.addEventListener('click', (e) => { e.preventDefault(); showView('curriculos'); });
+    navLojas.addEventListener('click', (e) => { e.preventDefault(); showView('lojas'); });
 
+    newStoreBtn.addEventListener('click', () => { storeModalTitle.textContent = 'Criar Nova Loja'; storeForm.reset(); storeIdInput.value = ''; openStoreModal(); });
+    cancelStoreBtn.addEventListener('click', closeStoreModal);
+    storeModalOverlay.addEventListener('click', (e) => { if (e.target === storeModalOverlay) closeStoreModal(); });
+    storeForm.addEventListener('submit', handleStoreFormSubmit);
 
-// Preenchimento automático de cidade/estado no modal de vagas
-document.getElementById('job-storeName').addEventListener('change', (e) => {
-    const selectedStoreId = e.target.value;
-    const store = loadedStores.find(s => s.id == selectedStoreId);
-    if (store) {
-        document.getElementById('job-city').value = store.city;
-        document.getElementById('job-state').value = store.state;
-    }
+    newJobBtn.addEventListener('click', () => { jobModalTitle.textContent = 'Criar Nova Vaga'; jobForm.reset(); document.getElementById('job-is_active').checked = true; openJobModal(); });
+    cancelJobBtn.addEventListener('click', closeJobModal);
+    jobModalOverlay.addEventListener('click', (e) => { if (e.target === jobModalOverlay) closeJobModal(); });
+    jobForm.addEventListener('submit', handleJobFormSubmit);
+
+    jobStatusFilter.addEventListener('change', displayJobs);
+    jobCategoryFilter.addEventListener('change', displayJobs);
+    jobTitleFilter.addEventListener('change', displayJobs);
+    jobSearchInput.addEventListener('input', displayJobs);
+
+    newTalentBtn.addEventListener('click', openTalentModal);
+    cancelTalentBtn.addEventListener('click', closeTalentModal);
+    talentModalOverlay.addEventListener('click', (e) => { if (e.target === talentModalOverlay) closeTalentModal(); });
+
+    storeFilterSelect.addEventListener('change', loadResumesByStore);
+    document.getElementById('store-search-input').addEventListener('input', displayStores);
+    document.getElementById('store-state-filter').addEventListener('change', displayStores);
+
+    document.getElementById('job-storeName').addEventListener('change', (e) => {
+        const selectedStoreId = e.target.value;
+        const store = loadedStores.find(s => s.id == selectedStoreId);
+        if (store) {
+            document.getElementById('job-city').value = store.city;
+            document.getElementById('job-state').value = store.state;
+        }
+    });
 });

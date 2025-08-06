@@ -508,7 +508,7 @@ th {
 }
 
 .slider {
-    position: relative;
+    position: fixed;
     width: 50px;
     height: 28px;
     background-color: #ccc;
