@@ -303,105 +303,95 @@ select {
 }
 
 
-.testimonial-nav-next { right: -10px; }
-.testimonial-nav-prev { left: -10px; }
-
 @media (max-width: 768px) {
     .testimonial-nav-next, .testimonial-nav-prev {
         display: none; /* Esconde as setas em telas pequenas */
     }
 }
 
-.testimonial-pagination .swiper-pagination-bullet {
-    background-color: #000000;
-    opacity: 0.4;
-    transition: all 0.3s ease;
-}
 
-.testimonial-pagination .swiper-pagination-bullet-active {
-    opacity: 1;
-    transform: scale(1.2);
-    background-color: #F37021;
-}
+/* ================================================= */
+/* === ESTILOS ALTERNATIVOS PARA OS DEPOIMENTOS === */
+/* ================================================= */
 
-/* Estilização da navegação do carrossel de depoimentos */
-.testimonial-nav-next,
-.testimonial-nav-prev {
-    color: #000000; /* Cor roxa da Help! */
-    top: 50%;
-    transform: translateY(-70%); /* Ajuste para centralizar com o card */
-}
-
-.testimonial-nav-next { right: -10px; }
-.testimonial-nav-prev { left: -10px; }
-
-@media (max-width: 768px) {
-    .testimonial-nav-next, .testimonial-nav-prev {
-        display: none; /* Esconde as setas em telas pequenas */
-    }
-}
-
-.testimonial-pagination .swiper-pagination-bullet {
-    background-color: #000000; /* Cor roxa da Help! */
-    opacity: 0.4;
-    transition: all 0.3s ease;
-}
-
-.testimonial-pagination .swiper-pagination-bullet-active {
-    opacity: 1;
-    transform: scale(1.2);
-    background-color: #F37021; /* Cor laranja no item ativo */
-}
-
-/* Corrigindo a seção de depoimentos */
 #depoimentos {
-    background-color: white !important; /* Força o fundo branco */
+    background-color: #ffffff; /* Fundo alterado para branco */
 }
-
+/* Garante que o slide se ajuste ao card */
 .testimonial-swiper .swiper-slide {
-    background: transparent !important; /* Remove qualquer fundo dos slides */
+    height: auto;
+    padding-bottom: 10px; /* Evita que a sombra seja cortada */
 }
 
-.testimonial-swiper .swiper-slide > div {
-    background-color: white; /* Mantém o card branco */
-    border: 1px solid #e5e7eb; /* Borda mais suave */
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+.testimonial-card-alt {
+    display: flex;
+    flex-direction: row; /* Layout lado a lado */
+    background: #ffffff;
+    border-radius: 0.75rem; /* 12px */
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    height: 100%; /* Faz o card ocupar a altura do slide */
+    min-height: 380px; /* Altura mínima para consistência */
 }
 
-/* Remove qualquer sobreposição de cor */
-.testimonial-swiper .swiper-slide::before {
-    content: none;
+.testimonial-img-alt {
+    width: 40%; /* Largura da imagem */
+    object-fit: cover;
+    flex-shrink: 0; /* Impede que a imagem encolha */
 }
 
-/* Ajustes para cards de depoimento com tamanho fixo */
-.testimonial-swiper .swiper-slide {
-    height: auto !important; /* Mantém altura automática baseada no conteúdo */
-}
-
-.testimonial-swiper .swiper-slide > div {
-    height: 100%; /* Ocupa toda a altura do slide */
-    min-height: 300px; /* Altura mínima para todos os cards */
+.testimonial-content-alt {
+    padding: 2rem; /* Espaçamento interno generoso */
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centraliza o conteúdo verticalmente */
+    text-align: left; /* Alinha o texto à esquerda */
+    flex-grow: 1;
 }
 
-/* Garante que o conteúdo do card ocupe o espaço disponível */
-.testimonial-swiper .swiper-slide figure {
-    height: 100%;
+.testimonial-text-alt {
+    color: #374151; /* Cor de texto mais escura para legibilidade */
+    font-size: 1rem;
+    line-height: 1.75;
+    flex-grow: 1; /* Faz o texto ocupar o espaço disponível */
+    font-style: italic;
+    margin-bottom: 1.5rem;
+}
+
+.testimonial-author-alt {
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Distribui o espaço entre os elementos */
+    align-items: flex-start; /* Alinha o autor à esquerda */
+    gap: 0.25rem;
 }
 
-/* Ajusta o bloco de citação para ocupar o espaço adequado */
-.testimonial-swiper blockquote {
-    flex-grow: 1; /* Faz o bloco de citação crescer para ocupar o espaço disponível */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+/* Ajustes para telas menores */
+@media (max-width: 768px) {
+    .testimonial-card-alt {
+        flex-direction: column; /* Volta para o layout vertical em telas pequenas */
+        min-height: auto;
+    }
+
+    .testimonial-img-alt {
+        width: 100%;
+        height: 250px; /* Altura fixa para a imagem em mobile */
+    }
+
+    .testimonial-content-alt {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .testimonial-author-alt {
+        align-items: center; /* Centraliza o autor em mobile */
+    }
 }
 
+/* Garante que os slides se estiquem para a mesma altura no wrapper */
+.testimonial-swiper .swiper-wrapper {
+    align-items: stretch;
+}
 
 #quem-somos,
 #depoimentos,
