@@ -39,7 +39,7 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <button id="logout-btn"><span class="material-icons">logout</span> Sair</button>
+                <button id="logout-btn" class="btn btn-outline"><span class="material-icons">logout</span> Sair</button>
             </div>
         </aside>
 
@@ -48,8 +48,8 @@
                 <header>
                     <h1>Gestão de Vagas</h1>
                     <div>
-                        <button id="new-talent-btn">+ Adicionar ao Banco de Talentos</button>
-                        <button id="new-job-btn">+ Criar Nova Vaga</button>
+                        <button id="new-talent-btn" class="btn btn-primary">+ Adicionar ao Banco de Talentos</button>
+                        <button id="new-job-btn" class="btn btn-secondary">+ Criar Nova Vaga</button>
                     </div>
                 </header>
                 <section class="stats-cards">
@@ -208,8 +208,8 @@
                         <span class="slider"></span> Vaga Ativa
                     </label>
                     <div class="modal-actions">
-                        <button type="button" id="cancel-btn">Cancelar</button>
-                        <button type="submit" id="save-btn">Salvar</button>
+                        <button type="button" id="cancel-btn" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" id="save-btn" class="btn btn-primary">Salvar</button>
                     </div>
                 </div>
             </form>
@@ -248,8 +248,8 @@
                 <label for="talent-cv-file">Currículo (PDF ou DOCX):</label>
                 <input type="file" id="talent-cv-file" accept=".pdf,.doc,.docx" required>
                 <div class="modal-actions">
-                    <button type="button" id="cancel-talent-btn">Cancelar</button>
-                    <button type="submit" id="save-talent-btn">Salvar Candidato</button>
+                    <button type="button" id="cancel-talent-btn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" id="save-talent-btn" class="btn btn-primary">Salvar Candidato</button>
                 </div>
                 <p id="talent-status-message"></p>
             </form>
@@ -277,8 +277,9 @@
                     <input type="text" id="store-instagram" placeholder="URL do Instagram">
                 </div>
                 <div class="modal-actions">
-                    <button type="button" id="cancel-store-btn">Cancelar</button>
-                    <button type="submit" id="save-store-btn">Salvar Loja</button>
+
+                    <button type="button" id="cancel-btn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" id="save-btn" class="btn btn-primary">Salvar Loja</button>
                 </div>
             </form>
         </div>

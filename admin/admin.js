@@ -279,8 +279,8 @@ function displayJobs() {
                 </div>
             </div>
             <div class="job-card-footer">
-                <button class="actions-btn edit-btn" data-id="${job.id}">Editar</button>
-                <button class="actions-btn delete-btn" data-id="${job.id}" data-candidates="${candidateCount}">Excluir</button>
+                <button class="btn btn-info" data-id="${job.id}">Editar</button>
+                    <button class="btn btn-danger" data-id="${job.id}" data-candidates="${candidateCount}">Excluir</button>
             </div>
         `;
         jobCardGrid.appendChild(card);
