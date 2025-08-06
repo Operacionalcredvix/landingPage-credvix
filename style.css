@@ -1,25 +1,32 @@
 body {
     font-family: 'Lato', sans-serif;
-    background-color: #ffffff;
-    color: #374151; 
+    background-color: rgb(255, 255, 255);
+    color: rgb(55, 65, 81);
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
 }
 
+:root {
+    --primary-color: rgb(242, 99, 34); /* Cor principal */
+    --secondary-color: #4B5563; /* Cinza escuro */
+    --accent-color: #72A0C1; /* Azul claro */
+    --text-color: #374151; /* Cinza escuro para texto */
+    --background-color: #F9FAFB; /* Cinza muito claro */
+}
 
 /* --- Paleta de Cores e Temas --- */
 .bg-gray-50 {
     background-color: #f9fafb; 
 }
-.bg-credvix-orange { background-color: #F37021; }
-.text-credvix-orange { color: #F37021; }
-.border-credvix-orange { border-color: #F37021; }
-.bg-help-purple { background-color: #000000; }
+.bg-credvix-orange { --primary-color: rgb(243, 112, 33); }
+.text-credvix-orange { color: rgb(243, 112, 33); }
+.border-credvix-orange { border-color: rgb(243, 112, 33); }
+.bg-help-purple { background-color: rgb(72, 43, 116); }
 .text-help-purple { color: #000000; }
 .ring-help-purple:focus {
-    outline-color: #000000;
+    outline-color: rgb(72, 43, 116);
     box-shadow: 0 0 0 3px rgba(74, 36, 109, 0.3);
 }
 .scroll-smooth { scroll-behavior: smooth; }
@@ -34,7 +41,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 .nav-link:hover {
     color: #000000;
-    border-bottom-color: #F37021;
+    border-bottom-color: var(--primary-color);
 }
 
 .section-title {
@@ -111,7 +118,7 @@ details > summary::after {
     color: #000000;
 }
 details[open] {
-    border-color: #F37021;
+    border-color: rgb(242, 99, 34);
 }
 details[open] > summary::after {
     transform: rotate(45deg);
@@ -329,15 +336,20 @@ select {
 
 .testimonial-card-alt {
     display: flex;
-    flex-direction: row; /* Layout lado a lado */
+    flex-direction: row;
     background: #ffffff;
-    border-radius: 0.75rem; /* 12px */
+    border-radius: 0.75rem;
     overflow: hidden;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
     border: 1px solid #e5e7eb;
-    height: 100%; /* Faz o card ocupar a altura do slide */
-    min-height: 380px; /* Altura mínima para consistência */
-    background-color: #ffffff !important;
+    height: 100%;
+    /* A linha 'min-height' foi REMOVIDA para permitir que o card cresça conforme o conteúdo */
+}
+.testimonial-content-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain; /* Garante que a imagem inteira seja visível */
 }
 
 .testimonial-img-alt {
@@ -347,28 +359,12 @@ select {
 }
 
 .testimonial-content-alt {
-    padding: 2rem; /* Espaçamento interno generoso */
+    padding: 1rem; /* Um pouco de espaço à volta da imagem */
     display: flex;
-    flex-direction: column;
-    justify-content: center; /* Centraliza o conteúdo verticalmente */
-    text-align: left; /* Alinha o texto à esquerda */
+    justify-content: center;
+    align-items: center;
     flex-grow: 1;
-}
-
-.testimonial-text-alt {
-    color: #374151; /* Cor de texto mais escura para legibilidade */
-    font-size: 0.875rem;
-    line-height: 1.75;
-    flex-grow: 1; /* Faz o texto ocupar o espaço disponível */
-    font-style: italic;
-    margin-bottom: 1.5rem;
-}
-
-.testimonial-author-alt {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Alinha o autor à esquerda */
-    gap: 0.25rem;
+    width: 60%; /* Define que a parte do depoimento ocupa 60% do card */
 }
 
 /* Ajustes para telas menores */
@@ -469,4 +465,38 @@ select {
 
 #hero .cta-button.bg-help-purple:hover {
     background-color: rgba(74, 36, 109, 0.4);
+}
+
+/* =============================================== */
+/* === ESTILOS PARA CATEGORIAS DE VAGAS          === */
+/* =============================================== */
+
+.category-card {
+    background-color: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.category-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
+.category-title-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary-color, #F37021); /* Cor de fallback */
+    color: white;
+    padding: 0.75rem 1rem;
 }
