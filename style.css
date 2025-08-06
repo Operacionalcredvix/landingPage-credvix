@@ -139,7 +139,7 @@ details[open] > summary::after {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0.2)); /* Gradiente para melhor legibilidade */
+    background: linear-gradient(to top, rgba(0,0,0,0.1), rgba(0,0,0,0.2), rgba(0,0,0,0.3));
     z-index: 1;
 }
 .slide-content { position: relative; z-index: 2; padding: 1rem; max-width: 800px; }
@@ -314,13 +314,17 @@ select {
 /* === ESTILOS ALTERNATIVOS PARA OS DEPOIMENTOS === */
 /* ================================================= */
 
+
 #depoimentos {
-    background-color: #ffffff; /* Fundo alterado para branco */
+    background-color: #ffffff !important;
+    padding: 4rem 0;
 }
+
 /* Garante que o slide se ajuste ao card */
 .testimonial-swiper .swiper-slide {
     height: auto;
     padding-bottom: 10px; /* Evita que a sombra seja cortada */
+    background-color: transparent !important;
 }
 
 .testimonial-card-alt {
@@ -333,6 +337,7 @@ select {
     border: 1px solid #e5e7eb;
     height: 100%; /* Faz o card ocupar a altura do slide */
     min-height: 380px; /* Altura mínima para consistência */
+    background-color: #ffffff !important;
 }
 
 .testimonial-img-alt {
@@ -352,7 +357,7 @@ select {
 
 .testimonial-text-alt {
     color: #374151; /* Cor de texto mais escura para legibilidade */
-    font-size: 1rem;
+    font-size: 0.875rem;
     line-height: 1.75;
     flex-grow: 1; /* Faz o texto ocupar o espaço disponível */
     font-style: italic;
