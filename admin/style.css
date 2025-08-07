@@ -349,8 +349,7 @@ body {
     margin-top: 10px;
 }
 
-.filter-panel,
-.resume-filter-container {
+.filter-panel {
     background-color: var(--card-background);
     padding: 1.5rem;
     border-radius: 8px;
