@@ -1,5 +1,11 @@
 import { supabase } from './supabase-client.js';
 
+// Define os valores padrão para os tipos de candidatura num único local
+const APLICATION_TYPE = {
+    OPEN_POSITION: 'Aberta',
+    TALENT_POOL: 'Banco de Talentos'
+};
+
 const uploadModal = document.getElementById('upload-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const modalJobTitle = document.getElementById('modal-job-title');
@@ -8,13 +14,33 @@ const cvFileInput = document.getElementById('cv-file');
 const modalContentForm = document.getElementById('modal-content-form');
 const modalContentStatus = document.getElementById('modal-content-status');
 
+/**
+ * Normaliza o tipo de candidatura para garantir a consistência dos dados.
+ * @param {string} type - O tipo de candidatura recebido.
+ * @returns {string|null} - O tipo de candidatura padronizado ou nulo se inválido.
+ */
+function normalizeApplicationType(type) {
+    if (typeof type !== 'string') return null;
+
+    const lowerCaseType = type.toLowerCase().trim();
+
+    if (lowerCaseType.includes('banco')) {
+        return APLICATION_TYPE.TALENT_POOL;
+    }
+    if (lowerCaseType.includes('aberta')) {
+        return APLICATION_TYPE.OPEN_POSITION;
+    }
+    // Retorna o valor original como fallback, caso não corresponda a nenhum padrão
+    return type;
+}
+
 export function openUploadModal(jobTitle, storeName, jobId, applicationType) {
     if (uploadModal) {
         modalJobTitle.textContent = `${jobTitle} - ${storeName}`;
         uploadForm.dataset.jobTitle = jobTitle;
         uploadForm.dataset.storeName = storeName;
         uploadForm.dataset.jobId = jobId;
-        uploadForm.dataset.applicationType = applicationType; // Adicionado
+        uploadForm.dataset.applicationType = applicationType;
         modalContentForm.classList.remove('hidden');
         modalContentStatus.classList.add('hidden');
         uploadForm.reset();
@@ -60,7 +86,9 @@ async function handleFormSubmit(e) {
     const file = cvFileInput.files[0];
     const jobTitle = e.currentTarget.dataset.jobTitle;
     const storeName = e.currentTarget.dataset.storeName;
-    const applicationType = e.currentTarget.dataset.applicationType; // Adicionado
+    const rawApplicationType = e.currentTarget.dataset.applicationType;
+    const applicationType = normalizeApplicationType(rawApplicationType);
+
     const candidateName = document.getElementById('candidate-name').value.trim();
     const candidateEmail = document.getElementById('candidate-email').value.trim();
     const candidatePhone = document.getElementById('candidate-phone').value.trim();
@@ -89,7 +117,7 @@ async function handleFormSubmit(e) {
             vaga: jobTitle,
             loja: storeName,
             city: vaga.lojas ? vaga.lojas.city : null,
-            tipo_candidatura: applicationType // Adicionado
+            tipo_candidatura: applicationType
         }, filePath);
 
         modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><p class="text-green-600 font-bold text-xl mb-2">Currículo enviado com sucesso!</p><p class="text-sm text-gray-500">Agradecemos seu interesse. Entraremos em contato em breve.</p></div>`;

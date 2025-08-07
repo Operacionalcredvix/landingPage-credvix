@@ -1,7 +1,17 @@
+// admin/modules/auth.js
 
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { showDashboard, showLogin } from './ui.js';
+import { loadStores } from './stores.js'; // Importa a função para carregar as lojas.
+
+/**
+ * Carrega os dados essenciais e exibe o painel.
+ */
+async function bootstrapDashboard() {
+    await loadStores(); //  Garante que as lojas (e cidades) sejam carregadas primeiro.
+    showDashboard();    //  Depois, exibe o painel já com os dados disponíveis.
+}
 
 /**
  * Lida com a tentativa de login do usuário.
@@ -35,7 +45,7 @@ export function initializeAuth() {
         const sessionIsActive = sessionStorage.getItem('sessionActive');
         if (event === 'SIGNED_IN' || (session && sessionIsActive)) {
             if (event === 'SIGNED_IN') sessionStorage.setItem('sessionActive', 'true');
-            showDashboard();
+            bootstrapDashboard(); // Chama a nova função de inicialização.
         } else {
             if (session && !sessionIsActive) {
                  supabase.auth.signOut(); // Força o logout se a sessão do storage não bater com a do supabase

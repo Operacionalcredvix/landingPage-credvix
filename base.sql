@@ -1,5 +1,24 @@
--- 1. Tabela 'lojas'
--- Esta tabela será a fonte única de informação sobre cada loja.
+-- =================================================================
+-- === SCRIPT COMPLETO DO BANCO DE DADOS - Job Recruitment System ===
+-- =================================================================
+
+-- DROP SCHEMA public CASCADE; -- Descomente para apagar tudo e recomeçar
+-- CREATE SCHEMA public;
+
+-- -----------------------------------------------------------------
+-- TIPO DE DADOS PERSONALIZADO (ENUM)
+-- Garante a consistência dos dados para categorias de vagas e candidaturas.
+-- -----------------------------------------------------------------
+CREATE TYPE public.tipo_candidatura_enum AS ENUM (
+    'Aberta',
+    'Banco de Talentos'
+);
+
+
+-- -----------------------------------------------------------------
+-- TABELA 1: lojas
+-- Contém a informação de todas as lojas físicas.
+-- -----------------------------------------------------------------
 CREATE TABLE public.lojas (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -12,64 +31,73 @@ CREATE TABLE public.lojas (
     instagram_url TEXT
 );
 
--- 2. Tabela 'vagas'
--- Contém todas as vagas e se relaciona diretamente com a tabela 'lojas'.
+
+-- -----------------------------------------------------------------
+-- TABELA 2: vagas
+-- Contém todas as vagas de emprego, associadas a uma loja.
+-- -----------------------------------------------------------------
 CREATE TABLE public.vagas (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    loja_id BIGINT, -- Chave Estrangeira que aponta para a loja
+    loja_id BIGINT,
     title TEXT NOT NULL,
-    storename TEXT, -- Mantido para compatibilidade, mas a relação é com loja_id
-    city TEXT, -- Mantido para compatibilidade
-    state TEXT, -- Mantido para compatibilidade
+    storename TEXT,
+    city TEXT,
+    state TEXT,
     type TEXT,
     description TEXT,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     inactivated_at TIMESTAMPTZ,
-    job_category TEXT NOT NULL DEFAULT 'Aberta'::TEXT,
+    job_category public.tipo_candidatura_enum NOT NULL DEFAULT 'Aberta'::public.tipo_candidatura_enum, -- Usa o tipo ENUM com valor padrão
     
-    -- Definição da Relação (Chave Estrangeira)
     CONSTRAINT fk_loja
         FOREIGN KEY(loja_id) 
         REFERENCES public.lojas(id)
-        ON DELETE SET NULL -- Se uma loja for deletada, a vaga não será, mas o campo loja_id ficará nulo.
+        ON DELETE SET NULL
 );
 
--- 3. Tabela 'candidatos'
--- Contém os candidatos e se relaciona com a tabela 'vagas'.
+
+-- -----------------------------------------------------------------
+-- TABELA 3: candidatos
+-- Contém os dados dos candidatos que se aplicam às vagas.
+-- -----------------------------------------------------------------
 CREATE TABLE public.candidatos (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    vaga_id BIGINT, -- Chave Estrangeira que aponta para a vaga
+    vaga_id BIGINT,
     nome_completo TEXT NOT NULL,
     email TEXT NOT NULL,
     telefone TEXT,
     curriculo_url TEXT,
     status TEXT DEFAULT 'pendente'::TEXT,
-    vaga TEXT, -- Mantido para guardar o título da vaga no momento da candidatura
-    loja TEXT, -- Mantido para guardar o nome da loja no momento da candidatura
-    city TEXT, -- Mantido para guardar o nome da cidade no momento da candidatura
-    tipo_candidatura TEXT, -- NOVA COLUNA: para 'Vaga Aberta' ou 'Banco de Talentos'
+    vaga TEXT,
+    loja TEXT,
+    city TEXT,
+    tipo_candidatura public.tipo_candidatura_enum, -- Usa o tipo ENUM
 
-    -- Definição da Relação (Chave Estrangeira)
     CONSTRAINT fk_vaga
         FOREIGN KEY(vaga_id) 
         REFERENCES public.vagas(id)
-        ON DELETE CASCADE -- Se uma vaga for deletada, todos os candidatos a ela também serão.
+        ON DELETE CASCADE
 );
 
--- Habilita a segurança a nível de linha (RLS) para as novas tabelas (Boa Prática)
+
+-- -----------------------------------------------------------------
+-- POLÍTICAS DE SEGURANÇA (ROW LEVEL SECURITY - RLS)
+-- Controla quem pode ver e modificar os dados.
+-- -----------------------------------------------------------------
+
+-- Habilita o RLS em todas as tabelas
 ALTER TABLE public.lojas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vagas ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.candidatos ENABLE ROW LEVEL SECURITY;
 
--- Cria políticas de acesso público para leitura (SELECT) e escrita (INSERT)
--- Isso permite que seu site público leia as lojas/vagas e envie currículos.
+-- Permissões para o site público (acesso anónimo)
 CREATE POLICY "Permitir leitura pública de lojas" ON public.lojas FOR SELECT USING (true);
-CREATE POLICY "Permitir leitura pública de vagas" ON public.vagas FOR SELECT USING (true);
+CREATE POLICY "Permitir leitura pública de vagas ativas" ON public.vagas FOR SELECT USING (is_active = true);
 CREATE POLICY "Permitir inserção pública de candidatos" ON public.candidatos FOR INSERT WITH CHECK (true);
 
--- Permite acesso total a quem estiver logado no sistema (admin)
-CREATE POLICY "Permitir acesso total para usuários autenticados em lojas" ON public.lojas FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Permitir acesso total para usuários autenticados em vagas" ON public.vagas FOR ALL USING (auth.role() = 'authenticated');
-CREATE POLICY "Permitir acesso total para usuários autenticados em candidatos" ON public.candidatos FOR ALL USING (auth.role() = 'authenticated');
+-- Permissões para o painel de administração (utilizadores autenticados)
+CREATE POLICY "Permitir acesso total para utilizadores autenticados em lojas" ON public.lojas FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Permitir acesso total para utilizadores autenticados em vagas" ON public.vagas FOR ALL USING (auth.role() = 'authenticated');
+CREATE POLICY "Permitir acesso total para utilizadores autenticados em candidatos" ON public.candidatos FOR ALL USING (auth.role() = 'authenticated');
