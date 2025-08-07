@@ -52,6 +52,7 @@ const cancelTalentBtn = document.getElementById('talent-cancel-btn');
 
 // Elementos da Tela de Currículos
 const storeFilterSelect = document.getElementById('store-filter-select');
+const applicationTypeFilter = document.getElementById('application-type-filter'); // NOVO
 const resumeListTbody = document.getElementById('resume-list-tbody');
 const loadingResumesMessage = document.getElementById('loading-resumes-message');
 const noResumesMessage = document.getElementById('no-resumes-message');
@@ -360,9 +361,19 @@ async function loadResumesByStore() {
     loadingResumesMessage.classList.remove('hidden');
     noResumesMessage.classList.add('hidden');
     resumeListTbody.innerHTML = '';
+
     const selectedCity = storeFilterSelect.value;
+    const selectedApplicationType = applicationTypeFilter.value; // NOVO
+
     let query = supabase.from('candidatos').select('*').order('created_at', { ascending: false });
-    if (selectedCity !== 'todos') query = query.eq('city', selectedCity);
+
+    if (selectedCity !== 'todos') {
+        query = query.eq('city', selectedCity);
+    }
+    if (selectedApplicationType !== 'todos') { // NOVO
+        query = query.eq('tipo_candidatura', selectedApplicationType);
+    }
+
     const { data: resumes, error } = await query;
     loadingResumesMessage.classList.add('hidden');
 
@@ -381,6 +392,7 @@ async function loadResumesByStore() {
         row.innerHTML = `
             <td><strong>${resume.nome_completo}</strong><br><small>${resume.email} / ${resume.telefone}</small></td>
             <td>${resume.loja || 'N/A'}</td>
+            <td>${resume.tipo_candidatura || 'N/A'}</td>
             <td>${applicationDate}</td>
             <td><a href="${resume.curriculo_url}" target="_blank" download class="btn btn-primary">Baixar</a></td>
         `;
@@ -438,6 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
     talentModalOverlay.addEventListener('click', (e) => { if (e.target === talentModalOverlay) closeTalentModal(); });
 
     storeFilterSelect.addEventListener('change', loadResumesByStore);
+    applicationTypeFilter.addEventListener('change', loadResumesByStore); // NOVO
     document.getElementById('store-search-input').addEventListener('input', displayStores);
     document.getElementById('store-state-filter').addEventListener('change', displayStores);
 

@@ -40,7 +40,8 @@ function createJobCard(job) {
             <button class="apply-btn block w-full text-center bg-help-purple text-white font-semibold px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors mt-4" 
                     data-job-id="${job.id}" 
                     data-job-title="${job.title}" 
-                    data-store-name="${storeName}">
+                    data-store-name="${storeName}"
+                    data-application-type="${job.job_category}">
                 Candidatar-se
             </button>
         </div>
@@ -53,7 +54,8 @@ function addApplyButtonListeners() {
             const jobId = e.currentTarget.dataset.jobId;
             const jobTitle = e.currentTarget.dataset.jobTitle;
             const storeName = e.currentTarget.dataset.storeName;
-            openUploadModal(jobTitle, storeName, jobId);
+            const applicationType = e.currentTarget.dataset.applicationType;
+            openUploadModal(jobTitle, storeName, jobId, applicationType);
         });
     });
 }

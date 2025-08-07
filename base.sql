@@ -49,6 +49,7 @@ CREATE TABLE public.candidatos (
     vaga TEXT, -- Mantido para guardar o título da vaga no momento da candidatura
     loja TEXT, -- Mantido para guardar o nome da loja no momento da candidatura
     city TEXT, -- Mantido para guardar o nome da cidade no momento da candidatura
+    tipo_candidatura TEXT, -- NOVA COLUNA: para 'Vaga Aberta' ou 'Banco de Talentos'
 
     -- Definição da Relação (Chave Estrangeira)
     CONSTRAINT fk_vaga

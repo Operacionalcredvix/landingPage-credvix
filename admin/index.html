@@ -112,11 +112,21 @@
                 <header>
                     <h1>Banco de Currículos</h1>
                 </header>
-                <section class="resume-filter-container">
-                    <label for="store-filter-select">Filtrar por Cidade:</label>
-                    <select id="store-filter-select">
-                        <option value="todos">Todas as Cidades</option>
-                    </select>
+                <section class="resume-filter-container" style="display: flex; gap: 1rem; align-items: flex-end;">
+                    <div style="flex-grow: 1;">
+                        <label for="store-filter-select">Filtrar por Cidade:</label>
+                        <select id="store-filter-select" style="width: 100%;">
+                            <option value="todos">Todas as Cidades</option>
+                        </select>
+                    </div>
+                    <div style="flex-grow: 1;">
+                        <label for="application-type-filter">Filtrar por Tipo de Vaga:</label>
+                        <select id="application-type-filter" style="width: 100%;">
+                            <option value="todos">Todos os Tipos</option>
+                            <option value="Aberta">Vaga Aberta</option>
+                            <option value="Banco de Talentos">Banco de Talentos</option>
+                        </select>
+                    </div>
                 </section>
                 <section class="resume-list-container">
                     <h2>Lista de Currículos</h2>
@@ -125,6 +135,7 @@
                             <tr>
                                 <th>Candidato</th>
                                 <th>Loja da Candidatura</th>
+                                <th>Tipo de Candidatura</th>
                                 <th>Data de Envio</th>
                                 <th>Ação</th>
                             </tr>
@@ -141,7 +152,6 @@
                     <h1>Gestão de Lojas</h1>
                     <button id="new-store-btn" class="btn btn-secondary">+ Criar Nova Loja</button>
                 </header>
-                <!-- Filtro de lojas -->
                 <section class="filter-panel">
                     <div class="filter-group">
                         <label for="store-search-input">Buscar por nome</label>
