@@ -486,7 +486,7 @@ select {
 
 .category-image {
     width: 100%;
-    height: 250px;
+    height: 370px;
     object-fit: cover;
     display: block;
 }
@@ -496,7 +496,7 @@ select {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: var(--primary-color, #F37021); /* Cor de fallback */
+    background-color: var(--primary-color, #F37021);
     color: white;
     padding: 0.75rem 1rem;
 }
