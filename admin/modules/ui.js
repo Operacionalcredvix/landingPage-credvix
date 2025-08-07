@@ -1,3 +1,4 @@
+// admin/modules/ui.js
 
 import * as dom from './dom.js';
 import { loadJobs } from './jobs.js';
@@ -30,6 +31,10 @@ export function showView(viewId) {
     if (selected) {
         selected.view.classList.remove('hidden');
         selected.nav.parentElement.classList.add('active');
+        
+        // Guarda a vista atual na sessão do navegador [NOVO]
+        sessionStorage.setItem('activeAdminView', viewId);
+
         // Carrega os dados para a tela selecionada
         if (viewLoaders[viewId]) {
             viewLoaders[viewId]();
@@ -53,7 +58,10 @@ export const closeTalentModal = () => dom.talentModalOverlay.classList.add('hidd
 export function showDashboard() {
     dom.loginContainer.classList.add('hidden');
     dom.dashboard.classList.remove('hidden');
-    showView('vagas'); // Define 'vagas' como a tela inicial
+    
+    // Verifica se há uma vista guardada na sessão, caso contrário, usa 'vagas' [ALTERADO]
+    const savedView = sessionStorage.getItem('activeAdminView');
+    showView(savedView || 'vagas'); 
 }
 
 /**
