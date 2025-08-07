@@ -2,16 +2,7 @@
 
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
-import { showDashboard, showLogin } from './ui.js';
-import { loadStores } from './stores.js'; // Importa a função para carregar as lojas.
-
-/**
- * Carrega os dados essenciais e exibe o painel.
- */
-async function bootstrapDashboard() {
-    await loadStores(); //  Garante que as lojas (e cidades) sejam carregadas primeiro.
-    showDashboard();    //  Depois, exibe o painel já com os dados disponíveis.
-}
+import { showLogin } from './ui.js';
 
 /**
  * Lida com a tentativa de login do usuário.
@@ -38,17 +29,20 @@ export async function handleLogout() {
 }
 
 /**
- * Verifica o estado da sessão e exibe a tela correta (login ou dashboard).
+ * Verifica o estado da sessão e chama a função de sucesso ou mostra o login.
+ * @param {Function} onLoginSuccess - Função a ser executada quando o login for bem-sucedido.
  */
-export function initializeAuth() {
+export function initializeAuth(onLoginSuccess) {
     supabase.auth.onAuthStateChange((event, session) => {
         const sessionIsActive = sessionStorage.getItem('sessionActive');
+
         if (event === 'SIGNED_IN' || (session && sessionIsActive)) {
             if (event === 'SIGNED_IN') sessionStorage.setItem('sessionActive', 'true');
-            bootstrapDashboard(); // Chama a nova função de inicialização.
+            // Apenas chama a função de sucesso, não faz mais nada.
+            onLoginSuccess();
         } else {
             if (session && !sessionIsActive) {
-                 supabase.auth.signOut(); // Força o logout se a sessão do storage não bater com a do supabase
+                supabase.auth.signOut();
             }
             showLogin();
         }

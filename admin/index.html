@@ -252,18 +252,31 @@
 
     <div id="talent-modal-overlay" class="hidden">
         <div id="talent-modal">
-            <h2>Adicionar ao Banco de Talentos</h2>
-            <form id="talent-form">
-                <input type="text" id="talent-name" placeholder="Nome Completo do Candidato" required>
-                <input type="email" id="talent-email" placeholder="E-mail do Candidato" required>
-                <input type="tel" id="talent-phone" placeholder="Telefone do Candidato" required>
-                <label for="talent-cv-file">Currículo (PDF ou DOCX):</label>
-                <input type="file" id="talent-cv-file" accept=".pdf,.doc,.docx" required>
-                <div class="modal-actions">
-                    <button type="button" id="talent-cancel-btn" class="btn btn-secondary">Cancelar</button>
-                    <button type="submit" id="talent-save-btn" class="btn btn-primary">Salvar Candidato</button>
+            <h2 id="talent-modal-title">Adicionar ao Banco de Talentos</h2>
+            <form id="talent-form" novalidate>
+                <div class="form-grid">
+                    <div class="form-field-full">
+                        <input type="text" id="talent-name" placeholder="Nome Completo do Candidato" required>
+                    </div>
+                    <input type="email" id="talent-email" placeholder="E-mail do Candidato" required>
+                    <input type="tel" id="talent-phone" placeholder="Telefone do Candidato" required>
+                    <select id="talent-store-select" required>
+                        <option value="" disabled selected>Selecione a Loja de Interesse</option>
+                    </select>
+                    <input type="text" id="talent-position-input" placeholder="Cargo de Interesse (ex: Vendedor)"
+                        required>
                 </div>
-                <p id="talent-status-message"></p>
+                <div class="form-field-full">
+                    <label for="talent-cv-file">Currículo (PDF ou DOCX):</label>
+                    <input type="file" id="talent-cv-file" accept=".pdf,.doc,.docx" required>
+                </div>
+                <div class="modal-actions">
+                    <p id="talent-status-message" style="color: red;"></p>
+                    <div>
+                        <button type="button" id="talent-cancel-btn" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" id="talent-save-btn" class="btn btn-primary">Salvar Candidato</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>

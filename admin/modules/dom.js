@@ -59,3 +59,4 @@ export const noResumesMessage = document.getElementById('no-resumes-message');
 export const newTalentBtn = document.getElementById('new-talent-btn');
 export const talentModalOverlay = document.getElementById('talent-modal-overlay');
 export const cancelTalentBtn = document.getElementById('talent-cancel-btn');
+export const talentForm = document.getElementById('talent-form');
