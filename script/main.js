@@ -1,5 +1,6 @@
 // Caminho: script/main.js
-import { initSwiper, initTestimonialSwiper } from './swiper.js';
+import { initHeroSwiper } from './hero-swiper.js'; // Alterado
+import { initTestimonialSwiper } from './testimonial-swiper.js'; // Alterado
 import { initStoreLocator } from './storeLocator.js';
 import { initJobBoard } from './jobBoard.js';
 import { initModalHandler } from './modalHandler.js';
@@ -21,7 +22,7 @@ function initializePage() {
     // Só inicializa o Swiper do Hero se o elemento existir
     if (document.querySelector('.hero-swiper')) {
         console.log("Inicializando Swiper do Hero...");
-        initSwiper();
+        initHeroSwiper(); // Alterado
     }
 
     // Só inicializa o Swiper de Depoimentos se o elemento existir

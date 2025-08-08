@@ -18,7 +18,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* --- Paleta de Cores e Temas --- */
 .bg-gray-50 {
-    background-color: #f9fafb; 
+    background-color: #f9fafb;
 }
 .bg-credvix-orange { --primary-color: rgb(243, 112, 33); }
 .text-credvix-orange { color: rgb(243, 112, 33); }
@@ -34,7 +34,7 @@ h1, h2, h3, h4, h5, h6 {
 /* --- Componentes Globais --- */
 .nav-link {
     color: #4B5563;
-    font-weight: 500; 
+    font-weight: 500;
     transition: color 0.3s ease;
     padding-bottom: 4px;
     border-bottom: 2px solid transparent;
@@ -45,7 +45,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .section-title {
-    font-size: 2.125rem; 
+    font-size: 2.125rem;
     line-height: 2.5rem;
     font-weight: 800;
     color: #000000;
@@ -85,7 +85,6 @@ h1, h2, h3, h4, h5, h6 {
 /* --- Animações --- */
 .animate-on-scroll {
     opacity: 0;
-    /* Animação mais sutil: sobe menos e aumenta ligeiramente */
     transform: translateY(20px) scale(0.98);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
@@ -124,36 +123,173 @@ details[open] > summary::after {
     transform: rotate(45deg);
 }
 
-/* --- Slider Swiper --- */
-.swiper {
+/* ================================================= */
+/* === ESTILOS DO CARROSSEL HERO                  === */
+/* ================================================= */
+.hero-swiper-container {
     width: 100%;
-    height: 500px;
+    aspect-ratio: 16 / 9;
+    max-height: 50vh;
 }
-@media (min-width: 768px) { .swiper { height: 550px; } }
 
-.swiper-slide {
+@media (max-width: 767px) {
+    .hero-swiper-container {
+        aspect-ratio: 4 / 3;
+    }
+}
+
+.hero-swiper-container .swiper-slide {
     text-align: center;
-    font-size: 18px;
     color: #fff;
-    background-size: cover;
-    background-position: center;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
 }
-.swiper-slide::before {
+
+.hero-swiper-container .swiper-slide::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.1), rgba(0,0,0,0.2));
+    background: linear-gradient(to top, rgba(0,0,0,0.1), rgba(0,0,0,0.2), rgba(0,0,0,0.3));
     z-index: 1;
 }
-.slide-content { position: relative; z-index: 2; padding: 1rem; max-width: 800px; }
-.swiper-button-next, .swiper-button-prev { color: #fff; opacity: 0.7; transition: opacity 0.3s, transform 0.3s; }
-.swiper-button-next:hover, .swiper-button-prev:hover { opacity: 1; transform: scale(1.05); }
-.swiper-pagination-bullet { background: rgba(255, 255, 255, 0.8); opacity: 1; }
-.swiper-pagination-bullet-active { background-color: #F37021; transform: scale(1.2); }
+
+.hero-swiper-container .slide-content {
+    position: relative;
+    z-index: 2;
+    padding: 1rem;
+    max-width: 800px;
+}
+
+.hero-swiper-container .swiper-button-next,
+.hero-swiper-container .swiper-button-prev {
+    color: #fff;
+    opacity: 0.7;
+    transition: opacity 0.3s, transform 0.3s;
+    background-color: rgba(0, 0, 0, 0.2);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+}
+.hero-swiper-container .swiper-button-next:hover,
+.hero-swiper-container .swiper-button-prev:hover {
+    opacity: 1;
+    transform: scale(1.05);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+.hero-swiper-container .swiper-button-next::after,
+.hero-swiper-container .swiper-button-prev::after {
+    font-size: 18px;
+}
+
+.hero-swiper-container .hero-pagination.swiper-pagination-progressbar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 400px;
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.hero-swiper-container .hero-pagination .swiper-pagination-progressbar-fill {
+    background-color: #F37021;
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+/* Animação para o conteúdo do slide do Hero */
+.hero-swiper-container .slide-content > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-swiper-container .slide-content.slide-content-visible > * {
+    opacity: 1;
+    transform: translateY(0);
+}
+.hero-swiper-container .slide-content.slide-content-visible h1 { transition-delay: 0.2s; }
+.hero-swiper-container .slide-content.slide-content-visible p { transition-delay: 0.4s; }
+.hero-swiper-container .slide-content.slide-content-visible .cta-button { transition-delay: 0.6s; }
+
+/* ================================================= */
+/* === ESTILOS DO CARROSSEL DEPOIMENTOS           === */
+/* ================================================= */
+#depoimentos {
+    background-color: #ffffff !important;
+    padding: 4rem 0;
+}
+
+.testimonial-swiper-container .swiper-slide {
+    height: auto;
+    padding-bottom: 10px;
+    background-color: transparent !important;
+}
+
+.testimonial-swiper-container .swiper-wrapper {
+    align-items: stretch; /* Garante que os slides se estiquem para a mesma altura */
+}
+
+.testimonial-swiper-container .testimonial-nav-next,
+.testimonial-swiper-container .testimonial-nav-prev {
+    color: #333; /* Setas mais escuras para contraste */
+}
+
+@media (max-width: 768px) {
+    .testimonial-swiper-container .testimonial-nav-next,
+    .testimonial-swiper-container .testimonial-nav-prev {
+        display: none; /* Esconde as setas em telas pequenas */
+    }
+}
+
+.testimonial-card-alt {
+    display: flex;
+    flex-direction: row;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+    height: 100%;
+}
+.testimonial-content-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
+.testimonial-img-alt {
+    width: 40%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.testimonial-content-alt {
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    width: 60%;
+}
+
+@media (max-width: 768px) {
+    .testimonial-card-alt {
+        flex-direction: column;
+        min-height: auto;
+    }
+    .testimonial-img-alt {
+        width: 100%;
+        height: 250px;
+    }
+    .testimonial-content-alt {
+        padding: 1.5rem;
+        text-align: center;
+    }
+}
 
 /* --- Card de Valores --- */
 .value-card {
@@ -173,7 +309,6 @@ details[open] > summary::after {
 .value-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    /* Ícones com fundo para destaque */
     background-color: rgba(243, 112, 33, 0.1);
     color: #F37021;
     width: 60px;
@@ -189,12 +324,12 @@ details[open] > summary::after {
     overflow: hidden;
     height: 12rem;
     background-color: #e5e7eb;
-    border-radius: 1rem 1rem 0 0; 
+    border-radius: 1rem 1rem 0 0;
 }
 .store-card-image {
     width: 100%;
     height: 100%;
-    object-fit: cover; 
+    object-fit: cover;
     transition: transform 0.4s ease, filter 0.4s ease;
 }
 .store-card-image-wrapper:hover .store-card-image {
@@ -203,7 +338,7 @@ details[open] > summary::after {
 
 /* --- Rodapé --- */
 .footer-bg {
-    background-color: #1f2937; 
+    background-color: #1f2937;
 }
 .social-icon { color: #9ca3af; transition: color 0.3s, transform 0.3s; }
 .social-icon:hover { color: #fff; transform: scale(1.1); }
@@ -246,156 +381,7 @@ select {
     background-position: center;
 }
 
-/* Animação para o conteúdo do slide */
-.slide-content > * {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-    /* Adicionada sombra para melhorar a legibilidade sobre qualquer imagem */
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5); 
-}
-
-.slide-content.slide-content-visible > * {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Adicionando um atraso (delay) para cada elemento aparecer em sequência */
-.slide-content.slide-content-visible h1 {
-    transition-delay: 0.2s;
-}
-.slide-content.slide-content-visible p {
-    transition-delay: 0.4s;
-}
-.slide-content.slide-content-visible .cta-button {
-    transition-delay: 0.6s;
-}
-
-
-/* Estilização da Paginação como Barra de Progresso */
-.swiper-pagination.hero-pagination {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    max-width: 400px;
-    height: 3px; /* Altura da barra de progresso */
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-.swiper-pagination-progressbar-fill {
-    background-color: #F37021; /* Cor da barra de progresso */
-    transform-origin: left;
-    transition: transform 0.3s ease;
-}
-
-/* Deixando os botões de navegação mais elegantes */
-.swiper-button-next,
-.swiper-button-prev {
-    background-color: rgba(0, 0, 0, 0.2);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-    background-color: rgba(0, 0, 0, 0.4);
-    transform: scale(1.05);
-}
-.swiper-button-next::after,
-.swiper-button-prev::after {
-    font-size: 18px; /* Ícone da seta menor */
-}
-
-
-@media (max-width: 768px) {
-    .testimonial-nav-next, .testimonial-nav-prev {
-        display: none; /* Esconde as setas em telas pequenas */
-    }
-}
-
-
-/* ================================================= */
-/* === ESTILOS ALTERNATIVOS PARA OS DEPOIMENTOS === */
-/* ================================================= */
-
-
-#depoimentos {
-    background-color: #ffffff !important;
-    padding: 4rem 0;
-}
-
-/* Garante que o slide se ajuste ao card */
-.testimonial-swiper .swiper-slide {
-    height: auto;
-    padding-bottom: 10px; /* Evita que a sombra seja cortada */
-    background-color: transparent !important;
-}
-
-.testimonial-card-alt {
-    display: flex;
-    flex-direction: row;
-    background: #ffffff;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e5e7eb;
-    height: 100%;
-    /* A linha 'min-height' foi REMOVIDA para permitir que o card cresça conforme o conteúdo */
-}
-.testimonial-content-img {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain; /* Garante que a imagem inteira seja visível */
-}
-
-.testimonial-img-alt {
-    width: 40%; /* Largura da imagem */
-    object-fit: cover;
-    flex-shrink: 0; /* Impede que a imagem encolha */
-}
-
-.testimonial-content-alt {
-    padding: 1rem; /* Um pouco de espaço à volta da imagem */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    width: 60%; /* Define que a parte do depoimento ocupa 60% do card */
-}
-
-/* Ajustes para telas menores */
-@media (max-width: 768px) {
-    .testimonial-card-alt {
-        flex-direction: column; /* Volta para o layout vertical em telas pequenas */
-        min-height: auto;
-    }
-
-    .testimonial-img-alt {
-        width: 100%;
-        height: 250px; /* Altura fixa para a imagem em mobile */
-    }
-
-    .testimonial-content-alt {
-        padding: 1.5rem;
-        text-align: center;
-    }
-
-    .testimonial-author-alt {
-        align-items: center; /* Centraliza o autor em mobile */
-    }
-}
-
-/* Garante que os slides se estiquem para a mesma altura no wrapper */
-.testimonial-swiper .swiper-wrapper {
-    align-items: stretch;
-}
-
 #quem-somos,
-#depoimentos,
 #trabalhe-conosco {
     background-color: #ffffff;
 }
@@ -414,14 +400,14 @@ select {
 }
 
 .category-indicator {
-    font-size: 0.7rem;         
+    font-size: 0.7rem;
     font-weight: 600;
-    padding: 3px 10px;          
-    border-radius: 12px;       
+    padding: 3px 10px;
+    border-radius: 12px;
     border: 1px solid;
-    white-space: nowrap;       
-    flex-shrink: 0;            
-    line-height: 1.5;          
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1.5;
 }
 
 .category-open {
@@ -431,33 +417,26 @@ select {
 }
 
 .category-talent {
-    color: #1e40af; /* Um azul escuro e profissional para o texto */
-    border-color: #3b82f6; /* Um azul um pouco mais vivo para a borda */
-    background-color: #dbeafe; /* Um fundo azul bem claro para dar contraste */
+    color: #1e40af;
+    border-color: #3b82f6;
+    background-color: #dbeafe;
 }
-
 
 /* Estilos específicos para os botões na seção HERO */
 #hero .cta-button {
-    /* Torna o fundo semitransparente */
     background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px); /* Efeito de vidro fosco no fundo */
-    -webkit-backdrop-filter: blur(5px); /* Para compatibilidade com Safari */
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Borda sutil */
-
-    /* Empurra o botão um pouco mais para baixo */
-    margin-top: 5rem; /* Equivalente a 'mt-6' no Tailwind */
-}
-
-/* Ajusta a cor do texto para o botão roxo no Hero */
-#hero .cta-button.bg-help-purple {
-    background-color: rgba(74, 36, 109, 0.2); /* Roxo com transparência */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #ffffff; /* Garante que o texto fique branco */
+    margin-top: 5rem;
 }
 
+#hero .cta-button.bg-help-purple {
+    background-color: rgba(74, 36, 109, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+}
 
-/* Efeito hover para os botões do Hero */
 #hero .cta-button:hover {
     background-color: rgba(255, 255, 255, 0.4);
     border-color: rgba(255, 255, 255, 0.5);
@@ -470,7 +449,6 @@ select {
 /* =============================================== */
 /* === ESTILOS PARA CATEGORIAS DE VAGAS          === */
 /* =============================================== */
-
 .category-card {
     background-color: #ffffff;
     border-radius: 0.75rem;
@@ -486,7 +464,7 @@ select {
 
 .category-image {
     width: 100%;
-    height: 370px;
+    height: 400px;
     object-fit: cover;
     display: block;
 }

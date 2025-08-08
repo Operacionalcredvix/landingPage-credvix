@@ -1,26 +1,27 @@
+// script/hero-swiper.js
 
-export function initSwiper() {
+export function initHeroSwiper() {
     new Swiper('.hero-swiper', {
         // --- Efeitos e Transições ---
         loop: true,
-        effect: 'fade', // Mude para 'fade' para uma transição suave
+        effect: 'fade', 
         fadeEffect: {
-            crossFade: true // Evita o "piscar" entre os slides
+            crossFade: true 
         },
-        parallax: true, // Habilita o efeito parallax
+        parallax: true, 
         watchSlidesProgress: true,
 
         // --- Autoplay e Navegação ---
         autoplay: {
             delay: 5000,
             disableOnInteraction: false,
-            // Pausa o autoplay quando o mouse está sobre o slider
+            
             pauseOnMouseEnter: true, 
         },
         pagination: {
             el: '.hero-pagination',
             clickable: true,
-            // Renderiza a paginação como uma barra de progresso
+            
             type: 'progressbar',
         },
         navigation: {
@@ -44,42 +45,5 @@ export function initSwiper() {
                 activeSlide.querySelector('.slide-content').classList.add('slide-content-visible');
             }
         }
-    });
-}
-
-export function initTestimonialSwiper() {
-    new Swiper('.testimonial-swiper', {
-        loop: true,
-        grabCursor: true,
-
-        autoplay: {
-            delay: 6000,
-            disableOnInteraction: false,
-            pauseOnMouseEnter: true, 
-        },
-
-        pagination: {
-            el: '.testimonial-pagination',
-            clickable: true,
-        },
-
-        navigation: {
-            nextEl: '.testimonial-nav-next',
-            prevEl: '.testimonial-nav-prev',
-        },
-
-        // Esta parte é a mais importante para os cards ficarem lado a lado
-        breakpoints: {
-            // Telas de celular: 1 card
-            320: {
-                slidesPerView: 1,
-                spaceBetween: 20,
-            },
-            // Telas de tablet e maiores: 2 cards
-            768: {
-                slidesPerView: 2,
-                spaceBetween: 30,
-            }
-        },
     });
 }
