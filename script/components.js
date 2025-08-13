@@ -30,7 +30,7 @@ const headerHTML = `
             </div>
             <div class="hidden md:flex items-center space-x-8">
                 <a href="#quem-somos" class="nav-link">Quem Somos</a>
-                <a href="#perguntas" class="nav-link">Perguntas Frequentes</a>
+
                 <a href="lojas.html" target="_blank" class="nav-link">Lojas</a>
                 <a href="/vagas.html" target="_blank" class="nav-link">Trabalhe Conosco</a>
                 <a href="/admin/index.html" target="_blank" class="nav-link">Enxame</a>
@@ -79,7 +79,6 @@ const footerHTML = `
                     <h3 class="font-semibold text-lg mb-4 text-white uppercase tracking-wider">Links Rápidos</h3>
                     <ul class="space-y-3 text-gray-400">
                         <li><a href="#quem-somos" class="hover:text-white transition-colors">Quem Somos</a></li>
-                        <li><a href="#perguntasFrequentes" class="hover:text-white transition-colors">Perguntas Frequentes</a></li>
                         <li><a href="lojas.html" target="_blank" class="hover:text-white transition-colors">Nossas Lojas</a></li>
                         <li><a href="vagas.html" target="_blank" class="hover:text-white transition-colors">Trabalhe Conosco</a></li>
                         </li>
