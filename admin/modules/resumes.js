@@ -56,9 +56,10 @@ export async function loadResumesByStore() {
 export async function handleTalentFormSubmit(event) {
     event.preventDefault();
     const statusMessage = document.getElementById('talent-status-message');
-    statusMessage.textContent = '';
+    statusMessage.textContent = 'A processar...';
+    document.getElementById('talent-save-btn').disabled = true;
 
-    // 1. Obter dados do formulário
+    // --- Dados do Formulário ---
     const nome_completo = document.getElementById('talent-name').value.trim();
     const email = document.getElementById('talent-email').value.trim();
     const telefone = document.getElementById('talent-phone').value.trim();
@@ -66,17 +67,36 @@ export async function handleTalentFormSubmit(event) {
     const vaga = document.getElementById('talent-position-input').value.trim();
     const file = document.getElementById('talent-cv-file').files[0];
 
-    // 2. Validação simples
     if (!nome_completo || !email || !telefone || !lojaId || !vaga || !file) {
         statusMessage.textContent = 'Todos os campos são obrigatórios.';
+        document.getElementById('talent-save-btn').disabled = false;
         return;
     }
 
-    statusMessage.textContent = 'A processar...';
-    document.getElementById('talent-save-btn').disabled = true;
-
     try {
-        // 3. Fazer upload do ficheiro para o Supabase Storage
+        // --- NOVA ETAPA DE VERIFICAÇÃO ---
+        // 1. Verifica se já existe um candidato com o mesmo e-mail para o mesmo tipo de vaga.
+        const { data: existingCandidate, error: checkError } = await supabase
+            .from('candidatos')
+            .select('id')
+            .eq('email', email)
+            .eq('tipo_candidatura', 'Banco de Talentos')
+            .single(); // .single() espera 0 ou 1 resultado. Se encontrar mais, dá erro.
+
+        if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = "No rows found"
+            throw new Error(`Erro ao verificar candidato: ${checkError.message}`);
+        }
+        
+        // Se `existingCandidate` não for nulo, significa que o candidato já existe.
+        if (existingCandidate) {
+            alert('Este candidato já está cadastrado no Banco de Talentos.');
+            statusMessage.textContent = '';
+            document.getElementById('talent-save-btn').disabled = false;
+            return; // Interrompe a execução
+        }
+        // --- FIM DA VERIFICAÇÃO ---
+
+        // 2. Fazer upload do ficheiro para o Supabase Storage
         const fileExt = file.name.split('.').pop();
         const fileName = `${email.split('@')[0]}_${Date.now()}.${fileExt}`;
         const filePath = `banco-de-talentos/${fileName}`;
@@ -84,13 +104,13 @@ export async function handleTalentFormSubmit(event) {
         const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file);
         if (uploadError) throw uploadError;
 
-        // 4. Obter a URL pública do ficheiro
+        // 3. Obter a URL pública do ficheiro
         const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
 
-        // 5. Obter dados da loja selecionada
+        // 4. Obter dados da loja selecionada
         const selectedStore = getLoadedStores().find(s => s.id == lojaId);
 
-        // 6. Inserir o candidato na base de dados
+        // 5. Inserir o candidato na base de dados
         const { error: insertError } = await supabase.from('candidatos').insert([{
             nome_completo,
             email,
@@ -99,13 +119,13 @@ export async function handleTalentFormSubmit(event) {
             curriculo_url: urlData.publicUrl,
             loja: selectedStore ? selectedStore.name : 'N/A',
             city: selectedStore ? selectedStore.city : 'N/A',
-            tipo_candidatura: 'Banco de Talentos', // Valor fixo para este formulário
+            tipo_candidatura: 'Banco de Talentos',
             status: 'pendente'
         }]);
 
         if (insertError) throw insertError;
 
-        // 7. Sucesso
+        // 6. Sucesso
         alert('Candidato adicionado com sucesso!');
         document.getElementById('talent-form').reset();
         closeTalentModal();
