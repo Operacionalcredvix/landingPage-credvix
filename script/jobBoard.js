@@ -3,7 +3,6 @@ import { supabase } from './supabase-client.js';
 import { openUploadModal } from './modalHandler.js';
 import { observeElements } from './animations.js';
 
-// ATUALIZADO: A query agora busca 'localidade'
 async function fetchActiveJobs() {
     const { data, error } = await supabase
         .from('vagas')
@@ -18,7 +17,6 @@ async function fetchActiveJobs() {
     return data;
 }
 
-// ATUALIZADO: O card agora exibe a 'localidade'
 function createJobCard(job) {
     const categoryClass = job.job_category === 'Banco de Talentos' ? 'category-talent' : 'category-open';
     
@@ -48,7 +46,7 @@ function addApplyButtonListeners() {
         button.addEventListener('click', (e) => {
             const jobId = e.currentTarget.dataset.jobId;
             const jobTitle = e.currentTarget.dataset.jobTitle;
-            const storeName = e.currentTarget.dataset.storeName; // Agora é a 'localidade'
+            const storeName = e.currentTarget.dataset.storeName;
             const applicationType = e.currentTarget.dataset.applicationType;
             openUploadModal(jobTitle, storeName, jobId, applicationType);
         });
@@ -57,7 +55,7 @@ function addApplyButtonListeners() {
 
 export async function initJobBoard() {
     const jobList = document.getElementById('job-list');
-    const jobLocationSelect = document.getElementById('job-location-select'); // O filtro de localização
+    const jobLocationSelect = document.getElementById('job-location-select');
     const jobTitleSelect = document.getElementById('job-title-select');
     const jobCategorySelect = document.getElementById('job-category-select');
     const noJobsMessage = document.getElementById('no-jobs-message');
@@ -96,7 +94,7 @@ export async function initJobBoard() {
             }
         };
         
-        // Popula os filtros dinamicamente
+        // ATUALIZADO: Popula o filtro de localização com as localidades das vagas
         const jobLocations = [...new Set(jobs.map(job => job.localidade).filter(Boolean))].sort();
         jobLocationSelect.innerHTML = '<option value="todos">Todas as Localidades</option>';
         jobLocations.forEach(loc => jobLocationSelect.add(new Option(loc, loc)));

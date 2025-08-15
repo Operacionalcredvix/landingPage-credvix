@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Vagas - Credvix</title>
+    <title>Dashboard Admin - Credvix</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="../img/favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
@@ -14,7 +14,7 @@
 
     <div id="login-container">
         <img src="../img/apis-preto.png" alt="Logo Apis grupo" class="logo">
-        <h2>Acesso ao Painel Vagas Credvix</h2>
+        <h2>Acesso ao Painel de Vagas</h2>
         <form id="login-form">
             <input type="email" id="email" placeholder="Digite seu e-mail" required>
             <input type="password" id="password" placeholder="Digite sua senha" required>
@@ -31,10 +31,8 @@
             </div>
             <nav>
                 <ul id="main-nav">
-                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a>
-                    </li>
-                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a>
-                    </li>
+                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
+                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a></li>
                     <li id="nav-lojas"><a href="#"><span class="material-icons">store</span> Lojas</a></li>
                 </ul>
             </nav>
@@ -79,7 +77,7 @@
                         <label for="job-title-filter">Cargo</label>
                         <select id="job-title-filter">
                             <option value="todos">Todos os Cargos</option>
-                            </select>
+                        </select>
                     </div>
                     <div class="filter-group">
                         <label for="job-status-filter">Status</label>
@@ -109,7 +107,6 @@
                 <header>
                     <h1>Banco de Currículos</h1>
                 </header>
-
                 <section class="filter-panel">
                     <div class="filter-group">
                         <label for="store-filter-select">Filtrar por Cidade</label>
@@ -126,7 +123,6 @@
                         </select>
                     </div>
                 </section>
-
                 <section class="resume-list-container">
                     <h2>Lista de Currículos</h2>
                     <table>
@@ -163,7 +159,6 @@
                         </select>
                     </div>
                 </section>
-
                 <section class="store-list-container">
                     <h2>Lista de Lojas</h2>
                     <table>
@@ -191,7 +186,7 @@
                     <input type="text" id="job-title" placeholder="Título da Vaga" required>
                     <select id="job-localidade" required>
                         <option value="" disabled selected>Selecione a Localidade</option>
-                        </select>
+                    </select>
                 </div>
                 <div class="form-field-full">
                     <input type="text" id="job-type" placeholder="Tipo (ex: Tempo Integral)" required>

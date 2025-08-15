@@ -1,10 +1,11 @@
+
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { openJobModal, closeJobModal } from './ui.js';
 
 let allJobs = [];
 
-// NOVO: Função para buscar as localidades para o formulário e filtros.
+// ATUALIZADO: Lógica para popular o seletor de localidades no formulário.
 async function populateLocalidadeOptions() {
     const { data, error } = await supabase.from('lojas').select('city');
     if (error) {
@@ -16,8 +17,11 @@ async function populateLocalidadeOptions() {
     
     const selectLocalidade = document.getElementById('job-localidade');
     selectLocalidade.innerHTML = '<option value="" disabled selected>Selecione a Localidade</option>';
+
+    // Adiciona a opção "Grande Vitória" primeiro.
     selectLocalidade.innerHTML += '<option value="Grande Vitória">Grande Vitória</option>';
 
+    // Adiciona as outras cidades, exceto as que compõem a Grande Vitória.
     cidades.forEach(cidade => {
         if (!['Vila Velha', 'Vitória', 'Serra', 'Cariacica'].includes(cidade)) {
             selectLocalidade.innerHTML += `<option value="${cidade}">${cidade}</option>`;
@@ -29,7 +33,6 @@ export async function loadJobs() {
     dom.jobCardGrid.innerHTML = `<p>Carregando vagas...</p>`;
     dom.noJobsMessage.classList.add('hidden');
 
-    // QUERY ATUALIZADA: Simplificada para a nova estrutura da tabela 'vagas'.
     const { data, error } = await supabase.from('vagas').select(`*, candidatos(count)`).order('created_at', { ascending: false });
 
     if (error) {
@@ -39,10 +42,9 @@ export async function loadJobs() {
     }
     allJobs = data;
     displayJobs();
-    populateJobTitleFilter(); // Popula o filtro de cargos
+    populateJobTitleFilter();
 }
 
-// ATUALIZADO: para usar 'localidade' em vez de 'lojas'
 export function displayJobs() {
     const statusFilter = dom.jobStatusFilter.value;
     const categoryFilter = dom.jobCategoryFilter.value;
@@ -105,7 +107,6 @@ export async function handleJobFormSubmit(event) {
     event.preventDefault();
     const jobId = dom.jobIdInput.value;
     
-    // FORMULÁRIO ATUALIZADO para usar 'localidade'
     const jobData = {
         title: document.getElementById('job-title').value,
         localidade: document.getElementById('job-localidade').value,
@@ -167,5 +168,4 @@ function populateJobTitleFilter() {
     jobTitles.forEach(title => dom.jobTitleFilter.add(new Option(title, title)));
 }
 
-// Chama a função para popular as localidades quando o módulo é carregado
 populateLocalidadeOptions();
