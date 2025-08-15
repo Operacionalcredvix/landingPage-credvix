@@ -31,13 +31,20 @@
             </div>
             <nav>
                 <ul id="main-nav">
-                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a>
-                    </li>
-                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a>
-                    </li>
+                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
+                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a></li>
                     <li id="nav-lojas"><a href="#"><span class="material-icons">store</span> Lojas</a></li>
                 </ul>
             </nav>
+
+            <div id="user-profile-widget" class="user-profile">
+                <img id="user-avatar-img" src="https://placehold.co/100" alt="Avatar do Utilizador" class="user-avatar">
+                <div class="user-info">
+                    <span id="user-name-span">A carregar...</span>
+                    <button id="btn-config" class="btn-config"><span class="material-icons">settings</span></button>
+                </div>
+            </div>
+
             <div class="sidebar-footer">
                 <button id="logout-btn" class="btn btn-outline"><span class="material-icons">logout</span> Sair</button>
             </div>
@@ -131,7 +138,7 @@
                         <thead>
                             <tr>
                                 <th>Candidato</th>
-                                <th>Loja de Interesse</th>
+                                <th>Localidade de Interesse</th>
                                 <th>Tipo de Candidatura</th>
                                 <th>Data de Envio</th>
                                 <th>Ação</th>
@@ -180,7 +187,7 @@
     </div>
 
     <div id="job-modal-overlay" class="hidden">
-        <div id="job-modal">
+        <div id="job-modal" class="modal">
             <h2 id="modal-title">Criar Nova Vaga</h2>
             <form id="job-form">
                 <input type="hidden" id="job-id">
@@ -193,9 +200,9 @@
                 <div class="form-field-full">
                     <input type="text" id="job-type" placeholder="Tipo (ex: Tempo Integral)" required>
                 </div>
-                <!-- <div class="form-field-full">
+                <div class="form-field-full">
                     <textarea id="job-description" placeholder="Descrição da Vaga" rows="4"></textarea>
-                </div> -->
+                </div>
                 <div class="form-field-full">
                     <label for="job-category">Categoria da Vaga</label>
                     <select id="job-category" required>
@@ -218,7 +225,7 @@
     </div>
 
     <div id="talent-modal-overlay" class="hidden">
-        <div id="talent-modal">
+        <div id="talent-modal" class="modal">
             <h2 id="talent-modal-title">Adicionar ao Banco de Talentos</h2>
             <form id="talent-form" novalidate>
                 <div class="form-field-full">
@@ -232,15 +239,14 @@
                     <select id="talent-localidade-select" required>
                         <option value="" disabled selected>Selecione a Localidade de Interesse</option>
                     </select>
-                    <input type="text" id="talent-position-input" placeholder="Cargo de Interesse (ex: Vendedor)"
-                        required>
+                    <input type="text" id="talent-position-input" placeholder="Cargo de Interesse (ex: Vendedor)" required>
                 </div>
                 <div class="form-field-full">
                     <label for="talent-cv-file">Currículo (PDF ou DOCX):</label>
                     <input type="file" id="talent-cv-file" accept=".pdf,.doc,.docx" required>
                 </div>
                 <div class="modal-actions">
-                    <p id="talent-status-message" style="color: red;"></p>
+                    <p id="talent-status-message" class="status-message"></p>
                     <div>
                         <button type="button" id="talent-cancel-btn" class="btn btn-secondary">Cancelar</button>
                         <button type="submit" id="talent-save-btn" class="btn btn-primary">Salvar Candidato</button>
@@ -251,7 +257,7 @@
     </div>
 
     <div id="store-modal-overlay" class="hidden">
-        <div id="store-modal">
+        <div id="store-modal" class="modal">
             <h2 id="store-modal-title">Criar Nova Loja</h2>
             <form id="store-form">
                 <input type="hidden" id="store-id">
@@ -277,8 +283,37 @@
             </form>
         </div>
     </div>
+    
+    <div id="profile-modal-overlay" class="hidden">
+        <div id="profile-modal" class="modal">
+            <h2>Configurações de Perfil</h2>
+            <form id="profile-form">
+                <div class="form-group profile-picture-section">
+                    <img id="profile-avatar-preview" src="https://placehold.co/150" alt="Pré-visualização do Avatar">
+                    <label for="avatar-file-input" class="btn btn-secondary">Alterar Imagem</label>
+                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
+                </div>
+                <hr>
+                <h4>Alterar Senha</h4>
+                <div class="form-group">
+                    <label for="new-password">Nova Senha</label>
+                    <input type="password" id="new-password" placeholder="Deixe em branco para não alterar">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar Nova Senha</label>
+                    <input type="password" id="confirm-password" placeholder="Confirme a nova senha">
+                </div>
+                <div class="modal-actions">
+                    <span id="profile-status-message" class="status-message"></span>
+                    <div>
+                        <button type="button" id="btn-cancel-profile" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" id="btn-save-profile" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script type="module" src="admin.js"></script>
 </body>
-
 </html>
