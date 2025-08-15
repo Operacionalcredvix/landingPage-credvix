@@ -1,4 +1,3 @@
-// admin/modules/auth.js
 
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
@@ -24,7 +23,6 @@ export async function handleLogin(event) {
  * Desloga o usuário do sistema.
  */
 export async function handleLogout() {
-    sessionStorage.removeItem('sessionActive');
     await supabase.auth.signOut();
 }
 
@@ -34,16 +32,11 @@ export async function handleLogout() {
  */
 export function initializeAuth(onLoginSuccess) {
     supabase.auth.onAuthStateChange((event, session) => {
-        const sessionIsActive = sessionStorage.getItem('sessionActive');
-
-        if (event === 'SIGNED_IN' || (session && sessionIsActive)) {
-            if (event === 'SIGNED_IN') sessionStorage.setItem('sessionActive', 'true');
-            // Apenas chama a função de sucesso, não faz mais nada.
+        if (session) {
+            // Usuário autenticado - mostra o painel
             onLoginSuccess();
         } else {
-            if (session && !sessionIsActive) {
-                supabase.auth.signOut();
-            }
+            // Usuário não autenticado - mostra a tela de login
             showLogin();
         }
     });

@@ -1,17 +1,36 @@
-// admin/modules/jobs.js
-
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
-import { getLoadedStores } from './stores.js';
 import { openJobModal, closeJobModal } from './ui.js';
 
-let allJobs = []; // Estado local do módulo
+let allJobs = [];
+
+// NOVO: Função para buscar as localidades para o formulário e filtros.
+async function populateLocalidadeOptions() {
+    const { data, error } = await supabase.from('lojas').select('city');
+    if (error) {
+        console.error("Erro ao buscar cidades para o filtro:", error);
+        return;
+    }
+
+    const cidades = [...new Set(data.map(item => item.city))].sort();
+    
+    const selectLocalidade = document.getElementById('job-localidade');
+    selectLocalidade.innerHTML = '<option value="" disabled selected>Selecione a Localidade</option>';
+    selectLocalidade.innerHTML += '<option value="Grande Vitória">Grande Vitória</option>';
+
+    cidades.forEach(cidade => {
+        if (!['Vila Velha', 'Vitória', 'Serra', 'Cariacica'].includes(cidade)) {
+            selectLocalidade.innerHTML += `<option value="${cidade}">${cidade}</option>`;
+        }
+    });
+}
 
 export async function loadJobs() {
     dom.jobCardGrid.innerHTML = `<p>Carregando vagas...</p>`;
     dom.noJobsMessage.classList.add('hidden');
 
-    const { data, error } = await supabase.from('vagas').select(`*, lojas(name, city, state), candidatos(count)`).order('created_at', { ascending: false });
+    // QUERY ATUALIZADA: Simplificada para a nova estrutura da tabela 'vagas'.
+    const { data, error } = await supabase.from('vagas').select(`*, candidatos(count)`).order('created_at', { ascending: false });
 
     if (error) {
         console.error('Erro ao carregar vagas:', error.message);
@@ -20,8 +39,10 @@ export async function loadJobs() {
     }
     allJobs = data;
     displayJobs();
+    populateJobTitleFilter(); // Popula o filtro de cargos
 }
 
+// ATUALIZADO: para usar 'localidade' em vez de 'lojas'
 export function displayJobs() {
     const statusFilter = dom.jobStatusFilter.value;
     const categoryFilter = dom.jobCategoryFilter.value;
@@ -33,9 +54,9 @@ export function displayJobs() {
         const matchesStatus = (statusFilter === 'todas') || (statusFilter === 'ativas' && isActive) || (statusFilter === 'inativas' && !isActive);
         const matchesCategory = (categoryFilter === 'todas') || (job.job_category === categoryFilter);
         const matchesTitle = (titleFilter === 'todos') || (job.title === titleFilter);
-        const storeName = job.lojas?.name?.toLowerCase() || '';
         const jobTitleText = job.title.toLowerCase();
-        const matchesSearch = storeName.includes(searchTerm) || jobTitleText.includes(searchTerm);
+        const localidadeText = job.localidade ? job.localidade.toLowerCase() : '';
+        const matchesSearch = localidadeText.includes(searchTerm) || jobTitleText.includes(searchTerm);
         return matchesStatus && matchesCategory && matchesTitle && matchesSearch;
     });
 
@@ -52,14 +73,13 @@ export function displayJobs() {
 
     filteredJobs.forEach(job => {
         const candidateCount = job.candidatos[0]?.count || 0;
-        const storeInfo = job.lojas ? `${job.lojas.name}` : 'Loja não vinculada';
         const card = document.createElement('div');
         card.className = 'job-card';
         card.innerHTML = `
             <div class="job-card-header">
                 <div>
                     <h3 class="job-card-title">${job.title}</h3>
-                    <p class="job-card-location"><span class="material-icons" style="font-size: 1rem;">store</span>${storeInfo}</p>
+                    <p class="job-card-location"><span class="material-icons" style="font-size: 1rem;">location_on</span>${job.localidade || 'N/D'}</p>
                 </div>
                 <div class="job-card-status"><span class="${job.is_active ? 'status-active' : 'status-inactive'}">${job.is_active ? 'Ativa' : 'Inativa'}</span></div>
             </div>
@@ -84,15 +104,11 @@ export function displayJobs() {
 export async function handleJobFormSubmit(event) {
     event.preventDefault();
     const jobId = dom.jobIdInput.value;
-    const selectedLojaId = dom.jobStoreSelect.value;
-    const selectedStore = getLoadedStores().find(s => s.id == selectedLojaId);
-
+    
+    // FORMULÁRIO ATUALIZADO para usar 'localidade'
     const jobData = {
         title: document.getElementById('job-title').value,
-        loja_id: selectedLojaId,
-        storename: selectedStore ? selectedStore.name : '',
-        city: selectedStore ? selectedStore.city : '',
-        state: selectedStore ? selectedStore.state : '',
+        localidade: document.getElementById('job-localidade').value,
         type: document.getElementById('job-type').value,
         description: document.getElementById('job-description').value,
         job_category: document.getElementById('job-category').value,
@@ -119,9 +135,7 @@ function handleEditJob(event) {
     dom.jobModalTitle.textContent = 'Editar Vaga';
     dom.jobIdInput.value = job.id;
     document.getElementById('job-title').value = job.title;
-    document.getElementById('job-storeName').value = job.loja_id;
-    document.getElementById('job-city').value = job.lojas?.city || '';
-    document.getElementById('job-state').value = job.lojas?.state || '';
+    document.getElementById('job-localidade').value = job.localidade;
     document.getElementById('job-type').value = job.type;
     document.getElementById('job-description').value = job.description;
     document.getElementById('job-category').value = job.job_category;
@@ -147,12 +161,11 @@ async function handleDeleteJob(event) {
     }
 }
 
-// ADICIONADO O "EXPORT" AQUI
-export function handleStoreSelectChange(event) {
-    const selectedStoreId = event.target.value;
-    const store = getLoadedStores().find(s => s.id == selectedStoreId);
-    if (store) {
-        document.getElementById('job-city').value = store.city;
-        document.getElementById('job-state').value = store.state;
-    }
+function populateJobTitleFilter() {
+    const jobTitles = [...new Set(allJobs.map(job => job.title))].sort();
+    dom.jobTitleFilter.innerHTML = '<option value="todos">Todos os Cargos</option>';
+    jobTitles.forEach(title => dom.jobTitleFilter.add(new Option(title, title)));
 }
+
+// Chama a função para popular as localidades quando o módulo é carregado
+populateLocalidadeOptions();

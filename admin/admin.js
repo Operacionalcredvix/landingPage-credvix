@@ -5,9 +5,8 @@ import * as dom from './modules/dom.js';
 import { initializeAuth, handleLogin, handleLogout } from './modules/auth.js';
 import { showView, showDashboard, openStoreModal, closeStoreModal, openJobModal, closeJobModal, openTalentModal, closeTalentModal } from './modules/ui.js';
 import { loadStores, displayStores, handleStoreFormSubmit } from './modules/stores.js';
-import { displayJobs, handleJobFormSubmit, handleStoreSelectChange } from './modules/jobs.js';
+import { displayJobs, handleJobFormSubmit } from './modules/jobs.js'; // REMOVIDO handleStoreSelectChange
 import { loadResumesByStore, handleTalentFormSubmit } from './modules/resumes.js';
-
 
 /**
  * Ponto de entrada da aplicação do painel de administração.
@@ -38,7 +37,7 @@ function initializeAdminPanel() {
     dom.cancelJobBtn.addEventListener('click', closeJobModal);
     dom.jobModalOverlay.addEventListener('click', (e) => { if (e.target === dom.jobModalOverlay) closeJobModal(); });
     dom.jobForm.addEventListener('submit', handleJobFormSubmit);
-    dom.jobStoreSelect.addEventListener('change', handleStoreSelectChange);
+    // REMOVIDO: dom.jobStoreSelect.addEventListener('change', handleStoreSelectChange);
     dom.jobStatusFilter.addEventListener('change', displayJobs);
     dom.jobCategoryFilter.addEventListener('change', displayJobs);
     dom.jobTitleFilter.addEventListener('change', displayJobs);
@@ -54,16 +53,11 @@ function initializeAdminPanel() {
     dom.storeFilterSelect.addEventListener('change', loadResumesByStore);
     dom.applicationTypeFilter.addEventListener('change', loadResumesByStore);
 
-
     // --- Inicialização da Aplicação ---
     
-    // A função initializeAuth agora recebe uma função para executar em caso de sucesso.
     initializeAuth(async () => {
         try {
-            // 1. Carrega os dados essenciais que outras partes da aplicação precisam.
             await loadStores();
-
-            // 2. Após os dados estarem prontos, exibe o painel.
             showDashboard();
         } catch (error) {
             console.error("Falha ao inicializar o painel:", error);
@@ -72,5 +66,4 @@ function initializeAdminPanel() {
     });
 }
 
-// Garante que o script rode após o carregamento completo do HTML
 document.addEventListener('DOMContentLoaded', initializeAdminPanel);

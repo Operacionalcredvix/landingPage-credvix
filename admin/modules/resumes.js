@@ -1,4 +1,3 @@
-
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { getLoadedStores } from './stores.js';
@@ -39,9 +38,10 @@ export async function loadResumesByStore() {
     resumes.forEach(resume => {
         const row = dom.resumeListTbody.insertRow();
         const applicationDate = new Date(resume.created_at).toLocaleDateString('pt-BR');
+        // ATUALIZADO: A coluna "Loja da Candidatura" agora mostra a cidade/localidade de interesse.
         row.innerHTML = `
             <td><strong>${resume.nome_completo}</strong><br><small>${resume.email} / ${resume.telefone}</small></td>
-            <td>${resume.loja || 'N/A'}</td>
+            <td>${resume.loja || resume.city || 'N/A'}</td>
             <td>${resume.tipo_candidatura || 'N/A'}</td>
             <td>${applicationDate}</td>
             <td><a href="${resume.curriculo_url}" target="_blank" download class="btn btn-primary">Baixar</a></td>
@@ -49,17 +49,12 @@ export async function loadResumesByStore() {
     });
 }
 
-/**
- * Lida com o envio do formulário para adicionar um novo candidato ao banco de talentos.
- * @param {Event} event - O evento de submissão do formulário.
- */
 export async function handleTalentFormSubmit(event) {
     event.preventDefault();
     const statusMessage = document.getElementById('talent-status-message');
     statusMessage.textContent = 'A processar...';
     document.getElementById('talent-save-btn').disabled = true;
 
-    // --- Dados do Formulário ---
     const nome_completo = document.getElementById('talent-name').value.trim();
     const email = document.getElementById('talent-email').value.trim();
     const telefone = document.getElementById('talent-phone').value.trim();
@@ -74,29 +69,24 @@ export async function handleTalentFormSubmit(event) {
     }
 
     try {
-        // --- NOVA ETAPA DE VERIFICAÇÃO ---
-        // 1. Verifica se já existe um candidato com o mesmo e-mail para o mesmo tipo de vaga.
         const { data: existingCandidate, error: checkError } = await supabase
             .from('candidatos')
             .select('id')
             .eq('email', email)
             .eq('tipo_candidatura', 'Banco de Talentos')
-            .single(); // .single() espera 0 ou 1 resultado. Se encontrar mais, dá erro.
+            .single();
 
-        if (checkError && checkError.code !== 'PGRST116') { // PGRST116 = "No rows found"
+        if (checkError && checkError.code !== 'PGRST116') {
             throw new Error(`Erro ao verificar candidato: ${checkError.message}`);
         }
         
-        // Se `existingCandidate` não for nulo, significa que o candidato já existe.
         if (existingCandidate) {
             alert('Este candidato já está cadastrado no Banco de Talentos.');
             statusMessage.textContent = '';
             document.getElementById('talent-save-btn').disabled = false;
-            return; // Interrompe a execução
+            return;
         }
-        // --- FIM DA VERIFICAÇÃO ---
 
-        // 2. Fazer upload do ficheiro para o Supabase Storage
         const fileExt = file.name.split('.').pop();
         const fileName = `${email.split('@')[0]}_${Date.now()}.${fileExt}`;
         const filePath = `banco-de-talentos/${fileName}`;
@@ -104,13 +94,10 @@ export async function handleTalentFormSubmit(event) {
         const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file);
         if (uploadError) throw uploadError;
 
-        // 3. Obter a URL pública do ficheiro
         const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
-
-        // 4. Obter dados da loja selecionada
         const selectedStore = getLoadedStores().find(s => s.id == lojaId);
 
-        // 5. Inserir o candidato na base de dados
+        // ATUALIZADO: Salva o nome e a cidade da loja de interesse
         const { error: insertError } = await supabase.from('candidatos').insert([{
             nome_completo,
             email,
@@ -125,11 +112,10 @@ export async function handleTalentFormSubmit(event) {
 
         if (insertError) throw insertError;
 
-        // 6. Sucesso
         alert('Candidato adicionado com sucesso!');
         document.getElementById('talent-form').reset();
         closeTalentModal();
-        loadResumesByStore(); // Atualiza a lista de currículos
+        loadResumesByStore();
 
     } catch (error) {
         console.error('Erro ao adicionar candidato:', error);
