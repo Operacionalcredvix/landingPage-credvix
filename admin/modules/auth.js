@@ -2,15 +2,12 @@
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { showLogin, showDashboard } from './ui.js';
-import { loadUserProfile } from './profile.js'; // Importa a função de perfil
+import { loadUserProfile } from './profile.js';
 
 let currentUser = null;
 
 export const getCurrentUser = () => currentUser;
 
-/**
- * Lida com a tentativa de login do utilizador.
- */
 export async function handleLogin(event) {
     event.preventDefault();
     dom.loginError.textContent = '';
@@ -22,28 +19,19 @@ export async function handleLogin(event) {
 
     if (error) {
         dom.loginError.textContent = 'E-mail ou senha inválidos.';
-        console.error('Erro de login:', error.message);
+        console.error('Erro de login detalhado:', error);
     }
-    // Se o login for bem-sucedido, o onAuthStateChange fará o resto.
+    // O sucesso é gerido pelo onAuthStateChange
 }
 
-/**
- * Desloga o utilizador do sistema.
- */
 export async function handleLogout() {
     await supabase.auth.signOut();
     currentUser = null;
-    // O onAuthStateChange irá detetar o evento SIGNED_OUT e redirecionar.
 }
 
-/**
- * Ponto de entrada da autenticação. Ouve as mudanças de estado e atualiza a interface.
- */
 export function initializeAuth(onSuccessCallback) {
     supabase.auth.onAuthStateChange(async (event, session) => {
         if (session && session.user) {
-            // Se existe uma sessão, o utilizador está logado.
-            // Busca os dados do perfil na tabela 'funcionarios'.
             const { data, error } = await supabase
                 .from('funcionarios')
                 .select('id, nome_completo, avatar_url, perfil:perfis (nome)')
@@ -51,17 +39,16 @@ export function initializeAuth(onSuccessCallback) {
                 .single();
             
             if (error) {
-                console.error("Erro ao buscar perfil do funcionário. A fazer logout forçado.", error);
+                console.error("Erro ao buscar o perfil do funcionário. O utilizador pode não estar registado na tabela 'funcionarios'. A fazer logout forçado.", error);
                 await handleLogout();
                 return;
             }
             
             currentUser = { ...session.user, ...data };
-            loadUserProfile(currentUser); // Mostra os dados do utilizador na UI
-            onSuccessCallback(); // Executa as funções de carregamento (loadStores, etc.)
+            loadUserProfile(currentUser);
+            onSuccessCallback();
             showDashboard();
         } else {
-            // Se não há sessão, o utilizador não está logado.
             currentUser = null;
             showLogin();
         }

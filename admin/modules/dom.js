@@ -60,3 +60,17 @@ export const newTalentBtn = document.getElementById('new-talent-btn');
 export const talentModalOverlay = document.getElementById('talent-modal-overlay');
 export const cancelTalentBtn = document.getElementById('talent-cancel-btn');
 export const talentForm = document.getElementById('talent-form');
+
+// Perfil do Utilizador
+export const userProfileWidget = document.getElementById('user-profile-widget');
+export const userAvatarImg = document.getElementById('user-avatar-img');
+export const userNameSpan = document.getElementById('user-name-span');
+export const btnConfig = document.getElementById('btn-config');
+export const profileModalOverlay = document.getElementById('profile-modal-overlay');
+export const profileForm = document.getElementById('profile-form');
+export const avatarFileInput = document.getElementById('avatar-file-input');
+export const newPasswordInput = document.getElementById('new-password');
+export const confirmPasswordInput = document.getElementById('confirm-password');
+export const profileStatusMessage = document.getElementById('profile-status-message');
+export const btnCancelProfile = document.getElementById('btn-cancel-profile');
+export const avatarPreview = document.getElementById('profile-avatar-preview');
