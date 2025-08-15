@@ -1,23 +1,17 @@
 // admin/modules/ui.js
-
 import * as dom from './dom.js';
+import { supabase } from '../../script/supabase-client.js'; // Importar o supabase
 import { loadJobs } from './jobs.js';
 import { loadResumesByStore } from './resumes.js';
-import { loadStores, getLoadedStores } from './stores.js'; // Importa getLoadedStores
+import { loadStores } from './stores.js';
 
-// Mapeia o ID da tela à sua função de carregamento de dados
 const viewLoaders = {
     'vagas': loadJobs,
     'curriculos': loadResumesByStore,
     'lojas': loadStores,
 };
 
-/**
- * Exibe a tela solicitada, esconde as outras e guarda o estado na sessão.
- * @param {string} viewId - O ID da tela a ser exibida ('vagas', 'curriculos', 'lojas').
- */
 export function showView(viewId) {
-    // Esconde todas as telas e remove a classe 'active' dos links de navegação
     [dom.vagasView, dom.curriculosView, dom.lojasView].forEach(view => view.classList.add('hidden'));
     [dom.navVagas, dom.navCurriculos, dom.navLojas].forEach(nav => nav.parentElement.classList.remove('active'));
 
@@ -31,47 +25,45 @@ export function showView(viewId) {
     if (selected) {
         selected.view.classList.remove('hidden');
         selected.nav.parentElement.classList.add('active');
-        
-        // Guarda a vista atual na sessão do navegador
         sessionStorage.setItem('activeAdminView', viewId);
-
-        // Carrega os dados para a tela selecionada, se necessário
         if (viewLoaders[viewId]) {
             viewLoaders[viewId]();
         }
     }
 }
 
-// Funções para controlar a visibilidade dos modais de Lojas e Vagas
 export const openStoreModal = () => dom.storeModalOverlay.classList.remove('hidden');
 export const closeStoreModal = () => { dom.storeModalOverlay.classList.add('hidden'); dom.storeForm.reset(); dom.storeIdInput.value = ''; };
 
 export const openJobModal = () => dom.jobModalOverlay.classList.remove('hidden');
 export const closeJobModal = () => { dom.jobModalOverlay.classList.add('hidden'); dom.jobForm.reset(); dom.jobIdInput.value = ''; };
 
-/**
- * Abre o modal para adicionar ao Banco de Talentos e popula o seletor de lojas.
- */
-export function openTalentModal() {
-    const talentStoreSelect = document.getElementById('talent-store-select');
-    const stores = getLoadedStores();
 
-    // Limpa opções antigas, exceto a primeira ("Selecione a Loja")
-    while (talentStoreSelect.options.length > 1) {
-        talentStoreSelect.remove(1);
-    }
+// FUNÇÃO ATUALIZADA
+export async function openTalentModal() {
+    const talentLocalidadeSelect = document.getElementById('talent-localidade-select');
     
-    // Popula com as lojas carregadas
-    stores.forEach(store => {
-        talentStoreSelect.add(new Option(store.name, store.id));
+    // Busca as cidades diretamente do banco de dados para criar a lista de localidades
+    const { data, error } = await supabase.from('lojas').select('city');
+    if (error) {
+        console.error("Erro ao buscar cidades para o Banco de Talentos:", error);
+        return;
+    }
+
+    const cidades = [...new Set(data.map(item => item.city))].sort();
+    
+    talentLocalidadeSelect.innerHTML = '<option value="" disabled selected>Selecione a Localidade de Interesse</option>';
+    talentLocalidadeSelect.innerHTML += '<option value="Grande Vitória">Grande Vitória</option>';
+
+    cidades.forEach(cidade => {
+        if (!['Vila Velha', 'Vitória', 'Serra', 'Cariacica'].includes(cidade)) {
+            talentLocalidadeSelect.innerHTML += `<option value="${cidade}">${cidade}</option>`;
+        }
     });
 
     dom.talentModalOverlay.classList.remove('hidden');
 }
 
-/**
- * Fecha o modal do Banco de Talentos e limpa o formulário e mensagens de erro.
- */
 export const closeTalentModal = () => {
     dom.talentModalOverlay.classList.add('hidden');
     document.getElementById('talent-form').reset();
@@ -81,21 +73,13 @@ export const closeTalentModal = () => {
     }
 };
 
-/**
- * Exibe o painel de administração e esconde a tela de login.
- */
 export function showDashboard() {
     dom.loginContainer.classList.add('hidden');
     dom.dashboard.classList.remove('hidden');
-    
-    // Verifica se há uma vista guardada na sessão, caso contrário, usa 'vagas'
     const savedView = sessionStorage.getItem('activeAdminView');
     showView(savedView || 'vagas'); 
 }
 
-/**
- * Exibe a tela de login e esconde o painel de administração.
- */
 export function showLogin() {
     dom.dashboard.classList.add('hidden');
     dom.loginContainer.classList.remove('hidden');

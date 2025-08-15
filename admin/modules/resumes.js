@@ -1,6 +1,6 @@
+// admin/modules/resumes.js
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
-import { getLoadedStores } from './stores.js';
 import { closeTalentModal } from './ui.js';
 
 export async function loadResumesByStore() {
@@ -38,7 +38,6 @@ export async function loadResumesByStore() {
     resumes.forEach(resume => {
         const row = dom.resumeListTbody.insertRow();
         const applicationDate = new Date(resume.created_at).toLocaleDateString('pt-BR');
-        // ATUALIZADO: A coluna "Loja da Candidatura" agora mostra a cidade/localidade de interesse.
         row.innerHTML = `
             <td><strong>${resume.nome_completo}</strong><br><small>${resume.email} / ${resume.telefone}</small></td>
             <td>${resume.loja || resume.city || 'N/A'}</td>
@@ -49,6 +48,7 @@ export async function loadResumesByStore() {
     });
 }
 
+// FUNÇÃO ATUALIZADA
 export async function handleTalentFormSubmit(event) {
     event.preventDefault();
     const statusMessage = document.getElementById('talent-status-message');
@@ -58,11 +58,11 @@ export async function handleTalentFormSubmit(event) {
     const nome_completo = document.getElementById('talent-name').value.trim();
     const email = document.getElementById('talent-email').value.trim();
     const telefone = document.getElementById('talent-phone').value.trim();
-    const lojaId = document.getElementById('talent-store-select').value;
+    const localidade = document.getElementById('talent-localidade-select').value; // CAMPO ATUALIZADO
     const vaga = document.getElementById('talent-position-input').value.trim();
     const file = document.getElementById('talent-cv-file').files[0];
 
-    if (!nome_completo || !email || !telefone || !lojaId || !vaga || !file) {
+    if (!nome_completo || !email || !telefone || !localidade || !vaga || !file) { // CONDIÇÃO ATUALIZADA
         statusMessage.textContent = 'Todos os campos são obrigatórios.';
         document.getElementById('talent-save-btn').disabled = false;
         return;
@@ -95,17 +95,16 @@ export async function handleTalentFormSubmit(event) {
         if (uploadError) throw uploadError;
 
         const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
-        const selectedStore = getLoadedStores().find(s => s.id == lojaId);
 
-        // ATUALIZADO: Salva o nome e a cidade da loja de interesse
+        // ATUALIZADO: Salva a localidade de interesse nos campos 'loja' e 'city'
         const { error: insertError } = await supabase.from('candidatos').insert([{
             nome_completo,
             email,
             telefone,
             vaga,
             curriculo_url: urlData.publicUrl,
-            loja: selectedStore ? selectedStore.name : 'N/A',
-            city: selectedStore ? selectedStore.city : 'N/A',
+            loja: localidade,
+            city: localidade,
             tipo_candidatura: 'Banco de Talentos',
             status: 'pendente'
         }]);

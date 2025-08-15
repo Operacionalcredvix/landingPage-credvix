@@ -31,8 +31,10 @@
             </div>
             <nav>
                 <ul id="main-nav">
-                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
-                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a></li>
+                    <li id="nav-vagas" class="active"><a href="#"><span class="material-icons">work</span> Vagas</a>
+                    </li>
+                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a>
+                    </li>
                     <li id="nav-lojas"><a href="#"><span class="material-icons">store</span> Lojas</a></li>
                 </ul>
             </nav>
@@ -191,9 +193,9 @@
                 <div class="form-field-full">
                     <input type="text" id="job-type" placeholder="Tipo (ex: Tempo Integral)" required>
                 </div>
-                <div class="form-field-full">
+                <!-- <div class="form-field-full">
                     <textarea id="job-description" placeholder="Descrição da Vaga" rows="4"></textarea>
-                </div>
+                </div> -->
                 <div class="form-field-full">
                     <label for="job-category">Categoria da Vaga</label>
                     <select id="job-category" required>
@@ -227,10 +229,11 @@
                     <input type="tel" id="talent-phone" placeholder="Telefone do Candidato" required>
                 </div>
                 <div class="form-grid">
-                    <select id="talent-store-select" required>
-                        <option value="" disabled selected>Selecione a Loja de Interesse</option>
+                    <select id="talent-localidade-select" required>
+                        <option value="" disabled selected>Selecione a Localidade de Interesse</option>
                     </select>
-                    <input type="text" id="talent-position-input" placeholder="Cargo de Interesse (ex: Vendedor)" required>
+                    <input type="text" id="talent-position-input" placeholder="Cargo de Interesse (ex: Vendedor)"
+                        required>
                 </div>
                 <div class="form-field-full">
                     <label for="talent-cv-file">Currículo (PDF ou DOCX):</label>
@@ -277,4 +280,5 @@
 
     <script type="module" src="admin.js"></script>
 </body>
+
 </html>
