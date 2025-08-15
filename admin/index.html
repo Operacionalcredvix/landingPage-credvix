@@ -73,15 +73,13 @@
                 <section class="filter-panel">
                     <div class="filter-group">
                         <label for="job-search-input">Buscar</label>
-                        <input type="search" id="job-search-input" placeholder="Título ou loja...">
+                        <input type="search" id="job-search-input" placeholder="Título ou localidade...">
                     </div>
                     <div class="filter-group">
                         <label for="job-title-filter">Cargo</label>
                         <select id="job-title-filter">
                             <option value="todos">Todos os Cargos</option>
-                            <option value="Consultor de Vendas">Consultor de Vendas</option>
-                            <option value="Supervisor de Vendas">Supervisor de Vendas</option>
-                        </select>
+                            </select>
                     </div>
                     <div class="filter-group">
                         <label for="job-status-filter">Status</label>
@@ -103,7 +101,6 @@
 
                 <section class="job-list-container">
                     <div id="job-card-grid" class="job-card-grid"></div>
-                    <p id="loading-message">Carregando vagas...</p>
                     <p id="no-jobs-message" class="hidden">Nenhuma vaga encontrada para os filtros selecionados.</p>
                 </section>
             </div>
@@ -136,7 +133,7 @@
                         <thead>
                             <tr>
                                 <th>Candidato</th>
-                                <th>Loja da Candidatura</th>
+                                <th>Loja de Interesse</th>
                                 <th>Tipo de Candidatura</th>
                                 <th>Data de Envio</th>
                                 <th>Ação</th>
@@ -180,7 +177,6 @@
                         </thead>
                         <tbody id="store-list-tbody"></tbody>
                     </table>
-                    <!-- <p id="loading-stores-message">Carregando lojas...</p> -->
                 </section>
             </div>
         </main>
@@ -193,13 +189,9 @@
                 <input type="hidden" id="job-id">
                 <div class="form-grid">
                     <input type="text" id="job-title" placeholder="Título da Vaga" required>
-                    <select id="job-storeName" required>
-                        <option value="" disabled selected>Selecione a Loja</option>
-                    </select>
-                </div>
-                <div class="form-grid">
-                    <input type="text" id="job-city" placeholder="Cidade (preenchido automaticamente)" readonly>
-                    <input type="text" id="job-state" placeholder="Estado (preenchido automaticamente)" readonly>
+                    <select id="job-localidade" required>
+                        <option value="" disabled selected>Selecione a Localidade</option>
+                        </select>
                 </div>
                 <div class="form-field-full">
                     <input type="text" id="job-type" placeholder="Tipo (ex: Tempo Integral)" required>
@@ -228,43 +220,22 @@
         </div>
     </div>
 
-    <div id="candidate-modal-overlay" class="hidden">
-        <div id="candidate-modal">
-            <div class="candidate-modal-header">
-                <h2 id="candidate-modal-title">Candidatos para a Vaga</h2>
-                <button id="close-candidate-modal-btn">&times;</button>
-            </div>
-            <div id="candidate-modal-body">
-                <!-- <p id="loading-candidates-message">Carregando candidatos...</p> -->
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Contato</th>
-                            <th>Currículo</th>
-                        </tr>
-                    </thead>
-                    <tbody id="candidate-list-tbody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     <div id="talent-modal-overlay" class="hidden">
         <div id="talent-modal">
             <h2 id="talent-modal-title">Adicionar ao Banco de Talentos</h2>
             <form id="talent-form" novalidate>
+                <div class="form-field-full">
+                    <input type="text" id="talent-name" placeholder="Nome Completo do Candidato" required>
+                </div>
                 <div class="form-grid">
-                    <div class="form-field-full">
-                        <input type="text" id="talent-name" placeholder="Nome Completo do Candidato" required>
-                    </div>
                     <input type="email" id="talent-email" placeholder="E-mail do Candidato" required>
                     <input type="tel" id="talent-phone" placeholder="Telefone do Candidato" required>
+                </div>
+                <div class="form-grid">
                     <select id="talent-store-select" required>
                         <option value="" disabled selected>Selecione a Loja de Interesse</option>
                     </select>
-                    <input type="text" id="talent-position-input" placeholder="Cargo de Interesse (ex: Vendedor)"
-                        required>
+                    <input type="text" id="talent-position-input" placeholder="Cargo de Interesse (ex: Vendedor)" required>
                 </div>
                 <div class="form-field-full">
                     <label for="talent-cv-file">Currículo (PDF ou DOCX):</label>
@@ -311,5 +282,4 @@
 
     <script type="module" src="admin.js"></script>
 </body>
-
 </html>

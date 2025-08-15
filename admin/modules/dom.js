@@ -46,7 +46,7 @@ export const jobModalTitle = document.getElementById('modal-title');
 export const jobForm = document.getElementById('job-form');
 export const jobIdInput = document.getElementById('job-id');
 export const cancelJobBtn = document.getElementById('job-cancel-btn');
-export const jobStoreSelect = document.getElementById('job-storeName');
+export const jobLocalidadeSelect = document.getElementById('job-localidade');
 
 // Seção de Currículos
 export const storeFilterSelect = document.getElementById('store-filter-select');

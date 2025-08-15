@@ -147,6 +147,7 @@ async function handleDeleteJob(event) {
     }
 }
 
+// ADICIONADO O "EXPORT" AQUI
 export function handleStoreSelectChange(event) {
     const selectedStoreId = event.target.value;
     const store = getLoadedStores().find(s => s.id == selectedStoreId);

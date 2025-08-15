@@ -1,14 +1,13 @@
+// script/jobBoard.js
 import { supabase } from './supabase-client.js';
 import { openUploadModal } from './modalHandler.js';
 import { observeElements } from './animations.js';
 
+// ATUALIZADO: A query agora busca 'localidade'
 async function fetchActiveJobs() {
     const { data, error } = await supabase
         .from('vagas')
-        .select(`
-            *,
-            lojas ( name, city, state )
-        `)
+        .select(`id, title, description, type, job_category, localidade`)
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 
@@ -19,14 +18,10 @@ async function fetchActiveJobs() {
     return data;
 }
 
+// ATUALIZADO: O card agora exibe a 'localidade'
 function createJobCard(job) {
     const categoryClass = job.job_category === 'Banco de Talentos' ? 'category-talent' : 'category-open';
     
-    const storeName = job.lojas ? job.lojas.name : job.storename;
-    const city = job.lojas ? job.lojas.city : job.city;
-    const state = job.lojas ? job.lojas.state : job.state;
-
-    // Card de vaga simplificado
     return `
         <div class="bg-white rounded-lg shadow-md p-6 border flex flex-col h-full animate-on-scroll justify-between">
             <div>
@@ -35,12 +30,12 @@ function createJobCard(job) {
                     <span class="inline-block bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full">${job.type || ''}</span>
                 </div>
                 <h3 class="text-lg font-bold text-help-purple">${job.title}</h3>
-                <p class="text-gray-600 font-semibold text-sm mt-1">${storeName} - ${city}, ${state}</p> 
+                <p class="text-gray-600 font-semibold text-sm mt-1">${job.localidade}</p> 
             </div>
             <button class="apply-btn block w-full text-center bg-help-purple text-white font-semibold px-4 py-2 rounded-lg hover:bg-opacity-90 transition-colors mt-4" 
                     data-job-id="${job.id}" 
                     data-job-title="${job.title}" 
-                    data-store-name="${storeName}"
+                    data-store-name="${job.localidade}"
                     data-application-type="${job.job_category}">
                 Candidatar-se
             </button>
@@ -53,7 +48,7 @@ function addApplyButtonListeners() {
         button.addEventListener('click', (e) => {
             const jobId = e.currentTarget.dataset.jobId;
             const jobTitle = e.currentTarget.dataset.jobTitle;
-            const storeName = e.currentTarget.dataset.storeName;
+            const storeName = e.currentTarget.dataset.storeName; // Agora é a 'localidade'
             const applicationType = e.currentTarget.dataset.applicationType;
             openUploadModal(jobTitle, storeName, jobId, applicationType);
         });
@@ -62,7 +57,7 @@ function addApplyButtonListeners() {
 
 export async function initJobBoard() {
     const jobList = document.getElementById('job-list');
-    const jobLocationSelect = document.getElementById('job-location-select');
+    const jobLocationSelect = document.getElementById('job-location-select'); // O filtro de localização
     const jobTitleSelect = document.getElementById('job-title-select');
     const jobCategorySelect = document.getElementById('job-category-select');
     const noJobsMessage = document.getElementById('no-jobs-message');
@@ -78,12 +73,12 @@ export async function initJobBoard() {
         }
 
         const displayJobs = () => {
-            const stateFilter = jobLocationSelect.value;
+            const locationFilter = jobLocationSelect.value;
             const titleFilter = jobTitleSelect.value;
             const categoryFilter = jobCategorySelect.value;
 
             const filteredJobs = jobs.filter(job =>
-                (stateFilter === 'todos' || (job.lojas && job.lojas.state === stateFilter)) &&
+                (locationFilter === 'todos' || job.localidade === locationFilter) &&
                 (titleFilter === 'todos' || job.title === titleFilter) &&
                 (categoryFilter === 'todos' || job.job_category === categoryFilter)
             );
@@ -101,9 +96,10 @@ export async function initJobBoard() {
             }
         };
         
-        const jobStates = [...new Set(jobs.map(job => job.lojas?.state).filter(Boolean))].sort();
-        jobLocationSelect.innerHTML = '<option value="todos">Todos os Estados</option>';
-        jobStates.forEach(state => jobLocationSelect.add(new Option(state, state)));
+        // Popula os filtros dinamicamente
+        const jobLocations = [...new Set(jobs.map(job => job.localidade).filter(Boolean))].sort();
+        jobLocationSelect.innerHTML = '<option value="todos">Todas as Localidades</option>';
+        jobLocations.forEach(loc => jobLocationSelect.add(new Option(loc, loc)));
 
         const jobTitles = [...new Set(jobs.map(job => job.title))].filter(Boolean).sort();
         jobTitleSelect.innerHTML = '<option value="todos">Todas as Vagas</option>';
