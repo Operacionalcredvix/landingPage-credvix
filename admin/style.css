@@ -413,7 +413,8 @@ th {
 #job-modal-overlay,
 #talent-modal-overlay,
 #candidate-modal-overlay,
-#store-modal-overlay {
+#store-modal-overlay,
+#profile-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
