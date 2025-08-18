@@ -1,14 +1,14 @@
 // admin/admin.js
 import * as dom from './modules/dom.js';
 import { initializeAuth, handleLogin, handleLogout } from './modules/auth.js';
-import { showView, openStoreModal, closeStoreModal, openJobModal, closeJobModal, openTalentModal, closeTalentModal } from './modules/ui.js';
+import { showView, openStoreModal, closeStoreModal, openJobModal, closeJobModal, openTalentModal } from './modules/ui.js';
 import { loadStores, displayStores, handleStoreFormSubmit } from './modules/stores.js';
 import { displayJobs, handleJobFormSubmit, loadJobs } from './modules/jobs.js';
 import { loadResumesByStore, handleTalentFormSubmit } from './modules/resumes.js';
 import { initializeProfile } from './modules/profile.js'; 
 
 function initializeAdminPanel() {
-    // Apenas adiciona listeners a elementos que existem
+    // Adiciona listeners apenas a elementos que existem
     if (dom.loginForm) dom.loginForm.addEventListener('submit', handleLogin);
     if (dom.logoutBtn) dom.logoutBtn.addEventListener('click', handleLogout);
 
@@ -23,7 +23,7 @@ function initializeAdminPanel() {
     if (dom.storeSearchInput) dom.storeSearchInput.addEventListener('input', displayStores);
     if (dom.storeStateFilter) dom.storeStateFilter.addEventListener('change', displayStores);
 
-    if (dom.newJobBtn) dom.newJobBtn.addEventListener('click', () => { dom.jobModalTitle.textContent = 'Criar Nova Vaga'; document.getElementById('job-is_active').checked = true; openJobModal(); });
+    if (dom.newJobBtn) dom.newJobBtn.addEventListener('click', () => { openJobModal(); });
     if (dom.cancelJobBtn) dom.cancelJobBtn.addEventListener('click', closeJobModal);
     if (dom.jobModalOverlay) dom.jobModalOverlay.addEventListener('click', (e) => { if (e.target === dom.jobModalOverlay) closeJobModal(); });
     if (dom.jobForm) dom.jobForm.addEventListener('submit', handleJobFormSubmit);
@@ -33,20 +33,21 @@ function initializeAdminPanel() {
     if (dom.jobSearchInput) dom.jobSearchInput.addEventListener('input', displayJobs);
 
     if (dom.newTalentBtn) dom.newTalentBtn.addEventListener('click', openTalentModal);
-    if (dom.cancelTalentBtn) dom.cancelTalentBtn.addEventListener('click', closeTalentModal);
-    if (dom.talentModalOverlay) dom.talentModalOverlay.addEventListener('click', (e) => { if (e.target === dom.talentModalOverlay) closeTalentModal(); });
     if (dom.talentForm) dom.talentForm.addEventListener('submit', handleTalentFormSubmit);
 
     if (dom.storeFilterSelect) dom.storeFilterSelect.addEventListener('change', loadResumesByStore);
     if (dom.applicationTypeFilter) dom.applicationTypeFilter.addEventListener('change', loadResumesByStore);
 
+    // Inicializa a autenticação e passa a função que carrega os dados do painel.
     initializeAuth(async () => {
         try {
-            await loadStores();
-            await loadJobs();
+            await Promise.all([
+                loadStores(),
+                loadJobs()
+            ]);
             initializeProfile();
         } catch (error) {
-            console.error("Falha ao inicializar o painel:", error);
+            console.error("Falha ao inicializar os módulos do painel:", error);
             alert("Ocorreu um erro ao carregar os dados do painel.");
         }
     });

@@ -1,9 +1,9 @@
 // admin/modules/ui.js
 import * as dom from './dom.js';
-import { supabase } from '../../script/supabase-client.js'; // Importar o supabase
+import { supabase } from '../../script/supabase-client.js';
 import { loadJobs } from './jobs.js';
 import { loadResumesByStore } from './resumes.js';
-import { loadStores } from './stores.js';
+import { loadStores, getLoadedStores } from './stores.js';
 
 const viewLoaders = {
     'vagas': loadJobs,
@@ -35,15 +35,16 @@ export function showView(viewId) {
 export const openStoreModal = () => dom.storeModalOverlay.classList.remove('hidden');
 export const closeStoreModal = () => { dom.storeModalOverlay.classList.add('hidden'); dom.storeForm.reset(); dom.storeIdInput.value = ''; };
 
-export const openJobModal = () => dom.jobModalOverlay.classList.remove('hidden');
+// ATUALIZADO
+export const openJobModal = () => {
+    dom.jobModalTitle.textContent = 'Criar Nova Vaga'; 
+    document.getElementById('job-is_active').checked = true;
+    dom.jobModalOverlay.classList.remove('hidden');
+};
 export const closeJobModal = () => { dom.jobModalOverlay.classList.add('hidden'); dom.jobForm.reset(); dom.jobIdInput.value = ''; };
 
-
-// FUNÇÃO ATUALIZADA
 export async function openTalentModal() {
     const talentLocalidadeSelect = document.getElementById('talent-localidade-select');
-    
-    // Busca as cidades diretamente do banco de dados para criar a lista de localidades
     const { data, error } = await supabase.from('lojas').select('city');
     if (error) {
         console.error("Erro ao buscar cidades para o Banco de Talentos:", error);
@@ -51,10 +52,8 @@ export async function openTalentModal() {
     }
 
     const cidades = [...new Set(data.map(item => item.city))].sort();
-    
     talentLocalidadeSelect.innerHTML = '<option value="" disabled selected>Selecione a Localidade de Interesse</option>';
     talentLocalidadeSelect.innerHTML += '<option value="Grande Vitória">Grande Vitória</option>';
-
     cidades.forEach(cidade => {
         if (!['Vila Velha', 'Vitória', 'Serra', 'Cariacica'].includes(cidade)) {
             talentLocalidadeSelect.innerHTML += `<option value="${cidade}">${cidade}</option>`;
@@ -68,9 +67,7 @@ export const closeTalentModal = () => {
     dom.talentModalOverlay.classList.add('hidden');
     document.getElementById('talent-form').reset();
     const statusMessage = document.getElementById('talent-status-message');
-    if (statusMessage) {
-        statusMessage.textContent = '';
-    }
+    if (statusMessage) statusMessage.textContent = '';
 };
 
 export function showDashboard() {
