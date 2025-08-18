@@ -33,7 +33,7 @@ export async function loadJobs() {
     dom.jobCardGrid.innerHTML = `<p>Carregando vagas...</p>`;
     dom.noJobsMessage.classList.add('hidden');
 
-    const { data, error } = await supabase.from('vagas').select(`*, candidatos(count)`).order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('vagas').select(`*`).order('created_at', { ascending: false });
 
     if (error) {
         console.error('Erro ao carregar vagas:', error.message);
@@ -74,7 +74,7 @@ export function displayJobs() {
     dom.noJobsMessage.classList.add('hidden');
 
     filteredJobs.forEach(job => {
-        const candidateCount = job.candidatos[0]?.count || 0;
+        const candidateCount = 0; // Temporariamente definido como 0
         const card = document.createElement('div');
         card.className = 'job-card';
         card.innerHTML = `

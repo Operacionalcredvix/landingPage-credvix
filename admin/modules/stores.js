@@ -11,11 +11,13 @@ export function getLoadedStores() {
 export async function loadStores() {
     dom.storeListTbody.innerHTML = `<tr><td colspan="4">Carregando lojas...</td></tr>`;
 
-    // QUERY CORRIGIDA ABAIXO
+    // ===== AQUI ESTÁ A CORREÇÃO CRÍTICA =====
+    // Trocámos select('*') por uma lista explícita de colunas para
+    // evitar o congelamento causado por RLS em relações de tabelas.
     const { data, error } = await supabase
         .from('lojas')
-        .select(`*`) // Simplificado para buscar todos os dados da loja
-        .order('nome', { ascending: true }); // Corrigido de 'name' para 'nome'
+        .select(`id, nome, city, state, address, phone, whatsapp, instagram_url`)
+        .order('nome', { ascending: true });
 
     if (error) {
         console.error("Erro ao carregar lojas:", error);
@@ -33,7 +35,7 @@ export function displayStores() {
     const stateFilter = dom.storeStateFilter.value;
 
     const filteredStores = loadedStores.filter(store =>
-        (store.nome.toLowerCase().includes(searchTerm)) && // Corrigido de 'name' para 'nome'
+        (store.nome.toLowerCase().includes(searchTerm)) &&
         (stateFilter === 'todos' || store.state === stateFilter)
     );
 
@@ -44,7 +46,6 @@ export function displayStores() {
     }
 
     filteredStores.forEach(store => {
-        // A contagem de vagas foi removida temporariamente para corrigir o erro
         const vagaCount = "N/A"; 
         const row = dom.storeListTbody.insertRow();
         row.innerHTML = `
@@ -71,7 +72,6 @@ function populateStoreFilters() {
     dom.storeFilterSelect.innerHTML = '<option value="todos">Todas as Cidades</option>';
     cities.forEach(city => dom.storeFilterSelect.add(new Option(city, city)));
     
-    // ATENÇÃO: dom.jobStoreSelect foi removido daqui pois a lógica mudou para 'localidade' em jobs.js
     const talentStoreSelect = document.getElementById('talent-store-select');
     if(talentStoreSelect) {
         talentStoreSelect.innerHTML = '<option value="" disabled selected>Selecione a Loja de Interesse</option>';
@@ -83,7 +83,7 @@ export async function handleStoreFormSubmit(event) {
     event.preventDefault();
     const storeId = dom.storeIdInput.value;
     const storeData = {
-        nome: document.getElementById('store-name').value, // Corrigido de 'name' para 'nome'
+        nome: document.getElementById('store-name').value,
         city: document.getElementById('store-city').value,
         state: document.getElementById('store-state').value,
         address: document.getElementById('store-address').value,
@@ -92,17 +92,12 @@ export async function handleStoreFormSubmit(event) {
         instagram_url: document.getElementById('store-instagram').value
     };
 
-    // Necessitamos buscar o regional_id para inserir ou atualizar
-    // Esta parte do código precisará de um seletor de regional no formulário.
-    // Por enquanto, esta função irá falhar se tentar criar uma loja sem regional_id.
-    // A edição deve funcionar.
-
     const { error } = storeId
         ? await supabase.from('lojas').update(storeData).eq('id', storeId)
         : await supabase.from('lojas').insert([storeData]);
 
     if (error) {
-        alert("Ocorreu um erro ao salvar a loja. Verifique se todos os campos, incluindo a regional, estão preenchidos.");
+        alert("Ocorreu um erro ao salvar a loja. Verifique se todos os campos estão preenchidos.");
         console.error(error);
     } else {
         closeStoreModal();
@@ -116,7 +111,7 @@ function handleEditStore(event) {
     if (!store) return;
     dom.storeModalTitle.textContent = 'Editar Loja';
     dom.storeIdInput.value = store.id;
-    document.getElementById('store-name').value = store.nome; // Corrigido de 'name' para 'nome'
+    document.getElementById('store-name').value = store.nome;
     document.getElementById('store-city').value = store.city;
     document.getElementById('store-state').value = store.state;
     document.getElementById('store-address').value = store.address;
@@ -129,7 +124,6 @@ function handleEditStore(event) {
 async function handleDeleteStore(event) {
     const id = event.currentTarget.dataset.id;
     
-    // Lógica para verificar vagas associadas à cidade da loja
     const store = loadedStores.find(s => s.id == id);
     if(store) {
         const {data: vagasNaCidade, error} = await supabase.from('vagas').select('id').eq('localidade', store.city);

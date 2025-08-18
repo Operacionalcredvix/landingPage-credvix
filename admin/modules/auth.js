@@ -1,4 +1,4 @@
-// admin/modules/auth.js (Versão Simplificada sem Perfis)
+// admin/modules/auth.js (Versão de TESTE sem Verificador de Perfil)
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { showLogin, showDashboard } from './ui.js';
@@ -24,13 +24,8 @@ export async function handleLogin(event) {
 }
 
 export async function handleLogout() {
-    // Encerra a sessão no Supabase
     const { error } = await supabase.auth.signOut();
-
-    // Limpa a variável local do utilizador
     currentUser = null;
-
-    // Força o recarregamento da página para um estado limpo
     if (!error) {
         location.reload();
     } else {
@@ -41,26 +36,16 @@ export async function handleLogout() {
 export function initializeAuth(onLoginSuccess) {
     supabase.auth.onAuthStateChange(async (event, session) => {
         if (session && session.user) {
-            // MODIFICADO: A consulta agora é mais simples e não busca o perfil.
-            const { data, error } = await supabase
-                .from('funcionarios')
-                .select('id, nome_completo, avatar_url')
-                .eq('user_id', session.user.id)
-                .single();
+            
+            // --- VERIFICADOR DE PERFIL REMOVIDO PARA TESTE ---
+            // A linha abaixo define um utilizador temporário apenas com os dados da autenticação.
+            console.log("Sessão do Supabase detectada. A carregar o painel diretamente.");
+            currentUser = session.user;
 
-            if (error) {
-                console.error("Erro ao buscar o perfil do funcionário. O utilizador pode não estar registado na tabela 'funcionarios'. A fazer logout forçado.", error);
-                await handleLogout();
-                return;
-            }
-
-            currentUser = { ...session.user, ...data };
-
-            loadUserProfile(currentUser); 
-
-            await onLoginSuccess(); 
-
+            // Carrega o painel sem verificar os dados do funcionário no banco.
+            await onLoginSuccess();
             showDashboard();
+            
         } else {
             currentUser = null;
             showLogin();
