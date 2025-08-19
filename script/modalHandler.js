@@ -1,11 +1,12 @@
 import { supabase } from './supabase-client.js';
 
-// Define os valores padrão para os tipos de candidatura num único local
+// Define os valores padrão para os tipos de candidatura
 const APLICATION_TYPE = {
     OPEN_POSITION: 'Aberta',
     TALENT_POOL: 'Banco de Talentos'
 };
 
+// Elementos do DOM
 const uploadModal = document.getElementById('upload-modal');
 const closeModalBtn = document.getElementById('close-modal-btn');
 const modalJobTitle = document.getElementById('modal-job-title');
@@ -15,71 +16,92 @@ const modalContentForm = document.getElementById('modal-content-form');
 const modalContentStatus = document.getElementById('modal-content-status');
 
 /**
- * Normaliza o tipo de candidatura para garantir a consistência dos dados.
- * @param {string} type - O tipo de candidatura recebido.
- * @returns {string|null} - O tipo de candidatura padronizado ou nulo se inválido.
+ * Normaliza o tipo de candidatura para garantir consistência
  */
 function normalizeApplicationType(type) {
     if (typeof type !== 'string') return null;
-
     const lowerCaseType = type.toLowerCase().trim();
-
     if (lowerCaseType.includes('banco')) {
         return APLICATION_TYPE.TALENT_POOL;
     }
     if (lowerCaseType.includes('aberta')) {
         return APLICATION_TYPE.OPEN_POSITION;
     }
-    // Retorna o valor original como fallback, caso não corresponda a nenhum padrão
     return type;
 }
 
-export function openUploadModal(jobTitle, storeName, jobId, applicationType) {
-    if (uploadModal) {
-        modalJobTitle.textContent = `${jobTitle} - ${storeName}`;
-        uploadForm.dataset.jobTitle = jobTitle;
-        uploadForm.dataset.storeName = storeName;
-        uploadForm.dataset.jobId = jobId;
-        uploadForm.dataset.applicationType = applicationType;
-        modalContentForm.classList.remove('hidden');
-        modalContentStatus.classList.add('hidden');
-        uploadForm.reset();
-        uploadModal.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden');
+/**
+ * Verifica se o bucket 'curriculos' existe e está acessível
+ */
+async function checkBucketExists() {
+    try {
+        const { data: buckets, error } = await supabase.storage.listBuckets();
+        if (error) throw error;
+        return buckets.some(b => b.name === 'curriculos');
+    } catch (error) {
+        console.error('Erro ao verificar buckets:', error);
+        return false;
     }
 }
 
-function closeModal() {
-    if (uploadModal) {
-        uploadModal.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden');
-    }
-}
-
+/**
+ * Valida o arquivo antes do upload
+ */
 function validateFile(file) {
-    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    const validTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
     if (!file) throw new Error('Por favor, selecione um arquivo.');
     if (file.size > 5 * 1024 * 1024) throw new Error('O arquivo é muito grande. Tamanho máximo: 5MB.');
     if (!validTypes.includes(file.type)) throw new Error('Formato inválido. Use PDF, DOC ou DOCX.');
     return true;
 }
 
+/**
+ * Faz upload do arquivo para o storage
+ */
 async function uploadFile(file, storeName, candidateEmail) {
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${candidateEmail.split('@')[0]}_${Date.now()}.${fileExt}`;
-    const safeStoreName = storeName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
-    const filePath = `${safeStoreName}/${fileName}`;
-    const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file);
-    if (uploadError) throw uploadError;
-    return filePath;
+    try {
+        const bucketExists = await checkBucketExists();
+        if (!bucketExists) {
+            throw new Error('Bucket "curriculos" não encontrado. O sistema pode estar em manutenção.');
+        }
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${candidateEmail.split('@')[0]}_${Date.now()}.${fileExt}`;
+        const safeStoreName = storeName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+        const filePath = `${safeStoreName}/${fileName}`;
+        const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file, { cacheControl: '3600', upsert: false });
+        if (uploadError) throw uploadError;
+        return filePath;
+    } catch (error) {
+        console.error('Erro no upload:', error);
+        throw error;
+    }
 }
 
+/**
+ * Registra o candidato no banco de dados
+ */
 async function registerCandidate(candidateData, filePath) {
-    const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
-    const { error } = await supabase.from('candidatos').insert([{ ...candidateData, curriculo_url: urlData.publicUrl, status: 'pendente' }]);
-    if (error) throw error;
+    try {
+        const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
+        const { error } = await supabase.from('candidatos').insert([{
+            ...candidateData,
+            curriculo_url: urlData.publicUrl,
+            status: 'pendente',
+        }]);
+        if (error) throw error;
+    } catch (error) {
+        console.error('Erro ao registrar candidato:', error);
+        throw error;
+    }
 }
 
+/**
+ * Manipula o envio do formulário
+ */
 async function handleFormSubmit(e) {
     e.preventDefault();
     const jobId = e.currentTarget.dataset.jobId;
@@ -88,7 +110,6 @@ async function handleFormSubmit(e) {
     const storeName = e.currentTarget.dataset.storeName;
     const rawApplicationType = e.currentTarget.dataset.applicationType;
     const applicationType = normalizeApplicationType(rawApplicationType);
-
     const candidateName = document.getElementById('candidate-name').value.trim();
     const candidateEmail = document.getElementById('candidate-email').value.trim();
     const candidatePhone = document.getElementById('candidate-phone').value.trim();
@@ -104,11 +125,19 @@ async function handleFormSubmit(e) {
 
     try {
         validateFile(file);
-        const filePath = await uploadFile(file, storeName, candidateEmail);
 
-        const { data: vaga, error: vagaError } = await supabase.from('vagas').select('*, lojas (city)').eq('id', jobId).single();
+        // ===== AQUI ESTÁ A CORREÇÃO CRÍTICA =====
+        // A consulta foi simplificada para buscar apenas da tabela 'vagas'
+        // e usamos o campo 'localidade' que já existe na vaga.
+        const { data: vaga, error: vagaError } = await supabase
+            .from('vagas')
+            .select('*')
+            .eq('id', jobId)
+            .single();
+            
         if (vagaError) throw vagaError;
 
+        const filePath = await uploadFile(file, storeName, candidateEmail);
         await registerCandidate({
             vaga_id: jobId,
             nome_completo: candidateName,
@@ -116,7 +145,7 @@ async function handleFormSubmit(e) {
             telefone: candidatePhone,
             vaga: jobTitle,
             loja: storeName,
-            city: vaga.lojas ? vaga.lojas.city : null,
+            city: vaga.localidade, // Usamos o campo 'localidade' da própria vaga
             tipo_candidatura: applicationType
         }, filePath);
 
@@ -125,10 +154,51 @@ async function handleFormSubmit(e) {
 
     } catch (error) {
         console.error('Erro no processo de candidatura:', error);
-        modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><p class="text-red-600 font-bold text-xl mb-2">Ocorreu um erro</p><p class="text-sm text-gray-500 mb-4">${error.message || 'Não foi possível enviar seu currículo.'}</p><button onclick="location.reload()" class="text-help-purple font-semibold mt-2 px-4 py-2 border border-help-purple rounded-lg hover:bg-help-purple hover:text-white transition-colors">Tentar novamente</button></div>`;
+        
+        let errorMessage = 'Não foi possível enviar seu currículo.';
+        if (error.message.includes('Bucket')) {
+            errorMessage = 'Sistema temporariamente indisponível. Por favor, tente novamente mais tarde.';
+        } else if (error.message.includes('Tamanho máximo')) {
+            errorMessage = error.message;
+        } else if (error.message.includes('Formato inválido')) {
+            errorMessage = error.message;
+        }
+        
+        modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><p class="text-red-600 font-bold text-xl mb-2">Ocorreu um erro</p><p class="text-sm text-gray-500 mb-4">${errorMessage}</p><button onclick="location.reload()" class="text-help-purple font-semibold mt-2 px-4 py-2 border border-help-purple rounded-lg hover:bg-help-purple hover:text-white transition-colors">Tentar novamente</button></div>`;
     }
 }
 
+/**
+ * Fecha o modal
+ */
+function closeModal() {
+    if (uploadModal) {
+        uploadModal.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+}
+
+/**
+ * Abre o modal de upload
+ */
+export function openUploadModal(jobTitle, storeName, jobId, applicationType) {
+    if (uploadModal) {
+        modalJobTitle.textContent = `${jobTitle} - ${storeName}`;
+        uploadForm.dataset.jobTitle = jobTitle;
+        uploadForm.dataset.storeName = storeName;
+        uploadForm.dataset.jobId = jobId;
+        uploadForm.dataset.applicationType = applicationType;
+        modalContentForm.classList.remove('hidden');
+        modalContentStatus.classList.add('hidden');
+        uploadForm.reset();
+        uploadModal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+}
+
+/**
+ * Inicializa o handler do modal
+ */
 export function initModalHandler() {
     if (!uploadModal) return;
     uploadForm.addEventListener('submit', handleFormSubmit);
@@ -137,6 +207,8 @@ export function initModalHandler() {
         if (e.target === uploadModal) closeModal();
     });
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !uploadModal.classList.contains('hidden')) closeModal();
+        if (e.key === 'Escape' && !uploadModal.classList.contains('hidden')) {
+            closeModal();
+        }
     });
 }

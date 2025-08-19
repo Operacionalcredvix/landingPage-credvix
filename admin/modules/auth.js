@@ -1,4 +1,4 @@
-// admin/modules/auth.js (Versão de TESTE sem Verificador de Perfil)
+// admin/modules/auth.js (Versão Simplificada - Apenas Autenticação)
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { showLogin, showDashboard } from './ui.js';
@@ -36,13 +36,16 @@ export async function handleLogout() {
 export function initializeAuth(onLoginSuccess) {
     supabase.auth.onAuthStateChange(async (event, session) => {
         if (session && session.user) {
-            
-            // --- VERIFICADOR DE PERFIL REMOVIDO PARA TESTE ---
-            // A linha abaixo define um utilizador temporário apenas com os dados da autenticação.
+            // --- VERIFICAÇÃO DE FUNCIONÁRIO REMOVIDA ---
+            // Se existir uma sessão válida do Supabase, o acesso é concedido imediatamente.
             console.log("Sessão do Supabase detectada. A carregar o painel diretamente.");
+            
+            // Definimos o utilizador apenas com os dados básicos da autenticação.
             currentUser = session.user;
+            
+            // O nome e a foto do utilizador não serão carregados, mas o painel irá funcionar.
+            loadUserProfile({ nome_completo: 'Utilizador', avatar_url: '' }); 
 
-            // Carrega o painel sem verificar os dados do funcionário no banco.
             await onLoginSuccess();
             showDashboard();
             
