@@ -1,4 +1,4 @@
-// admin/modules/ui.js
+
 import * as dom from './dom.js';
 import { supabase } from '../../script/supabase-client.js';
 import { loadJobs } from './jobs.js';
@@ -11,9 +11,11 @@ const viewLoaders = {
     'lojas': loadStores,
 };
 
+// admin/modules/ui.js (função showView corrigida)
 export function showView(viewId) {
+    // Esconde todas as vistas
     [dom.vagasView, dom.curriculosView, dom.lojasView].forEach(view => view.classList.add('hidden'));
-    [dom.navVagas, dom.navCurriculos, dom.navLojas].forEach(nav => nav.parentElement.classList.remove('active'));
+    [dom.navVagas, dom.navCurriculos, dom.navLojas].forEach(nav => nav.classList.remove('active'));
 
     const viewMap = {
         'vagas': { view: dom.vagasView, nav: dom.navVagas },
@@ -23,8 +25,10 @@ export function showView(viewId) {
 
     const selected = viewMap[viewId];
     if (selected) {
+        // Mostra a vista selecionada
         selected.view.classList.remove('hidden');
-        selected.nav.parentElement.classList.add('active');
+        selected.nav.classList.add('active');
+        
         sessionStorage.setItem('activeAdminView', viewId);
         if (viewLoaders[viewId]) {
             viewLoaders[viewId]();
