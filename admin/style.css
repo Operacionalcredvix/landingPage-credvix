@@ -535,4 +535,69 @@ input:checked+.slider {
 input:checked+.slider:before {
     transform: translateX(22px);
 }
+/* --- Estilos para a Tag de Critérios --- */
+.criteria-tag-item {
+    background-color: #eef2ff; /* Azul muito claro */
+    border: 1px solid #c7d2fe; /* Borda azul clara */
+    border-radius: 8px;
+    padding: 15px;
+    position: relative;
+    padding-right: 50px; /* Espaço para o botão de excluir */
+}
 
+.criteria-tag-item strong {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #4338ca; /* Azul escuro */
+    display: block;
+    margin-bottom: 8px;
+}
+
+.criteria-tag-item p {
+    font-size: 0.9rem;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap; /* Preserva as quebras de linha do textarea */
+}
+
+.delete-criteria-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    color: #ef4444; /* Vermelho */
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.delete-criteria-btn:hover {
+    background-color: #fee2e2; /* Fundo vermelho claro no hover */
+}
+
+/* --- Estilos Personalizados para a Biblioteca Tagify --- */
+:root {
+    --tagify-font-size: 1rem;
+    --tagify-bg-color: var(--card-background);
+    --tagify-dd-bg-color: var(--card-background);
+    --tag-bg: var(--primary-color);
+    --tag-hover: #1d4ed8;
+    --tag-text-color: white;
+}
+
+.tagify {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 0.5rem;
+}
+
+.tagify:hover {
+    border-color: var(--primary-color);
+}
+
+.tagify__tag {
+    margin: 5px;
+}

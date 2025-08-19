@@ -15,9 +15,11 @@ export const logoutBtn = document.getElementById('logout-btn');
 export const navVagas = document.getElementById('nav-vagas');
 export const navCurriculos = document.getElementById('nav-curriculos');
 export const navLojas = document.getElementById('nav-lojas');
+export const navCriterios = document.getElementById('nav-criterios'); // Adicionado
 export const vagasView = document.getElementById('vagas-view');
 export const curriculosView = document.getElementById('curriculos-view');
 export const lojasView = document.getElementById('lojas-view');
+export const criteriosView = document.getElementById('criterios-view'); // Adicionado
 
 // Seção de Lojas
 export const storeListTbody = document.getElementById('store-list-tbody');
@@ -61,25 +63,12 @@ export const talentModalOverlay = document.getElementById('talent-modal-overlay'
 export const cancelTalentBtn = document.getElementById('talent-cancel-btn');
 export const talentForm = document.getElementById('talent-form');
 
-// Perfil do Utilizador
-export const userProfileWidget = document.getElementById('user-profile-widget');
-export const userAvatarImg = document.getElementById('user-avatar-img');
-export const userNameSpan = document.getElementById('user-name-span');
-export const btnConfig = document.getElementById('btn-config');
-export const profileModalOverlay = document.getElementById('profile-modal-overlay');
-export const profileForm = document.getElementById('profile-form');
-export const avatarFileInput = document.getElementById('avatar-file-input');
-export const newPasswordInput = document.getElementById('new-password');
-export const confirmPasswordInput = document.getElementById('confirm-password');
-export const profileStatusMessage = document.getElementById('profile-status-message');
-export const btnCancelProfile = document.getElementById('btn-cancel-profile');
-export const avatarPreview = document.getElementById('profile-avatar-preview');
-
-// Adicione estas linhas no final do ficheiro dom.js
-export const navCriterios = document.getElementById('nav-criterios');
-export const criteriosView = document.getElementById('criterios-view');
+// Secção de Critérios (Adicionado)
 export const criteriaForm = document.getElementById('criteria-form');
 export const criteriaStoreSelect = document.getElementById('criteria-store-select');
 export const criteriaText = document.getElementById('criteria-text');
 export const criteriaSubmitBtn = criteriaForm ? criteriaForm.querySelector('button[type="submit"]') : null;
 export const criteriaStatusMessage = document.getElementById('criteria-status-message');
+export const criteriaSummaryContainer = document.getElementById('criteria-summary-container');
+export const criteriaSummaryList = document.getElementById('criteria-summary-list');
+export const criteriaTagDisplay = document.getElementById('criteria-tag-display');

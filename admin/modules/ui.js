@@ -1,37 +1,39 @@
-// admin/modules/ui.js (Versão Final e Corrigida)
+// admin/modules/ui.js (Versão Final com a secção de Critérios)
 import * as dom from './dom.js';
 import { supabase } from '../../script/supabase-client.js';
 import { loadJobs } from './jobs.js';
 import { loadResumesByStore } from './resumes.js';
 import { loadStores } from './stores.js';
+// A função initializeCriteria é chamada em admin.js, não aqui.
 
-// Mapeia qual função de carregamento de dados pertence a cada vista
 const viewLoaders = {
     'vagas': loadJobs,
     'curriculos': loadResumesByStore,
     'lojas': loadStores,
-    // Adicione o 'criterios' se/quando criar essa funcionalidade
+    // Nota: 'criterios' não precisa de um loader aqui porque a sua lógica já é chamada em admin.js
 };
 
 /**
  * Gere a visibilidade das diferentes secções do painel e o estado ativo do menu.
- * @param {string} viewId - O ID da vista a ser exibida (ex: 'vagas', 'lojas').
+ * @param {string} viewId - O ID da vista a ser exibida (ex: 'vagas', 'criterios').
  */
 export function showView(viewId) {
-    // Esconde todas as vistas
-    [dom.vagasView, dom.curriculosView, dom.lojasView].forEach(view => {
+    // Esconde todas as vistas, incluindo a nova de critérios
+    [dom.vagasView, dom.curriculosView, dom.lojasView, dom.criteriosView].forEach(view => {
         if (view) view.classList.add('hidden');
     });
     
-    // Remove a classe 'active' de todos os itens do menu
-    [dom.navVagas, dom.navCurriculos, dom.navLojas].forEach(nav => {
+    // Remove a classe 'active' de todos os itens do menu, incluindo o novo de critérios
+    [dom.navVagas, dom.navCurriculos, dom.navLojas, dom.navCriterios].forEach(nav => {
         if (nav) nav.classList.remove('active');
     });
 
+    // Mapeia todas as vistas, incluindo a nova de critérios
     const viewMap = {
         'vagas': { view: dom.vagasView, nav: dom.navVagas },
         'curriculos': { view: dom.curriculosView, nav: dom.navCurriculos },
-        'lojas': { view: dom.lojasView, nav: dom.navLojas }
+        'lojas': { view: dom.lojasView, nav: dom.navLojas },
+        'criterios': { view: dom.criteriosView, nav: dom.navCriterios }
     };
 
     const selected = viewMap[viewId];
@@ -46,35 +48,37 @@ export function showView(viewId) {
         
         sessionStorage.setItem('activeAdminView', viewId);
         
-        // Carrega os dados para a vista que está a ser aberta
+        // Carrega os dados para a vista que está a ser aberta, se necessário
         if (viewLoaders[viewId]) {
             viewLoaders[viewId]();
         }
     }
 }
 
+// O restante do ficheiro permanece igual...
+
 // Funções para controlar os modais
 export const openStoreModal = () => dom.storeModalOverlay && dom.storeModalOverlay.classList.remove('hidden');
 export const closeStoreModal = () => {
     if (dom.storeModalOverlay) {
         dom.storeModalOverlay.classList.add('hidden');
-        dom.storeForm.reset();
-        dom.storeIdInput.value = '';
+        if(dom.storeForm) dom.storeForm.reset();
+        if(dom.storeIdInput) dom.storeIdInput.value = '';
     }
 };
 
 export const openJobModal = () => {
     if (dom.jobModalOverlay) {
         dom.jobModalTitle.textContent = 'Criar Nova Vaga'; 
-        document.getElementById('job-is_active').checked = true;
+        if(document.getElementById('job-is_active')) document.getElementById('job-is_active').checked = true;
         dom.jobModalOverlay.classList.remove('hidden');
     }
 };
 export const closeJobModal = () => {
     if (dom.jobModalOverlay) {
         dom.jobModalOverlay.classList.add('hidden');
-        dom.jobForm.reset();
-        dom.jobIdInput.value = '';
+        if(dom.jobForm) dom.jobForm.reset();
+        if(dom.jobIdInput) dom.jobIdInput.value = '';
     }
 };
 
@@ -103,7 +107,8 @@ export async function openTalentModal() {
 export const closeTalentModal = () => {
     if (dom.talentModalOverlay) {
         dom.talentModalOverlay.classList.add('hidden');
-        document.getElementById('talent-form').reset();
+        const talentForm = document.getElementById('talent-form');
+        if(talentForm) talentForm.reset();
         const statusMessage = document.getElementById('talent-status-message');
         if (statusMessage) statusMessage.textContent = '';
     }
