@@ -74,3 +74,12 @@ export const confirmPasswordInput = document.getElementById('confirm-password');
 export const profileStatusMessage = document.getElementById('profile-status-message');
 export const btnCancelProfile = document.getElementById('btn-cancel-profile');
 export const avatarPreview = document.getElementById('profile-avatar-preview');
+
+// Adicione estas linhas no final do ficheiro dom.js
+export const navCriterios = document.getElementById('nav-criterios');
+export const criteriosView = document.getElementById('criterios-view');
+export const criteriaForm = document.getElementById('criteria-form');
+export const criteriaStoreSelect = document.getElementById('criteria-store-select');
+export const criteriaText = document.getElementById('criteria-text');
+export const criteriaSubmitBtn = criteriaForm ? criteriaForm.querySelector('button[type="submit"]') : null;
+export const criteriaStatusMessage = document.getElementById('criteria-status-message');

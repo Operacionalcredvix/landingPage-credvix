@@ -1,11 +1,12 @@
-// admin/admin.js (Versão Final Super Simplificada)
+// admin/admin.js (Versão Final e Corrigida)
 import * as dom from './modules/dom.js';
 import { initializeAuth, handleLogin, handleLogout } from './modules/auth.js';
 import { showView, openStoreModal, closeStoreModal, openJobModal, closeJobModal, openTalentModal } from './modules/ui.js';
 import { loadStores, displayStores, handleStoreFormSubmit } from './modules/stores.js';
 import { displayJobs, handleJobFormSubmit, loadJobs } from './modules/jobs.js';
 import { loadResumesByStore, handleTalentFormSubmit } from './modules/resumes.js';
-// A importação e a inicialização do perfil foram removidas.
+// A importação e a inicialização do perfil foram removidas para corrigir o erro.
+// import { initializeProfile } from './modules/profile.js'; 
 
 function initializeAdminPanel() {
     // Adiciona listeners de eventos básicos
@@ -32,13 +33,11 @@ function initializeAdminPanel() {
     if (dom.talentForm) dom.talentForm.addEventListener('submit', handleTalentFormSubmit);
     if (dom.storeFilterSelect) dom.storeFilterSelect.addEventListener('change', loadResumesByStore);
     if (dom.applicationTypeFilter) dom.applicationTypeFilter.addEventListener('change', loadResumesByStore);
-    // Adiciona o evento de clique para o botão "Cancelar" do modal de talentos.
-    // if (dom.cancelTalentBtn) dom.cancelTalentBtn.addEventListener('click', closeTalentModal);
 
-    // Inicializa a autenticação com uma função de callback vazia.
+    // Inicializa a autenticação com a lógica de carregamento de dados adiada
     initializeAuth(() => {
-        // Esta função é chamada após o login ser bem-sucedido.
-        // Já não precisamos de fazer nada aqui.
+        // Esta função de callback é chamada após o login ser bem-sucedido.
+        // A chamada a initializeProfile() foi removida daqui.
     });
 }
 

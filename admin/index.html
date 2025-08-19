@@ -32,8 +32,10 @@
             <nav>
                 <ul id="main-nav">
                     <li id="nav-vagas"><a href="#"><span class="material-icons">work</span> Vagas</a></li>
-                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a></li>
+                    <li id="nav-curriculos"><a href="#"><span class="material-icons">folder_shared</span> Currículos</a>
+                    </li>
                     <li id="nav-lojas"><a href="#"><span class="material-icons">store</span> Lojas</a></li>
+                    <li id="nav-criterios"><a href="#"><span class="material-icons">rule</span> Critérios</a></li>
                 </ul>
             </nav>
 
@@ -170,6 +172,31 @@
                         </thead>
                         <tbody id="store-list-tbody"></tbody>
                     </table>
+                </section>
+            </div>
+            <div id="criterios-view" class="hidden">
+                <header>
+                    <h1>Gestão de Critérios por Loja</h1>
+                </header>
+                <section class="card">
+                    <form id="criteria-form">
+                        <div class="form-field-full">
+                            <label for="criteria-store-select">Selecione a Loja</label>
+                            <select id="criteria-store-select" required>
+                                <option value="">A carregar lojas...</option>
+                            </select>
+                        </div>
+                        <div class="form-field-full" style="margin-top: 20px;">
+                            <label for="criteria-text">Critérios de Recrutamento</label>
+                            <textarea id="criteria-text" rows="8"
+                                placeholder="Digite os critérios para a loja selecionada... (ex: Mínimo 6 meses de experiência em vendas, boa comunicação, etc.)"
+                                required disabled></textarea>
+                        </div>
+                        <div class="form-footer" style="margin-top: 20px;">
+                            <span id="criteria-status-message"></span>
+                            <button type="submit" class="btn btn-primary" disabled>Salvar Critérios</button>
+                        </div>
+                    </form>
                 </section>
             </div>
         </main>
