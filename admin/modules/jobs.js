@@ -1,4 +1,3 @@
-
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { openJobModal, closeJobModal } from './ui.js';
@@ -33,6 +32,7 @@ export async function loadJobs() {
     dom.jobCardGrid.innerHTML = `<p>Carregando vagas...</p>`;
     dom.noJobsMessage.classList.add('hidden');
 
+    // A consulta foi simplificada para não depender da contagem de candidatos que estava a causar problemas.
     const { data, error } = await supabase.from('vagas').select(`*`).order('created_at', { ascending: false });
 
     if (error) {
@@ -74,7 +74,7 @@ export function displayJobs() {
     dom.noJobsMessage.classList.add('hidden');
 
     filteredJobs.forEach(job => {
-        const candidateCount = 0; // Temporariamente definido como 0
+        const candidateCount = 0; // Contagem de candidatos desativada temporariamente.
         const card = document.createElement('div');
         card.className = 'job-card';
         card.innerHTML = `
