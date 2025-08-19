@@ -64,16 +64,23 @@ function validateFile(file) {
  */
 async function uploadFile(file, storeName, candidateEmail) {
     try {
-        const bucketExists = await checkBucketExists();
-        if (!bucketExists) {
-            throw new Error('Bucket "curriculos" não encontrado. O sistema pode estar em manutenção.');
-        }
         const fileExt = file.name.split('.').pop();
         const fileName = `${candidateEmail.split('@')[0]}_${Date.now()}.${fileExt}`;
         const safeStoreName = storeName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
         const filePath = `${safeStoreName}/${fileName}`;
-        const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file, { cacheControl: '3600', upsert: false });
-        if (uploadError) throw uploadError;
+        
+        const { error: uploadError } = await supabase.storage.from('curriculos').upload(filePath, file, { 
+            cacheControl: '3600', 
+            upsert: false 
+        });
+        
+        if (uploadError) {
+            if (uploadError.message.includes('Bucket not found')) {
+                throw new Error('Bucket "curriculos" não encontrado. O sistema pode estar em manutenção.');
+            }
+            throw uploadError;
+        }
+        
         return filePath;
     } catch (error) {
         console.error('Erro no upload:', error);
