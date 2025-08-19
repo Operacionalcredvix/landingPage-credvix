@@ -1,13 +1,14 @@
-// admin/admin.js (Versão com Diagnóstico)
+// admin/admin.js (Versão Final Super Simplificada)
 import * as dom from './modules/dom.js';
 import { initializeAuth, handleLogin, handleLogout } from './modules/auth.js';
 import { showView, openStoreModal, closeStoreModal, openJobModal, closeJobModal, openTalentModal } from './modules/ui.js';
 import { loadStores, displayStores, handleStoreFormSubmit } from './modules/stores.js';
 import { displayJobs, handleJobFormSubmit, loadJobs } from './modules/jobs.js';
 import { loadResumesByStore, handleTalentFormSubmit } from './modules/resumes.js';
-import { initializeProfile } from './modules/profile.js';
+// A importação e a inicialização do perfil foram removidas.
 
 function initializeAdminPanel() {
+    // Adiciona listeners de eventos básicos
     if (dom.loginForm) dom.loginForm.addEventListener('submit', handleLogin);
     if (dom.logoutBtn) dom.logoutBtn.addEventListener('click', handleLogout);
     if (dom.navVagas) dom.navVagas.addEventListener('click', (e) => { e.preventDefault(); showView('vagas'); });
@@ -31,25 +32,13 @@ function initializeAdminPanel() {
     if (dom.talentForm) dom.talentForm.addEventListener('submit', handleTalentFormSubmit);
     if (dom.storeFilterSelect) dom.storeFilterSelect.addEventListener('change', loadResumesByStore);
     if (dom.applicationTypeFilter) dom.applicationTypeFilter.addEventListener('change', loadResumesByStore);
+    // Adiciona o evento de clique para o botão "Cancelar" do modal de talentos.
+    // if (dom.cancelTalentBtn) dom.cancelTalentBtn.addEventListener('click', closeTalentModal);
 
-    initializeAuth(async () => {
-        console.log('[DIAGNÓSTICO] A iniciar o carregamento dos dados do painel...');
-        try {
-            console.log('[DIAGNÓSTICO] A carregar Lojas...');
-            await loadStores();
-            console.log('[DIAGNÓSTICO] Lojas carregadas com sucesso.');
-
-            console.log('[DIAGNÓSTICO] A carregar Vagas...');
-            await loadJobs();
-            console.log('[DIAGNÓSTICO] Vagas carregadas com sucesso.');
-            
-            console.log('[DIAGNÓSTICO] A inicializar o perfil do utilizador...');
-            initializeProfile();
-            console.log('[DIAGNÓSTICO] Dados do painel carregados com sucesso.');
-        } catch (error) {
-            console.error("[DIAGNÓSTICO] FALHA CRÍTICA ao carregar os dados do painel:", error);
-            alert("Ocorreu um erro crítico ao carregar os dados do painel. Verifique a consola para mais detalhes.");
-        }
+    // Inicializa a autenticação com uma função de callback vazia.
+    initializeAuth(() => {
+        // Esta função é chamada após o login ser bem-sucedido.
+        // Já não precisamos de fazer nada aqui.
     });
 }
 

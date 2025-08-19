@@ -37,13 +37,6 @@
                 </ul>
             </nav>
 
-            <div id="user-profile-widget" class="user-profile">
-                <img id="user-avatar-img" src="https://placehold.co/100" alt="Avatar do Utilizador" class="user-avatar">
-                <div class="user-info">
-                    <span id="user-name-span">A carregar...</span>
-                    <button id="btn-config" class="btn-config"><span class="material-icons">settings</span></button>
-                </div>
-            </div>
 
             <div class="sidebar-footer">
                 <button id="logout-btn" class="btn btn-outline"><span class="material-icons">logout</span> Sair</button>
@@ -76,7 +69,6 @@
                         <span class="material-icons card-icon">thumb_down</span>
                     </div>
                 </section>
-
                 <section class="filter-panel">
                     <div class="filter-group">
                         <label for="job-search-input">Buscar</label>
@@ -105,13 +97,11 @@
                         </select>
                     </div>
                 </section>
-
                 <section class="job-list-container">
                     <div id="job-card-grid" class="job-card-grid"></div>
                     <p id="no-jobs-message" class="hidden">Nenhuma vaga encontrada para os filtros selecionados.</p>
                 </section>
             </div>
-
             <div id="curriculos-view" class="hidden">
                 <header>
                     <h1>Banco de Currículos</h1>
@@ -150,7 +140,6 @@
                     <p id="no-resumes-message" class="hidden">Nenhum currículo encontrado.</p>
                 </section>
             </div>
-
             <div id="lojas-view" class="hidden">
                 <header>
                     <h1>Gestão de Lojas</h1>
@@ -223,7 +212,6 @@
             </form>
         </div>
     </div>
-
     <div id="talent-modal-overlay" class="hidden">
         <div id="talent-modal" class="modal">
             <h2 id="talent-modal-title">Adicionar ao Banco de Talentos</h2>
@@ -255,7 +243,6 @@
             </form>
         </div>
     </div>
-
     <div id="store-modal-overlay" class="hidden">
         <div id="store-modal" class="modal">
             <h2 id="store-modal-title">Criar Nova Loja</h2>
@@ -284,36 +271,6 @@
         </div>
     </div>
     
-    <div id="profile-modal-overlay" class="hidden">
-        <div id="profile-modal" class="modal">
-            <h2>Configurações de Perfil</h2>
-            <form id="profile-form">
-                <div class="form-group profile-picture-section">
-                    <img id="profile-avatar-preview" src="https://placehold.co/150" alt="Pré-visualização do Avatar">
-                    <label for="avatar-file-input" class="btn btn-secondary">Alterar Imagem</label>
-                    <input type="file" id="avatar-file-input" accept="image/*" style="display: none;">
-                </div>
-                <hr>
-                <h4>Alterar Senha</h4>
-                <div class="form-group">
-                    <label for="new-password">Nova Senha</label>
-                    <input type="password" id="new-password" placeholder="Deixe em branco para não alterar">
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirmar Nova Senha</label>
-                    <input type="password" id="confirm-password" placeholder="Confirme a nova senha">
-                </div>
-                <div class="modal-actions">
-                    <span id="profile-status-message" class="status-message"></span>
-                    <div>
-                        <button type="button" id="btn-cancel-profile" class="btn btn-secondary">Cancelar</button>
-                        <button type="submit" id="btn-save-profile" class="btn btn-primary">Salvar Alterações</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script type="module" src="admin.js"></script>
 </body>
 </html>

@@ -1,8 +1,9 @@
-// admin/modules/auth.js (Versão Simplificada - Apenas Autenticação)
+// admin/modules/auth.js (Versão Final Super Simplificada)
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 import { showLogin, showDashboard } from './ui.js';
-import { loadUserProfile } from './profile.js';
+// A linha abaixo foi removida pois a função não é mais utilizada.
+// import { loadUserProfile } from './profile.js';
 
 let currentUser = null;
 
@@ -36,16 +37,11 @@ export async function handleLogout() {
 export function initializeAuth(onLoginSuccess) {
     supabase.auth.onAuthStateChange(async (event, session) => {
         if (session && session.user) {
-            // --- VERIFICAÇÃO DE FUNCIONÁRIO REMOVIDA ---
-            // Se existir uma sessão válida do Supabase, o acesso é concedido imediatamente.
-            console.log("Sessão do Supabase detectada. A carregar o painel diretamente.");
-            
-            // Definimos o utilizador apenas com os dados básicos da autenticação.
+            console.log("Sessão do Supabase detectada. A carregar o painel.");
             currentUser = session.user;
             
-            // O nome e a foto do utilizador não serão carregados, mas o painel irá funcionar.
-            loadUserProfile({ nome_completo: 'Utilizador', avatar_url: '' }); 
-
+            // A chamada a loadUserProfile foi removida.
+            
             await onLoginSuccess();
             showDashboard();
             
