@@ -607,3 +607,56 @@ input:checked+.slider:before {
     min-width: 470px !important;
     min-height: 50px;
 }
+
+/* ================================================= */
+/* === LAYOUT RESPONSIVO PARA O FORM DE CRITÉRIOS === */
+/* ================================================= */
+
+/* Define o formulário como um container grid */
+.criteria-form-grid {
+    display: grid;
+    gap: 1.5rem; /* Espaçamento entre os elementos do formulário */
+    align-items: end; /* Alinha os itens na parte de baixo do seu espaço */
+}
+
+/* Em telas maiores (desktop), cria um grid com 2 colunas:
+  - A primeira coluna (1fr) ocupa todo o espaço flexível disponível.
+  - A segunda coluna (auto) ajusta-se ao tamanho do conteúdo (o nosso botão).
+*/
+@media (min-width: 768px) {
+    .criteria-form-grid {
+        grid-template-columns: 1fr auto;
+    }
+
+    /* Faz com que os campos de input e a mensagem de status ocupem apenas a primeira coluna */
+    .criteria-form-grid .filter-group,
+    .criteria-form-grid .form-field-full,
+    .criteria-form-grid #criteria-status-message {
+        grid-column: 1 / 2;
+    }
+    
+    /* Faz com que o botão ocupe apenas a segunda coluna */
+    .criteria-form-grid .btn {
+        grid-column: 2 / 3;
+    }
+}
+
+/* Em telas menores (mobile), tudo vira uma única coluna (1fr)
+  e o botão de salvar ocupa a largura total para melhor usabilidade.
+*/
+@media (max-width: 767px) {
+    .criteria-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .criteria-form-grid .btn {
+        width: 100%;
+        padding: 12px; /* Aumenta um pouco o padding para facilitar o toque */
+    }
+
+    .criteria-form-grid #criteria-status-message {
+        text-align: center; /* Centraliza a mensagem de status */
+        width: 100%;
+        margin-bottom: -1rem; /* Reduz o espaço antes do botão */
+    }
+}
