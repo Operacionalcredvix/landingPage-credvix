@@ -600,4 +600,10 @@ input:checked+.slider:before {
 
 .tagify__tag {
     margin: 5px;
+    
+}
+
+.tagify__input{
+    min-width: 470px !important;
+    min-height: 50px;
 }
