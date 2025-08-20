@@ -660,3 +660,6 @@ input:checked+.slider:before {
         margin-bottom: -1rem; /* Reduz o espaço antes do botão */
     }
 }
+.grid-span-full {
+    grid-column: 1 / -1;
+}

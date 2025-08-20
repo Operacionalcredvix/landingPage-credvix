@@ -185,17 +185,24 @@
                 <section class="card">
                     <form id="criteria-form" class="criteria-form-grid">
                         <div class="filter-group">
-                            <label for="criteria-store-select">Selecione a Loja</label>
+                            <label for="criteria-store-select">1. Selecione a Loja</label>
                             <select id="criteria-store-select" required>
                                 <option value="">A carregar lojas...</option>
                             </select>
                         </div>
-                        <div id="criteria-tag-display" class="hidden"></div>
-                        <div class="form-field-full">
-                            <label for="criteria-text">Critérios de Recrutamento (pressione Enter ou vírgula para criar
-                                uma tag)</label>
+                        <div class="filter-group">
+                            <label for="criteria-role-select">2. Selecione o Cargo</label>
+                            <select id="criteria-role-select" required disabled>
+                                <option value="">Selecione uma loja primeiro...</option>
+                                <option value="Consultor">Consultor</option>
+                                <option value="Supervisor">Supervisor</option>
+                            </select>
+                        </div>
+
+                        <div class="filter-group grid-span-full">
+                            <label for="criteria-text">3. Critérios de Recrutamento (pressione Enter ou vírgula)</label>
                             <input id="criteria-text" class="tagify-input"
-                                placeholder="Selecione uma loja para começar...">
+                                placeholder="Selecione uma loja e um cargo...">
                         </div>
 
                         <span id="criteria-status-message"></span>

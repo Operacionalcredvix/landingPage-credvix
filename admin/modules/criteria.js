@@ -1,4 +1,4 @@
-// admin/modules/criteria.js (Versão Final Corrigida)
+// admin/modules/criteria.js (Versão Final com seleção de Cargo)
 import { supabase } from '../../script/supabase-client.js';
 import * as dom from './dom.js';
 
@@ -11,30 +11,30 @@ function initializeTagify() {
     if (!dom.criteriaText) return;
 
     tagify = new Tagify(dom.criteriaText, {
-        delimiters: ',|Enter', // Permite criar tags com vírgula ou Enter
-        // ATUALIZADO: Inicia o campo como 'apenas leitura' (desativado) através do método da biblioteca
-        readOnly: true 
+        delimiters: ',|Enter',
+        readOnly: true // Começa desativado
     });
 }
 
 /**
- * Carrega as tags de critérios para a loja selecionada.
+ * Carrega as tags de critérios para a loja e cargo selecionados.
  */
-async function loadCriteriaForStore() {
+async function loadCriteria() {
     const storeId = dom.criteriaStoreSelect.value;
+    const role = dom.criteriaRoleSelect.value;
     
     tagify.removeAllTags(); 
     dom.criteriaStatusMessage.textContent = '';
 
-    if (!storeId) {
-        // Desativa o campo e o botão se nenhuma loja estiver selecionada
+    // Validação para garantir que loja e cargo foram selecionados
+    if (!storeId || !role) {
         tagify.setReadonly(true);
-        tagify.DOM.input.placeholder = 'Selecione uma loja para começar...';
+        tagify.DOM.input.placeholder = 'Selecione uma loja e um cargo para começar...';
         dom.criteriaSubmitBtn.disabled = true;
         return;
     }
 
-    // Ativa o campo e o botão quando uma loja é selecionada
+    // Ativa os campos
     tagify.setReadonly(false);
     tagify.DOM.input.placeholder = 'Adicione um critério e pressione Enter...';
     dom.criteriaSubmitBtn.disabled = false;
@@ -43,7 +43,8 @@ async function loadCriteriaForStore() {
     const { data, error } = await supabase
         .from('criterio_tags')
         .select('tag_texto')
-        .eq('loja_id', storeId);
+        .eq('loja_id', storeId)
+        .eq('cargo', role); // << NOVO: Filtra também pelo cargo
 
     if (error) {
         console.error("Erro ao carregar critérios:", error);
@@ -53,15 +54,18 @@ async function loadCriteriaForStore() {
         tagify.loadOriginalValues(tags);
         dom.criteriaStatusMessage.textContent = 'Critérios carregados.';
     } else {
-        dom.criteriaStatusMessage.textContent = 'Nenhum critério definido para esta loja ainda.';
+        dom.criteriaStatusMessage.textContent = `Nenhum critério definido para ${role} nesta loja.`;
     }
 }
 
+/**
+ * Popula o dropdown de lojas.
+ */
 async function populateStoreDropdown() {
     const { data: stores, error } = await supabase.from('lojas').select('id, nome').order('nome');
     if (error) {
         console.error("Erro ao carregar lojas:", error);
-        dom.criteriaStoreSelect.innerHTML = '<option value="">Não foi possível carregar as lojas</option>';
+        dom.criteriaStoreSelect.innerHTML = '<option value="">Não foi possível carregar</option>';
         return;
     }
 
@@ -78,25 +82,29 @@ async function populateStoreDropdown() {
 async function handleCriteriaFormSubmit(event) {
     event.preventDefault();
     const storeId = dom.criteriaStoreSelect.value;
-    
-    const tagsToSave = tagify.value.map(tag => ({
-        loja_id: storeId,
-        tag_texto: tag.value
-    }));
+    const role = dom.criteriaRoleSelect.value; // << NOVO: Pega o valor do cargo
 
-    if (!storeId) {
-        alert('Por favor, selecione uma loja.');
+    if (!storeId || !role) {
+        alert('Por favor, selecione uma loja e um cargo.');
         return;
     }
+
+    // Adiciona o cargo a cada tag que será salva
+    const tagsToSave = tagify.value.map(tag => ({
+        loja_id: storeId,
+        tag_texto: tag.value,
+        cargo: role // << NOVO: Inclui o cargo no objeto
+    }));
 
     dom.criteriaStatusMessage.textContent = 'A salvar...';
     dom.criteriaSubmitBtn.disabled = true;
 
-    // Estratégia de Sincronização: Apagar todos os critérios antigos para esta loja
+    // Estratégia de Sincronização: Apaga todos os critérios antigos para esta loja E este cargo
     const { error: deleteError } = await supabase
         .from('criterio_tags')
         .delete()
-        .eq('loja_id', storeId);
+        .eq('loja_id', storeId)
+        .eq('cargo', role); // << NOVO: Deleta apenas os do cargo selecionado
 
     if (deleteError) {
         console.error("Erro ao apagar critérios antigos:", deleteError);
@@ -118,17 +126,39 @@ async function handleCriteriaFormSubmit(event) {
             dom.criteriaStatusMessage.textContent = 'Critérios salvos com sucesso!';
         }
     } else {
-        dom.criteriaStatusMessage.textContent = 'Todos os critérios foram removidos.';
+        dom.criteriaStatusMessage.textContent = 'Todos os critérios foram removidos para este cargo.';
     }
     
     dom.criteriaSubmitBtn.disabled = false;
 }
 
+
+/**
+ * Habilita ou desabilita o seletor de cargo.
+ */
+function handleStoreChange() {
+    if (dom.criteriaStoreSelect.value) {
+        dom.criteriaRoleSelect.disabled = false;
+        dom.criteriaRoleSelect.value = ''; // Reseta a seleção de cargo
+        dom.criteriaRoleSelect.querySelector('option[value=""]').textContent = "Selecione um cargo...";
+    } else {
+        dom.criteriaRoleSelect.disabled = true;
+        dom.criteriaRoleSelect.value = '';
+        dom.criteriaRoleSelect.querySelector('option[value=""]').textContent = "Selecione uma loja primeiro...";
+    }
+    loadCriteria(); // Tenta carregar os critérios (que irá falhar e resetar o campo de tags)
+}
+
+/**
+ * Inicializa toda a funcionalidade da página de critérios.
+ */
 export function initializeCriteria() {
     if (dom.criteriaForm) {
         initializeTagify();
         populateStoreDropdown();
-        dom.criteriaStoreSelect.addEventListener('change', loadCriteriaForStore);
+        // Adiciona os event listeners para os dois seletores
+        dom.criteriaStoreSelect.addEventListener('change', handleStoreChange);
+        dom.criteriaRoleSelect.addEventListener('change', loadCriteria);
         dom.criteriaForm.addEventListener('submit', handleCriteriaFormSubmit);
     }
 }

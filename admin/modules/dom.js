@@ -72,3 +72,4 @@ export const criteriaStatusMessage = document.getElementById('criteria-status-me
 export const criteriaSummaryContainer = document.getElementById('criteria-summary-container');
 export const criteriaSummaryList = document.getElementById('criteria-summary-list');
 export const criteriaTagDisplay = document.getElementById('criteria-tag-display');
+export const criteriaRoleSelect = document.getElementById('criteria-role-select');
