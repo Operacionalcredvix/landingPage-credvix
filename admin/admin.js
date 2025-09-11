@@ -1,7 +1,7 @@
 // admin/admin.js (Versão Final com a secção de Critérios)
 import * as dom from './modules/dom.js';
 import { initializeAuth, handleLogin, handleLogout } from './modules/auth.js';
-import { showView, openStoreModal, closeStoreModal, openJobModal, closeJobModal, openTalentModal } from './modules/ui.js';
+import { showView, openStoreModal, closeStoreModal, openJobModal, closeJobModal, openTalentModal, closeTalentModal } from './modules/ui.js'; // Adicionado closeTalentModal aqui
 import { loadStores, displayStores, handleStoreFormSubmit } from './modules/stores.js';
 import { displayJobs, handleJobFormSubmit, loadJobs } from './modules/jobs.js';
 import { loadResumesByStore, handleTalentFormSubmit } from './modules/resumes.js';
@@ -37,6 +37,13 @@ function initializeAdminPanel() {
     // Listeners para a Secção de Currículos (Banco de Talentos)
     if (dom.newTalentBtn) dom.newTalentBtn.addEventListener('click', openTalentModal);
     if (dom.talentForm) dom.talentForm.addEventListener('submit', handleTalentFormSubmit);
+    
+    // LINHA ADICIONADA PARA CORRIGIR O BOTÃO
+    if (dom.cancelTalentBtn) dom.cancelTalentBtn.addEventListener('click', closeTalentModal);
+    // Também adicionei um listener para fechar clicando fora do modal
+    if (dom.talentModalOverlay) dom.talentModalOverlay.addEventListener('click', (e) => { if (e.target === dom.talentModalOverlay) closeTalentModal(); });
+
+
     if (dom.storeFilterSelect) dom.storeFilterSelect.addEventListener('change', loadResumesByStore);
     if (dom.applicationTypeFilter) dom.applicationTypeFilter.addEventListener('change', loadResumesByStore);
 
