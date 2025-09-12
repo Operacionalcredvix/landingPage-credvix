@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div id="dashboard" class="flex">
+    <div id="dashboard" class="flex hidden">
         <aside class="sidebar">
             <div class="sidebar-header">
                 <img src="../img/favicon.png" alt="Logo" class="sidebar-logo">
@@ -61,8 +61,8 @@
                             </div>
                         </div>
                         <div class="form-field-full mt-4">
-                            <label for="email">Email *</label>
-                            <input type="email" id="email" placeholder="Ex: joao.silva@empresa.com" required>
+                            <label for="employee-email">Email *</label>
+                            <input type="email" id="employee-email" placeholder="Ex: joao.silva@empresa.com" required>
                         </div>
                         <div class="form-field-full mt-4">
                             <label for="system-user">Vincular Utilizador do Sistema (Opcional)</label>
@@ -163,7 +163,18 @@
         </main>
     </div>
 
-    <script type="module" src="admin.js"></script>
-    <script type="module" src="funcionarios.js"></script>
+    <div id="login-container">
+        <img src="../img/apis-preto.png" alt="Logo Apis grupo" class="logo">
+        <h2>Acesso ao Painel de Vagas</h2>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Digite seu e-mail" required>
+            <input type="password" id="password" placeholder="Digite sua senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+        <p id="login-error" class="error-message"></p>
+    </div>
+
+    <script type="module" src="modules/auth.js"></script>
+    <script type="module" src="modules/funcionarios.js"></script>
 </body>
 </html>

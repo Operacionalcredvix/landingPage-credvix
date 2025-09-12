@@ -1,5 +1,22 @@
 // admin/funcionarios.js
 import { supabase } from '../script/supabase-client.js';
+import { initializeAuth } from './modules/auth.js';
+
+/**
+ * Mostra o dashboard e esconde o login.
+ */
+function showDashboard() {
+    document.getElementById('dashboard').classList.remove('hidden');
+    document.getElementById('login-container').classList.add('hidden');
+}
+
+/**
+ * Mostra o login e esconde o dashboard.
+ */
+function showLogin() {
+    document.getElementById('dashboard').classList.add('hidden');
+    document.getElementById('login-container').classList.remove('hidden');
+}
 
 /**
  * Função para carregar dados iniciais, como preencher a lista de lojas.
@@ -21,7 +38,6 @@ async function initializePage() {
         return;
     }
 
-    // Limpa opções antigas e adiciona as novas
     storeSelect.innerHTML = '<option value="">Selecione a loja (após a regional)</option>';
     stores.forEach(store => {
         storeSelect.add(new Option(store.nome, store.id));
@@ -39,9 +55,33 @@ async function initializePage() {
  */
 async function handleEmployeeFormSubmit(event) {
     event.preventDefault();
-    alert('Funcionalidade de salvar funcionário ainda não implementada.');
+    console.log("Formulário de funcionário enviado!");
+
+    // Seleciona os valores dos campos do formulário
+    const fullName = document.getElementById('full-name').value;
+    // Pega o email do campo com o ID CORRETO
+    const email = document.getElementById('employee-email').value; 
+    const profile = document.getElementById('access-profile').value;
+
+    console.log({
+        nome: fullName,
+        email: email,
+        perfil: profile
+    });
+    
+    alert('Funcionalidade de salvar funcionário ainda não implementada, mas os dados foram capturados no console.');
     // Futuramente, a lógica para salvar os dados no Supabase será adicionada aqui.
 }
 
-// Inicia a página quando o DOM estiver pronto
-document.addEventListener('DOMContentLoaded', initializePage);
+// Inicia a autenticação e, em seguida, a página.
+initializeAuth(
+    (user) => { // onUserLoggedIn
+        console.log("Utilizador logado:", user.email);
+        showDashboard();
+        initializePage();
+    },
+    () => { // onUserLoggedOut
+        console.log("Nenhum utilizador logado.");
+        showLogin();
+    }
+);

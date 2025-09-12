@@ -1,53 +1,54 @@
-// admin/modules/auth.js (Versão Final Super Simplificada)
+
 import { supabase } from '../../script/supabase-client.js';
-import * as dom from './dom.js';
-import { showLogin, showDashboard } from './ui.js';
-// A linha abaixo foi removida pois a função não é mais utilizada.
-// import { loadUserProfile } from './profile.js';
 
-let currentUser = null;
-
-export const getCurrentUser = () => currentUser;
-
+/**
+ * Lida com o login do utilizador.
+ */
 export async function handleLogin(event) {
     event.preventDefault();
-    dom.loginError.textContent = '';
+    const loginError = document.getElementById('login-error');
+    loginError.textContent = '';
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: dom.emailInput.value,
-        password: dom.passwordInput.value
-    });
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-        dom.loginError.textContent = 'E-mail ou senha inválidos.';
-        console.error('Erro de login detalhado:', error);
+        loginError.textContent = 'E-mail ou senha inválidos.';
+        console.error('Erro de login:', error);
     }
+    // A página irá recarregar automaticamente pelo onAuthStateChange
 }
 
+/**
+ * Lida com o logout do utilizador.
+ */
 export async function handleLogout() {
     const { error } = await supabase.auth.signOut();
-    currentUser = null;
-    if (!error) {
-        location.reload();
-    } else {
+    if (error) {
         console.error('Erro ao fazer logout:', error);
     }
+    // A página irá recarregar automaticamente pelo onAuthStateChange
 }
 
-export function initializeAuth(onLoginSuccess) {
-    supabase.auth.onAuthStateChange(async (event, session) => {
+/**
+ * Inicializa a verificação de autenticação.
+ * @param {function} onUserLoggedIn - Função a ser executada quando um utilizador está logado.
+ * @param {function} onUserLoggedOut - Função a ser executada quando não há utilizador.
+ */
+export function initializeAuth(onUserLoggedIn, onUserLoggedOut) {
+    const loginForm = document.getElementById('login-form');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    if (loginForm) loginForm.addEventListener('submit', handleLogin);
+    if (logoutBtn) logoutBtn.addEventListener('click', handleLogout);
+
+    supabase.auth.onAuthStateChange((event, session) => {
         if (session && session.user) {
-            console.log("Sessão do Supabase detectada. A carregar o painel.");
-            currentUser = session.user;
-            
-            // A chamada a loadUserProfile foi removida.
-            
-            await onLoginSuccess();
-            showDashboard();
-            
+            onUserLoggedIn(session.user);
         } else {
-            currentUser = null;
-            showLogin();
+            onUserLoggedOut();
         }
     });
 }
