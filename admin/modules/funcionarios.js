@@ -1,5 +1,4 @@
-// admin/modules/funcionarios.js
-import { supabase } from '../../script/supabase-client.js';
+import { supabase } from '/../../script/supabase-client.js';
 import { initializeAuth } from './auth.js';
 
 // --- Funções de UI ---
@@ -56,15 +55,22 @@ async function consultarCEP() {
 
 async function populatePerfis() {
     const select = document.getElementById('perfil-select');
-    const { data, error } = await supabase.from('perfis').select('id, nome').order('nome');
-    
-    if (error || !data) {
+    try {
+        const { data, error } = await supabase
+            .from('perfis')
+            .select('id, nome')
+            .order('nome');
+
+        if (error) throw error;
+
+        select.innerHTML = '<option value="">Selecione o perfil</option>';
+        data.forEach(perfil => {
+            select.add(new Option(perfil.nome, perfil.id));
+        });
+    } catch (error) {
         console.error("Erro ao carregar perfis:", error);
-        select.innerHTML = '<option value="">Erro ao carregar</option>';
-        return;
+        select.innerHTML = '<option value="">Erro ao carregar perfis</option>';
     }
-    select.innerHTML = '<option value="">Selecione o perfil</option>';
-    data.forEach(perfil => select.add(new Option(perfil.nome, perfil.id)));
 }
 
 async function populateRegionais() {
