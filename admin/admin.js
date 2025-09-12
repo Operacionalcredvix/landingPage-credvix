@@ -15,7 +15,8 @@ function initializeAdminPanel() {
     if (dom.navCurriculos) dom.navCurriculos.addEventListener('click', (e) => { e.preventDefault(); showView('curriculos'); });
     if (dom.navLojas) dom.navLojas.addEventListener('click', (e) => { e.preventDefault(); showView('lojas'); });
     if (dom.navCriterios) dom.navCriterios.addEventListener('click', (e) => { e.preventDefault(); showView('criterios'); });
-
+    if (dom.navFuncionarios) {dom.navFuncionarios.addEventListener('click', (e) => {e.preventDefault();window.location.href = 'funcionarios.html';});}
+    
     // Listeners para a Secção de Lojas
     if (dom.newStoreBtn) dom.newStoreBtn.addEventListener('click', () => { dom.storeModalTitle.textContent = 'Criar Nova Loja'; openStoreModal(); });
     if (dom.cancelStoreBtn) dom.cancelStoreBtn.addEventListener('click', closeStoreModal);
@@ -37,7 +38,7 @@ function initializeAdminPanel() {
     // Listeners para a Secção de Currículos (Banco de Talentos)
     if (dom.newTalentBtn) dom.newTalentBtn.addEventListener('click', openTalentModal);
     if (dom.talentForm) dom.talentForm.addEventListener('submit', handleTalentFormSubmit);
-    
+
     // LINHA ADICIONADA PARA CORRIGIR O BOTÃO
     if (dom.cancelTalentBtn) dom.cancelTalentBtn.addEventListener('click', closeTalentModal);
     // Também adicionei um listener para fechar clicando fora do modal

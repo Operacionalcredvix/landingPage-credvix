@@ -15,11 +15,13 @@ export const logoutBtn = document.getElementById('logout-btn');
 export const navVagas = document.getElementById('nav-vagas');
 export const navCurriculos = document.getElementById('nav-curriculos');
 export const navLojas = document.getElementById('nav-lojas');
-export const navCriterios = document.getElementById('nav-criterios'); // Adicionado
+export const navCriterios = document.getElementById('nav-criterios');
 export const vagasView = document.getElementById('vagas-view');
 export const curriculosView = document.getElementById('curriculos-view');
 export const lojasView = document.getElementById('lojas-view');
-export const criteriosView = document.getElementById('criterios-view'); // Adicionado
+export const criteriosView = document.getElementById('criterios-view');
+export const navFuncionarios = document.getElementById('nav-funcionarios');
+export const funcionariosView = document.getElementById('funcionarios-view');
 
 // Seção de Lojas
 export const storeListTbody = document.getElementById('store-list-tbody');

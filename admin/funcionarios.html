@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funcionários - Admin Credvix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/funcionarios.css"> 
+    <link rel="icon" type="image/png" href="../img/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+</head>
+
+<body>
+    <div id="dashboard" class="flex">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="../img/favicon.png" alt="Logo" class="sidebar-logo">
+                <h3>Credvix Admin</h3>
+            </div>
+            <nav>
+                <ul id="main-nav">
+                    <li id="nav-vagas"><a href="index.html"><span class="material-icons">work</span> Vagas</a></li>
+                    <li id="nav-curriculos"><a href="index.html"><span class="material-icons">folder_shared</span> Currículos</a></li>
+                    <li id="nav-lojas"><a href="index.html"><span class="material-icons">store</span> Lojas</a></li>
+                    <li id="nav-criterios"><a href="index.html"><span class="material-icons">rule</span> Critérios</a></li>
+                    <li id="nav-funcionarios" class="active"><a href="funcionarios.html"><span class="material-icons">badge</span> Funcionários</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-outline"><span class="material-icons">logout</span> Sair</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-subheader">
+                <h1 class="page-subheader-title">Gestão de RH</h1>
+                <div class="page-subheader-actions">
+                    <button id="employee-back-btn" class="btn btn-secondary">Voltar</button>
+                    <button id="employee-save-btn" class="btn btn-primary" form="employee-form" type="submit">Salvar</button>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Novo Cadastro</h2>
+                    <p>Preencha os dados do novo funcionário.</p>
+                </div>
+
+                <form id="employee-form" class="space-y-6">
+                    <div class="card p-6">
+                        <h3 class="card-title">Informações Pessoais e de Acesso</h3>
+                        <div class="form-grid">
+                            <div>
+                                <label for="full-name">Nome Completo *</label>
+                                <input type="text" id="full-name" placeholder="Ex: João da Silva" required>
+                            </div>
+                            <div>
+                                <label for="mother-name">Nome da Mãe</label>
+                                <input type="text" id="mother-name" placeholder="Ex: Maria da Silva">
+                            </div>
+                        </div>
+                        <div class="form-field-full mt-4">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" placeholder="Ex: joao.silva@empresa.com" required>
+                        </div>
+                        <div class="form-field-full mt-4">
+                            <label for="system-user">Vincular Utilizador do Sistema (Opcional)</label>
+                            <select id="system-user">
+                                <option value="">Pesquisar e selecionar um utilizador</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                        <h3 class="card-title">Informações de Contato e Endereço</h3>
+                         <div class="form-field-full mb-4">
+                            <label for="phone">Telefone</label>
+                            <input type="tel" id="phone" placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="form-grid-3">
+                            <div class="col-span-2">
+                                <label for="address">Endereço</label>
+                                <input type="text" id="address" placeholder="Ex: Rua das Flores, 123">
+                            </div>
+                            <div>
+                                <label for="cep">CEP</label>
+                                <input type="text" id="cep" placeholder="00000-000">
+                            </div>
+                        </div>
+                        <div class="form-grid mt-4">
+                            <div>
+                                <label for="city">Cidade</label>
+                                <input type="text" id="city" placeholder="Ex: São Paulo">
+                            </div>
+                            <div>
+                                <label for="state">Estado</label>
+                                <select id="state">
+                                    <option value="">Selecione o estado</option>
+                                    <option value="ES">Espírito Santo</option>
+                                    <option value="MG">Minas Gerais</option>
+                                    <option value="BA">Bahia</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card p-6">
+                         <h3 class="card-title">Informações Organizacionais</h3>
+                        <div class="form-grid">
+                            <div>
+                                <label for="access-profile">Perfil de Acesso *</label>
+                                <select id="access-profile" required>
+                                    <option value="">Selecione o perfil</option>
+                                    <option value="admin">Administrador</option>
+                                    <option value="manager">Gerente</option>
+                                    <option value="employee">Funcionário</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="manager">Gestor/Gerente Direto (Opcional)</label>
+                                <select id="manager">
+                                    <option value="">Pesquisar e selecionar um gestor</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="regional">Regional (Opcional)</label>
+                                <select id="regional">
+                                    <option value="">Selecione a regional</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="store-employee">Loja (Opcional)</label>
+                                <select id="store-employee">
+                                    <option value="">Selecione a loja (após a regional)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card p-6">
+                        <h3 class="card-title">Status e Vínculo Contratual</h3>
+                        <div class="form-grid">
+                            <div>
+                                <label for="admission-date">Data de Admissão (Opcional)</label>
+                                <input type="date" id="admission-date">
+                            </div>
+                            <div>
+                                <label for="exit-date">Data de Saída (Opcional)</label>
+                                <input type="date" id="exit-date">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between mt-6">
+                            <label>Status do Funcionário</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="employee-status" checked>
+                                <span class="slider"></span> Ativo
+                            </label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="admin.js"></script>
+    <script type="module" src="funcionarios.js"></script>
+</body>
+</html>

@@ -4,12 +4,13 @@ import { supabase } from '../../script/supabase-client.js';
 import { loadJobs } from './jobs.js';
 import { loadResumesByStore } from './resumes.js';
 import { loadStores } from './stores.js';
-// A função initializeCriteria é chamada em admin.js, não aqui.
+import { loadEmployees } from './employees.js';
 
 const viewLoaders = {
     'vagas': loadJobs,
     'curriculos': loadResumesByStore,
     'lojas': loadStores,
+    'funcionarios': loadEmployees,
     // Nota: 'criterios' não precisa de um loader aqui porque a sua lógica já é chamada em admin.js
 };
 
@@ -18,13 +19,12 @@ const viewLoaders = {
  * @param {string} viewId - O ID da vista a ser exibida (ex: 'vagas', 'criterios').
  */
 export function showView(viewId) {
-    // Esconde todas as vistas, incluindo a nova de critérios
-    [dom.vagasView, dom.curriculosView, dom.lojasView, dom.criteriosView].forEach(view => {
+    [dom.vagasView, dom.curriculosView, dom.lojasView, dom.criteriosView, dom.funcionariosView].forEach(view => { // ADICIONADO dom.funcionariosView
         if (view) view.classList.add('hidden');
     });
-    
-    // Remove a classe 'active' de todos os itens do menu, incluindo o novo de critérios
-    [dom.navVagas, dom.navCurriculos, dom.navLojas, dom.navCriterios].forEach(nav => {
+
+    // Remove a classe 'active' de todos os itens do menu
+    [dom.navVagas, dom.navCurriculos, dom.navLojas, dom.navCriterios, dom.navFuncionarios].forEach(nav => { // ADICIONADO dom.navFuncionarios
         if (nav) nav.classList.remove('active');
     });
 
@@ -33,21 +33,22 @@ export function showView(viewId) {
         'vagas': { view: dom.vagasView, nav: dom.navVagas },
         'curriculos': { view: dom.curriculosView, nav: dom.navCurriculos },
         'lojas': { view: dom.lojasView, nav: dom.navLojas },
-        'criterios': { view: dom.criteriosView, nav: dom.navCriterios }
+        'criterios': { view: dom.criteriosView, nav: dom.navCriterios },
+        'funcionarios': { view: dom.funcionariosView, nav: dom.navFuncionarios },
     };
 
     const selected = viewMap[viewId];
     if (selected && selected.view) {
         // Mostra a vista selecionada
         selected.view.classList.remove('hidden');
-        
+
         // Adiciona a classe 'active' apenas ao item de menu correto
         if (selected.nav) {
             selected.nav.classList.add('active');
         }
-        
+
         sessionStorage.setItem('activeAdminView', viewId);
-        
+
         // Carrega os dados para a vista que está a ser aberta, se necessário
         if (viewLoaders[viewId]) {
             viewLoaders[viewId]();
@@ -62,23 +63,23 @@ export const openStoreModal = () => dom.storeModalOverlay && dom.storeModalOverl
 export const closeStoreModal = () => {
     if (dom.storeModalOverlay) {
         dom.storeModalOverlay.classList.add('hidden');
-        if(dom.storeForm) dom.storeForm.reset();
-        if(dom.storeIdInput) dom.storeIdInput.value = '';
+        if (dom.storeForm) dom.storeForm.reset();
+        if (dom.storeIdInput) dom.storeIdInput.value = '';
     }
 };
 
 export const openJobModal = () => {
     if (dom.jobModalOverlay) {
-        dom.jobModalTitle.textContent = 'Criar Nova Vaga'; 
-        if(document.getElementById('job-is_active')) document.getElementById('job-is_active').checked = true;
+        dom.jobModalTitle.textContent = 'Criar Nova Vaga';
+        if (document.getElementById('job-is_active')) document.getElementById('job-is_active').checked = true;
         dom.jobModalOverlay.classList.remove('hidden');
     }
 };
 export const closeJobModal = () => {
     if (dom.jobModalOverlay) {
         dom.jobModalOverlay.classList.add('hidden');
-        if(dom.jobForm) dom.jobForm.reset();
-        if(dom.jobIdInput) dom.jobIdInput.value = '';
+        if (dom.jobForm) dom.jobForm.reset();
+        if (dom.jobIdInput) dom.jobIdInput.value = '';
     }
 };
 
@@ -108,7 +109,7 @@ export const closeTalentModal = () => {
     if (dom.talentModalOverlay) {
         dom.talentModalOverlay.classList.add('hidden');
         const talentForm = document.getElementById('talent-form');
-        if(talentForm) talentForm.reset();
+        if (talentForm) talentForm.reset();
         const statusMessage = document.getElementById('talent-status-message');
         if (statusMessage) statusMessage.textContent = '';
     }
@@ -118,9 +119,9 @@ export const closeTalentModal = () => {
 export function showDashboard() {
     if (dom.loginContainer) dom.loginContainer.classList.add('hidden');
     if (dom.dashboard) dom.dashboard.classList.remove('hidden');
-    
+
     const savedView = sessionStorage.getItem('activeAdminView');
-    showView(savedView || 'vagas'); 
+    showView(savedView || 'vagas');
 }
 
 export function showLogin() {
