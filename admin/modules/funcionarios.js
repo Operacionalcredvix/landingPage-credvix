@@ -1,4 +1,4 @@
-import { supabase } from '/../../script/supabase-client.js';
+import { supabase } from '../../script/supabase-client.js';
 import { initializeAuth } from './auth.js';
 
 // --- Funções de UI ---
@@ -55,21 +55,30 @@ async function consultarCEP() {
 
 async function populatePerfis() {
     const select = document.getElementById('perfil-select');
-    try {
-        const { data, error } = await supabase
-            .from('perfis')
-            .select('id, nome')
-            .order('nome');
+    
+    // Lista local temporária (simulando os dados do banco)
+    const perfisLocais = [
+        { id: 1, nome: 'Master' },
+        { id: 2, nome: 'Coordenador' },
+        { id: 3, nome: 'Supervisor' },
+        { id: 4, nome: 'Consultor' },
+        { id: 5, nome: 'RH' },
+        { id: 6, nome: 'Backoffice' }
+    ];
 
-        if (error) throw error;
+    try {
+        // Simula um pequeno atraso, como se estivesse a carregar da rede
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         select.innerHTML = '<option value="">Selecione o perfil</option>';
-        data.forEach(perfil => {
+        perfisLocais.forEach(perfil => {
             select.add(new Option(perfil.nome, perfil.id));
         });
+        console.log("Perfis carregados da lista local com sucesso.");
+
     } catch (error) {
-        console.error("Erro ao carregar perfis:", error);
-        select.innerHTML = '<option value="">Erro ao carregar perfis</option>';
+        console.error("Erro ao carregar perfis da lista local:", error);
+        select.innerHTML = '<option value="">Erro ao carregar</option>';
     }
 }
 
