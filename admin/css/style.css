@@ -708,3 +708,17 @@ input:checked+.slider:before {
 .sidebar nav li.has-submenu summary {
     list-style: none;
 }
+
+/* ================================================= */
+/* === ESTILOS PARA O DESTAQUE DO RELATÓRIO      === */
+/* ================================================= */
+
+tr.highlight-warning {
+    background-color: #ffebe6 !important; /* Vermelho bem claro */
+    color: #c53030; /* Texto vermelho escuro */
+    font-weight: 600; /* Negrito para chamar atenção */
+}
+
+tr.highlight-warning:hover {
+    background-color: #fbd7d1 !important; /* Um pouco mais escuro no hover */
+}

@@ -1,5 +1,5 @@
 import { initializeAuth } from './modules/auth.js';
-import { generateNewEmployeesReport } from './modules/relatorios.js';
+import { generateNewEmployeesReport, filterHighlightedRows } from './modules/relatorios.js';
 
 function showDashboard() {
     document.getElementById('login-container')?.classList.add('hidden');
@@ -11,35 +11,45 @@ function showLogin() {
     document.getElementById('login-container')?.classList.remove('hidden');
 }
 
-/**
- * Define os valores padrão para os filtros de data e dispara a geração do relatório.
- */
 function initializeReportPage() {
     const startDateInput = document.getElementById('start-date');
     const endDateInput = document.getElementById('end-date');
     const filterButton = document.getElementById('filter-report-btn');
+    const filter40DaysButton = document.getElementById('filter-40-days-btn');
+    const filter80DaysButton = document.getElementById('filter-80-days-btn');
+    const highlightToggle = document.getElementById('highlight-only-toggle');
 
-    // Define a data final padrão como hoje
     const today = new Date();
-    endDateInput.value = today.toISOString().split('T')[0];
 
-    // Define a data inicial padrão como 90 dias atrás
-    const ninetyDaysAgo = new Date();
-    ninetyDaysAgo.setDate(today.getDate() - 90);
-    startDateInput.value = ninetyDaysAgo.toISOString().split('T')[0];
-    
-    // Adiciona o evento de clique ao botão de filtro
+    const setPeriodAndFilter = (days) => {
+        const startDate = new Date();
+        startDate.setDate(today.getDate() - days);
+        startDateInput.value = startDate.toISOString().split('T')[0];
+        endDateInput.value = today.toISOString().split('T')[0];
+        generateNewEmployeesReport(startDateInput.value, endDateInput.value);
+    };
+
     filterButton.addEventListener('click', () => {
-        const startDate = startDateInput.value;
-        const endDate = endDateInput.value;
-        generateNewEmployeesReport(startDate, endDate);
+        generateNewEmployeesReport(startDateInput.value, endDateInput.value);
     });
 
-    // Gera o relatório inicial com o período padrão
-    generateNewEmployeesReport(startDateInput.value, endDateInput.value);
+    filter40DaysButton.addEventListener('click', () => {
+        setPeriodAndFilter(45); // Ajustado para incluir o intervalo de destaque
+    });
+
+    filter80DaysButton.addEventListener('click', () => {
+        setPeriodAndFilter(90); // Ajustado para incluir o intervalo de destaque
+    });
+
+    // Adiciona o evento para o novo interruptor
+    highlightToggle.addEventListener('change', () => {
+        filterHighlightedRows();
+    });
+
+    // Gera o relatório inicial com o período padrão de 90 dias
+    setPeriodAndFilter(90);
 }
 
-// Inicializa a autenticação e, em seguida, a página de relatórios
 initializeAuth(
     (user) => {
         showDashboard();

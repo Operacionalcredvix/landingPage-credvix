@@ -1,8 +1,5 @@
 import { supabase } from '../../script/supabase-client.js';
 
-/**
- * Calcula a diferença de dias entre duas datas.
- */
 function getDaysDifference(date1, date2) {
     const oneDay = 1000 * 60 * 60 * 24;
     const diffInTime = date1.getTime() - date2.getTime();
@@ -10,10 +7,28 @@ function getDaysDifference(date1, date2) {
 }
 
 /**
- * Busca funcionários admitidos em um intervalo de datas e os renderiza na tabela.
- * @param {string} startDate - A data de início no formato YYYY-MM-DD.
- * @param {string} endDate - A data de fim no formato YYYY-MM-DD.
+ * Filtra as linhas da tabela, mostrando apenas as que têm a classe 'highlight-warning'.
  */
+export function filterHighlightedRows() {
+    const toggle = document.getElementById('highlight-only-toggle');
+    const tbody = document.getElementById('report-new-employees-tbody');
+    if (!toggle || !tbody) return;
+
+    const shouldFilter = toggle.checked;
+    const rows = tbody.querySelectorAll('tr');
+
+    rows.forEach(row => {
+        const isHighlighted = row.classList.contains('highlight-warning');
+        if (shouldFilter) {
+            // Se o filtro está ativo, mostre a linha APENAS se ela for destacada
+            row.style.display = isHighlighted ? '' : 'none';
+        } else {
+            // Se o filtro está inativo, mostre todas as linhas
+            row.style.display = '';
+        }
+    });
+}
+
 export async function generateNewEmployeesReport(startDate, endDate) {
     const tbody = document.getElementById('report-new-employees-tbody');
     const loadingMessage = document.getElementById('loading-report-message');
@@ -25,12 +40,8 @@ export async function generateNewEmployeesReport(startDate, endDate) {
     loadingMessage.classList.remove('hidden');
     noReportMessage.classList.add('hidden');
 
-    // Monta a consulta base
     let query = supabase
         .from('historico_vinculos')
-        // ================== AQUI ESTÁ A MUDANÇA ==================
-        // Adicionamos !left para forçar um LEFT JOIN.
-        // Isso garante que os funcionários apareçam mesmo se não tiverem loja ou perfil associado.
         .select(`
             data_admissao,
             funcionarios!left (
@@ -39,7 +50,6 @@ export async function generateNewEmployeesReport(startDate, endDate) {
                 lojas!left ( nome )
             )
         `)
-        // ==========================================================
         .is('data_saida', null)
         .order('data_admissao', { ascending: false });
 
@@ -67,12 +77,15 @@ export async function generateNewEmployeesReport(startDate, endDate) {
 
     const today = new Date();
     data.forEach(vinculo => {
-        // Adicionamos uma verificação extra para garantir que o funcionário existe no vínculo
         if (!vinculo.funcionarios) return;
 
         const row = tbody.insertRow();
         const admissionDate = new Date(vinculo.data_admissao);
         const daysInCompany = getDaysDifference(today, admissionDate);
+
+        if ((daysInCompany >= 40 && daysInCompany <= 45) || (daysInCompany >= 80 && daysInCompany <= 90)) {
+            row.classList.add('highlight-warning');
+        }
 
         const funcionario = vinculo.funcionarios;
         const perfil = funcionario.perfis ? funcionario.perfis.nome : 'N/A';
@@ -86,4 +99,7 @@ export async function generateNewEmployeesReport(startDate, endDate) {
             <td>${daysInCompany} dias</td>
         `;
     });
+
+    // Ao final de gerar o relatório, aplica o filtro de destaque atual
+    filterHighlightedRows();
 }

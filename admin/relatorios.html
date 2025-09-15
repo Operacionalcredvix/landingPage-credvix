@@ -21,11 +21,14 @@
             <nav>
                 <ul id="main-nav">
                     <li id="nav-vagas"><a href="index.html"><span class="material-icons">work</span> Vagas</a></li>
-                    <li id="nav-curriculos"><a href="index.html"><span class="material-icons">folder_shared</span> Currículos</a></li>
+                    <li id="nav-curriculos"><a href="index.html"><span class="material-icons">folder_shared</span>
+                            Currículos</a></li>
                     <li id="nav-lojas"><a href="index.html"><span class="material-icons">store</span> Lojas</a></li>
-                    <li id="nav-criterios"><a href="index.html"><span class="material-icons">rule</span> Critérios</a></li>
+                    <li id="nav-criterios"><a href="index.html"><span class="material-icons">rule</span> Critérios</a>
+                    </li>
                     <li class="has-submenu">
-                        <details open> <summary>
+                        <details open>
+                            <summary>
                                 <span class="material-icons">badge</span> Funcionários
                             </summary>
                             <ul>
@@ -42,22 +45,41 @@
         </aside>
 
         <main class="main-content">
-            <header class="page-subheader" style="align-items: flex-end; gap: 1rem;">
+            <header class="page-subheader"
+                style="align-items: flex-end; gap: 1rem; flex-wrap: wrap; justify-content: space-between;">
                 <div>
                     <h1 class="page-subheader-title">Relatório de Admissões</h1>
                     <p style="margin: 0; color: #6B7280;">Filtre os funcionários ativos por período de admissão.</p>
                 </div>
-                <div class="filter-group">
-                    <label for="start-date">Data de Início</label>
-                    <input type="date" id="start-date" class="form-input" style="padding: 0.5rem 0.75rem;">
+
+                <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                    <div class="filter-group">
+                        <label for="start-date">Data de Início</label>
+                        <input type="date" id="start-date" class="form-input" style="padding: 0.5rem 0.75rem;">
+                    </div>
+                    <div class="filter-group">
+                        <label for="end-date">Data Final</label>
+                        <input type="date" id="end-date" class="form-input" style="padding: 0.5rem 0.75rem;">
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+                        <button id="filter-40-days-btn" class="btn btn-secondary" style="padding: 10px 15px;">Até 40
+                            dias</button>
+                        <button id="filter-80-days-btn" class="btn btn-secondary" style="padding: 10px 15px;">Até 80
+                            dias</button>
+                        <button id="filter-report-btn" class="btn btn-primary">Filtrar</button>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label for="end-date">Data Final</label>
-                    <input type="date" id="end-date" class="form-input" style="padding: 0.5rem 0.75rem;">
+
+                <div class="form-group" style="border-left: 2px solid #e5e7eb; padding-left: 1rem; margin-left: 1rem;">
+                    <label for="highlight-only-toggle" class="form-label" style="margin-bottom: 0.8rem;">Filtro de
+                        Destaques</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="highlight-only-toggle">
+                        <span class="slider"></span> Mostrar apenas destaques
+                    </label>
                 </div>
-                <button id="filter-report-btn" class="btn btn-primary">Filtrar</button>
             </header>
-            
+
             <section class="card" style="margin-top: 2rem;">
                 <div class="store-list-container">
                     <table>
@@ -73,14 +95,15 @@
                         <tbody id="report-new-employees-tbody"></tbody>
                     </table>
                     <p id="loading-report-message">A gerar relatório...</p>
-                    <p id="no-report-message" class="hidden">Nenhum funcionário encontrado para o período selecionado.</p>
+                    <p id="no-report-message" class="hidden">Nenhum funcionário encontrado para o período selecionado.
+                    </p>
                 </div>
             </section>
         </main>
     </div>
 
     <div id="login-container">
-       <img src="../img/apis-preto.png" alt="Logo Apis grupo" class="logo">
+        <img src="../img/apis-preto.png" alt="Logo Apis grupo" class="logo">
         <h2>Acesso ao Painel</h2>
         <form id="login-form">
             <input type="email" id="email" placeholder="Digite seu e-mail" required>
@@ -92,4 +115,5 @@
 
     <script type="module" src="relatorios.js"></script>
 </body>
+
 </html>
