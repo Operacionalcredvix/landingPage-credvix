@@ -46,9 +46,8 @@ function resetFormToCreateMode() {
     document.getElementById('employee-form').reset();
     document.getElementById('employee-id').value = '';
     document.getElementById('vinculo-id').value = '';
-
     document.getElementById('form-title').textContent = 'Novo Cadastro';
-    document.getElementById('form-subtitle').textContent = 'Preencha os dados abaixo para criar um novo funcionário.';
+    document.getElementById('form-subtitle').textContent = 'Preencha os dados do novo funcionário.';
     document.getElementById('form-action-btn').textContent = 'Salvar Novo Funcionário';
     document.getElementById('clear-form-btn').classList.add('hidden');
     
@@ -64,7 +63,6 @@ function resetFormToCreateMode() {
 }
 
 async function populateFormForEdit(employee) {
-    // Preenche todos os campos do formulário com os dados do funcionário
     document.getElementById('employee-id').value = employee.id;
     document.getElementById('full-name').value = employee.nome_completo;
     document.getElementById('birth-date').value = employee.data_nascimento;
@@ -258,7 +256,9 @@ async function handleEmployeeFormSubmit(event) {
         endereco: document.getElementById('address').value || null,
         numero_endereco: document.getElementById('address-number').value || null,
         complemento_endereco: document.getElementById('address-complement').value || null,
-        bairro: document.getElementById('bairro').value || null,
+        // ================== AQUI ESTÁ A CORREÇÃO ==================
+        bairro: document.getElementById('neighborhood').value || null, // Corrigido de 'bairro' para 'neighborhood'
+        // ==========================================================
         cidade: document.getElementById('city').value || null,
         estado: document.getElementById('state').value || null,
         perfil_id: document.getElementById('perfil-select').value,
