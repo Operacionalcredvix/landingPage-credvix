@@ -26,8 +26,17 @@
                     <li id="nav-lojas"><a href="index.html"><span class="material-icons">store</span> Lojas</a></li>
                     <li id="nav-criterios"><a href="index.html"><span class="material-icons">rule</span> Critérios</a>
                     </li>
-                    <li id="nav-funcionarios" class="active"><a href="funcionarios.html"><span
-                                class="material-icons">badge</span> Funcionários</a></li>
+                    <li class="has-submenu">
+                        <details>
+                            <summary>
+                                <span class="material-icons">badge</span> Funcionários
+                            </summary>
+                            <ul>
+                                <li><a href="funcionarios.html">Cadastrar Novo</a></li>
+                                <li><a href="relatorios.html">Relatórios</a></li>
+                            </ul>
+                        </details>
+                    </li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -132,7 +141,33 @@
                                     <label for="state" class="form-label">Estado</label>
                                     <select id="state" name="state" class="form-select">
                                         <option value="">Selecione</option>
-                                        <option value="AC">Acre</option><option value="AL">Alagoas</option><option value="AP">Amapá</option><option value="AM">Amazonas</option><option value="BA">Bahia</option><option value="CE">Ceará</option><option value="DF">Distrito Federal</option><option value="ES">Espírito Santo</option><option value="GO">Goiás</option><option value="MA">Maranhão</option><option value="MT">Mato Grosso</option><option value="MS">Mato Grosso do Sul</option><option value="MG">Minas Gerais</option><option value="PA">Pará</option><option value="PB">Paraíba</option><option value="PR">Paraná</option><option value="PE">Pernambuco</option><option value="PI">Piauí</option><option value="RJ">Rio de Janeiro</option><option value="RN">Rio Grande do Norte</option><option value="RS">Rio Grande do Sul</option><option value="RO">Rondônia</option><option value="RR">Roraima</option><option value="SC">Santa Catarina</option><option value="SP">São Paulo</option><option value="SE">Sergipe</option><option value="TO">Tocantins</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
                                     </select>
                                 </div>
                             </div>
@@ -175,8 +210,10 @@
                         <div class="form-section">
                             <div class="form-grid">
                                 <div>
-                                    <label for="admission-date" class="form-label form-label-required">Data de Admissão</label>
-                                    <input type="date" id="admission-date" name="admission-date" class="form-input" required>
+                                    <label for="admission-date" class="form-label form-label-required">Data de
+                                        Admissão</label>
+                                    <input type="date" id="admission-date" name="admission-date" class="form-input"
+                                        required>
                                 </div>
                                 <div>
                                     <label for="exit-date" class="form-label">Data de Saída</label>
@@ -193,12 +230,12 @@
                         </div>
                     </div>
                 </form>
-                 </div>
+            </div>
         </main>
     </div>
 
     <div id="login-container">
-       <img src="../img/apis-preto.png" alt="Logo Apis grupo" class="logo">
+        <img src="../img/apis-preto.png" alt="Logo Apis grupo" class="logo">
         <h2>Acesso ao Painel de Vagas</h2>
         <form id="login-form">
             <input type="email" id="email" placeholder="Digite seu e-mail" required>

@@ -663,3 +663,48 @@ input:checked+.slider:before {
 .grid-span-full {
     grid-column: 1 / -1;
 }
+
+/* ================================================= */
+/* === ESTILOS PARA O SUBMENU                    === */
+/* ================================================= */
+
+.sidebar nav li.has-submenu summary {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sidebar nav li.has-submenu summary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar nav li.has-submenu details[open] > summary {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar nav li.has-submenu ul {
+    list-style: none;
+    padding-left: 25px; /* Indentação do submenu */
+    margin-top: 5px;
+}
+
+.sidebar nav li.has-submenu ul a {
+    padding: 10px 15px; /* Padding menor para itens de submenu */
+    padding-left: 35px; /* Alinha com o ícone do pai */
+    font-size: 0.9em;
+}
+
+.sidebar nav li.has-submenu summary .material-icons {
+    margin-right: 15px;
+}
+
+/* Esconde a seta padrão do <details> */
+.sidebar nav li.has-submenu summary::-webkit-details-marker {
+    display: none;
+}
+.sidebar nav li.has-submenu summary {
+    list-style: none;
+}

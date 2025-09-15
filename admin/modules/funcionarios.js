@@ -8,14 +8,11 @@ function showDashboard() {
 }
 function showLogin() {
     document.getElementById('dashboard')?.classList.add('hidden');
-    document.getElementById('login-container')?.classList.remove('hidden');
+    document.getElementById('login-container')?.remove('hidden');
 }
 
 // --- Funções de Lógica do Formulário ---
-
-/**
- * Preenche os campos de endereço a partir da resposta da API ViaCEP.
- */
+// ... (as funções consultarCEP e preencherFormularioEndereco continuam as mesmas) ...
 function preencherFormularioEndereco(data) {
     if (data.erro) {
         alert("CEP não encontrado. Por favor, verifique o número digitado.");
@@ -28,15 +25,10 @@ function preencherFormularioEndereco(data) {
     document.getElementById('state').value = data.uf || '';
 }
 
-/**
- * Consulta a API ViaCEP quando o utilizador preenche o CEP.
- */
 async function consultarCEP() {
     const cepInput = document.getElementById('cep');
     const cep = cepInput.value.replace(/\D/g, '');
-
     if (cep.length !== 8) return;
-
     cepInput.disabled = true;
     try {
         const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
@@ -51,42 +43,29 @@ async function consultarCEP() {
     }
 }
 
+
 // --- Funções de Carregamento de Dados (Populate) ---
 
+// ATUALIZADO: Busca os perfis do Supabase
 async function populatePerfis() {
     const select = document.getElementById('perfil-select');
-    
-    // Lista local temporária (simulando os dados do banco)
-    const perfisLocais = [
-        { id: 1, nome: 'Master' },
-        { id: 2, nome: 'Coordenador' },
-        { id: 3, nome: 'Supervisor' },
-        { id: 4, nome: 'Consultor' },
-        { id: 5, nome: 'RH' },
-        { id: 6, nome: 'Backoffice' }
-    ];
-
-    try {
-        // Simula um pequeno atraso, como se estivesse a carregar da rede
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        select.innerHTML = '<option value="">Selecione o perfil</option>';
-        perfisLocais.forEach(perfil => {
-            select.add(new Option(perfil.nome, perfil.id));
-        });
-        console.log("Perfis carregados da lista local com sucesso.");
-
-    } catch (error) {
-        console.error("Erro ao carregar perfis da lista local:", error);
+    select.innerHTML = '<option value="">A carregar perfis...</option>';
+    const { data: perfis, error } = await supabase.from('perfis').select('id, nome').order('id');
+    if (error) {
+        console.error("Erro ao carregar perfis do Supabase:", error);
         select.innerHTML = '<option value="">Erro ao carregar</option>';
+        return;
     }
+    select.innerHTML = '<option value="">Selecione o perfil</option>';
+    perfis.forEach(perfil => select.add(new Option(perfil.nome, perfil.id)));
+    console.log("Perfis carregados do Supabase com sucesso!");
 }
 
 async function populateRegionais() {
     const select = document.getElementById('regional-select');
+    select.innerHTML = '<option value="">A carregar...</option>';
     const { data, error } = await supabase.from('regionais').select('id, nome_regional').order('nome_regional');
-
-    if (error || !data) {
+    if (error) {
         console.error("Erro ao carregar regionais:", error);
         select.innerHTML = '<option value="">Erro ao carregar</option>';
         return;
@@ -98,104 +77,135 @@ async function populateRegionais() {
 async function populateLojas(regionalId) {
     const select = document.getElementById('loja-select');
     select.innerHTML = '<option value="">A carregar lojas...</option>';
+    select.disabled = true;
     const { data, error } = await supabase.from('lojas').select('id, nome').eq('regional_id', regionalId).order('nome');
-
-    if (error || !data) {
-        console.error(`Erro ao carregar lojas para a regional ID ${regionalId}:`, error);
+    if (error) {
+        console.error(`Erro ao carregar lojas:`, error);
         select.innerHTML = '<option value="">Erro ao carregar</option>';
         return;
     }
     select.innerHTML = '<option value="">Selecione a loja</option>';
     data.forEach(loja => select.add(new Option(loja.nome, loja.id)));
+    select.disabled = false;
 }
 
 async function populateLideres(perfilLiderNome) {
     const liderSelect = document.getElementById('lider-select');
-    liderSelect.innerHTML = '<option value="">A carregar...</option>';
+    liderSelect.innerHTML = `<option value="">A carregar ${perfilLiderNome.toLowerCase()}es...</option>`;
+    
+    // Primeiro, busca o ID do perfil desejado (ex: "Coordenador")
+    const { data: perfilData, error: perfilError } = await supabase
+      .from('perfis')
+      .select('id')
+      .eq('nome', perfilLiderNome)
+      .single();
 
-    const { data, error } = await supabase
+    if (perfilError || !perfilData) {
+        console.error(`Perfil "${perfilLiderNome}" não encontrado.`, perfilError);
+        liderSelect.innerHTML = `<option value="">Erro ao carregar</option>`;
+        return;
+    }
+
+    // Agora, busca os funcionários que têm esse ID de perfil
+    const { data: funcionarios, error: funcError } = await supabase
         .from('funcionarios')
-        .select(`id, nome_completo, perfis ( nome )`)
-        .eq('perfis.nome', perfilLiderNome);
+        .select('id, nome_completo')
+        .eq('perfil_id', perfilData.id)
+        .eq('is_active', true); // Busca apenas líderes ativos
 
-    if (error || !data) {
-        console.error(`Erro ao buscar funcionários com perfil ${perfilLiderNome}:`, error);
+    if (funcError) {
+        console.error(`Erro ao buscar funcionários com perfil ${perfilLiderNome}:`, funcError);
         liderSelect.innerHTML = `<option value="">Erro ao carregar</option>`;
         return;
     }
     
     liderSelect.innerHTML = `<option value="">Selecione o ${perfilLiderNome.toLowerCase()}</option>`;
-    data.forEach(func => liderSelect.add(new Option(func.nome_completo, func.id)));
+    funcionarios.forEach(func => liderSelect.add(new Option(func.nome_completo, func.id)));
 }
 
 // --- Funções de Manipulação de Eventos (Handlers) ---
 
+// ATUALIZADO: Esta função agora contém toda a lógica condicional
 function handlePerfilChange(event) {
-    const perfilTexto = event.target.options[event.target.selectedIndex].text;
+    const perfilSelecionado = event.target.options[event.target.selectedIndex];
+    const perfilTexto = perfilSelecionado ? perfilSelecionado.text : '';
+
+    // Referências aos elementos do formulário
     const liderSelect = document.getElementById('lider-select');
     const liderLabel = document.querySelector('label[for="lider-select"]');
     const regionalSelect = document.getElementById('regional-select');
-    const regionalLabel = document.querySelector('label[for="regional-select"]');
     const lojaSelect = document.getElementById('loja-select');
-    const lojaLabel = document.querySelector('label[for="loja-select"]');
 
-    const perfisOperacionais = ['Coordenador', 'Supervisor', 'Consultor'];
-
-    // Reset geral
+    // 1. Resetar o estado de todos os campos
     [liderSelect, regionalSelect, lojaSelect].forEach(el => {
         el.disabled = true;
         el.required = false;
         el.value = '';
     });
-    [liderLabel, regionalLabel, lojaLabel].forEach(el => el.classList.remove('form-label-required'));
-    liderSelect.innerHTML = '<option value="">Selecione o perfil primeiro</option>';
+    liderLabel.textContent = 'Líder Direto';
     lojaSelect.innerHTML = '<option value="">Selecione a regional primeiro</option>';
-    liderLabel.innerHTML = 'Líder Direto';
+    
+    // 2. Aplicar as regras com base no perfil selecionado
+    switch (perfilTexto) {
+        case 'Master':
+        case 'RH':
+        case 'Backoffice':
+            // Não faz nada, todos os campos permanecem desabilitados
+            break;
 
-    if (perfisOperacionais.includes(perfilTexto)) {
-        regionalSelect.disabled = false;
-        regionalSelect.required = true;
-        regionalLabel.classList.add('form-label-required');
-        
-        lojaSelect.required = true;
-        lojaLabel.classList.add('form-label-required');
+        case 'Coordenador':
+            regionalSelect.disabled = false;
+            regionalSelect.required = true;
+            // A regra de "múltiplas regionais" exigiria uma alteração na interface (ex: multi-select).
+            // Por enquanto, o formulário permite selecionar uma regional.
+            break;
 
-        if (perfilTexto === 'Supervisor') {
-            liderLabel.innerHTML = 'Coordenador Direto';
-            liderLabel.classList.add('form-label-required');
-            liderSelect.required = true;
+        case 'Supervisor':
+            liderLabel.textContent = 'Coordenador Direto';
             liderSelect.disabled = false;
+            liderSelect.required = true;
+            regionalSelect.disabled = false;
+            regionalSelect.required = true;
+            // O campo de loja será habilitado quando uma regional for selecionada
             populateLideres('Coordenador');
-        } else if (perfilTexto === 'Consultor') {
-            liderLabel.innerHTML = 'Supervisor Direto';
-            liderLabel.classList.add('form-label-required');
-            liderSelect.required = true;
+            break;
+
+        case 'Consultor':
+            liderLabel.textContent = 'Supervisor Direto';
             liderSelect.disabled = false;
+            liderSelect.required = true;
+            regionalSelect.disabled = false;
+            regionalSelect.required = true;
+            // O campo de loja será habilitado quando uma regional for selecionada
             populateLideres('Supervisor');
-        }
+            break;
     }
 }
+
 
 function handleRegionalChange(event) {
     const regionalId = event.target.value;
     const lojaSelect = document.getElementById('loja-select');
-
-    if (regionalId) {
-        lojaSelect.disabled = false;
-        populateLojas(regionalId);
+    
+    // Verifica se o perfil selecionado requer uma loja (Supervisor ou Consultor)
+    const perfilTexto = document.getElementById('perfil-select').options[document.getElementById('perfil-select').selectedIndex].text;
+    
+    if (regionalId && ['Supervisor', 'Consultor'].includes(perfilTexto)) {
+        lojaSelect.required = true;
+        populateLojas(regionalId); // A função populateLojas já habilita o select no final
     } else {
         lojaSelect.disabled = true;
+        lojaSelect.required = false;
         lojaSelect.innerHTML = '<option value="">Selecione a regional primeiro</option>';
     }
 }
 
+// ... (as funções handleStatusToggle e handleEmployeeFormSubmit continuam as mesmas) ...
 function handleStatusToggle() {
     const toggle = document.getElementById('employee-status-toggle');
     const exitDateInput = document.getElementById('exit-date');
     const exitDateLabel = document.querySelector('label[for="exit-date"]');
-
     if (!toggle || !exitDateInput || !exitDateLabel) return;
-
     if (toggle.checked) {
         exitDateInput.required = false;
         exitDateLabel.classList.remove('form-label-required');
@@ -212,7 +222,6 @@ async function handleEmployeeFormSubmit(event) {
     const saveButton = document.getElementById('employee-save-btn');
     saveButton.disabled = true;
     saveButton.textContent = 'A salvar...';
-
     try {
         const funcionarioData = {
             nome_completo: document.getElementById('full-name').value,
@@ -227,15 +236,12 @@ async function handleEmployeeFormSubmit(event) {
             data_admissao: document.getElementById('admission-date').value,
             data_saida: document.getElementById('exit-date').value || null
         };
-
         const { data: novoFuncionario, error: erroFuncionario } = await supabase
             .from('funcionarios')
             .insert(funcionarioData)
             .select()
             .single();
-
         if (erroFuncionario) throw erroFuncionario;
-
         const { error: erroVinculo } = await supabase
             .from('historico_vinculos')
             .insert({
@@ -243,12 +249,9 @@ async function handleEmployeeFormSubmit(event) {
                 data_admissao: vinculoData.data_admissao,
                 data_saida: vinculoData.data_saida
             });
-        
         if (erroVinculo) throw erroVinculo;
-
         alert('Funcionário cadastrado com sucesso!');
         event.target.reset();
-
     } catch (error) {
         console.error('Erro ao salvar funcionário:', error);
         alert(`Ocorreu um erro: ${error.message}`);
@@ -257,6 +260,7 @@ async function handleEmployeeFormSubmit(event) {
         saveButton.textContent = 'Salvar';
     }
 }
+
 
 // --- Função Principal de Inicialização ---
 async function initializePage() {
