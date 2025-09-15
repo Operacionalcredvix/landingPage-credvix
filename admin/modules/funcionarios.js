@@ -8,25 +8,50 @@ function showDashboard() {
 }
 function showLogin() {
     document.getElementById('dashboard')?.classList.add('hidden');
-    document.getElementById('login-container')?.remove('hidden');
+    document.getElementById('login-container')?.classList.remove('hidden');
 }
 
 // --- Funções de Lógica do Formulário ---
+function preencherFormularioEndereco(data) {
+    if (data.erro) {
+        alert("CEP não encontrado. Por favor, verifique o número digitado.");
+        document.getElementById('cep').value = '';
+        return;
+    }
+    document.getElementById('address').value = data.logradouro || '';
+    document.getElementById('neighborhood').value = data.bairro || '';
+    document.getElementById('city').value = data.localidade || '';
+    document.getElementById('state').value = data.uf || '';
+}
 
-/**
- * Limpa o formulário e o reconfigura para o modo de criação.
- */
+async function consultarCEP() {
+    const cepInput = document.getElementById('cep');
+    const cep = cepInput.value.replace(/\D/g, '');
+    if (cep.length !== 8) return;
+    cepInput.disabled = true;
+    try {
+        const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+        const data = await response.json();
+        preencherFormularioEndereco(data);
+        document.getElementById('address-number').focus();
+    } catch (error) {
+        console.error("Erro ao consultar o CEP:", error);
+        alert("Não foi possível consultar o CEP. Tente novamente.");
+    } finally {
+        cepInput.disabled = false;
+    }
+}
+
 function resetFormToCreateMode() {
     document.getElementById('employee-form').reset();
     document.getElementById('employee-id').value = '';
     document.getElementById('vinculo-id').value = '';
 
     document.getElementById('form-title').textContent = 'Novo Cadastro';
-    document.getElementById('form-subtitle').textContent = 'Preencha os dados do novo funcionário.';
+    document.getElementById('form-subtitle').textContent = 'Preencha os dados abaixo para criar um novo funcionário.';
     document.getElementById('form-action-btn').textContent = 'Salvar Novo Funcionário';
     document.getElementById('clear-form-btn').classList.add('hidden');
     
-    // Reseta e desabilita os selects dependentes
     const liderSelect = document.getElementById('lider-select');
     const regionalSelect = document.getElementById('regional-select');
     const lojaSelect = document.getElementById('loja-select');
@@ -35,215 +60,262 @@ function resetFormToCreateMode() {
         el.disabled = true;
         el.innerHTML = '<option value="">Selecione o perfil primeiro</option>';
     });
+    document.getElementById('perfil-select').dispatchEvent(new Event('change'));
 }
 
-/**
- * Preenche o formulário com os dados de um funcionário para edição.
- * @param {object} employee - O objeto do funcionário com seus dados.
- */
 async function populateFormForEdit(employee) {
-    resetFormToCreateMode();
-
-    // Preenche os campos simples
+    // Preenche todos os campos do formulário com os dados do funcionário
     document.getElementById('employee-id').value = employee.id;
     document.getElementById('full-name').value = employee.nome_completo;
+    document.getElementById('birth-date').value = employee.data_nascimento;
+    document.getElementById('mother-name').value = employee.nome_mae;
+    document.getElementById('cpf').value = employee.cpf;
     document.getElementById('employee-email').value = employee.email;
+    document.getElementById('phone').value = employee.telefone;
+    document.getElementById('cep').value = employee.cep;
+    document.getElementById('address').value = employee.endereco;
+    document.getElementById('address-number').value = employee.numero_endereco;
+    document.getElementById('address-complement').value = employee.complemento_endereco;
+    document.getElementById('neighborhood').value = employee.bairro;
+    document.getElementById('city').value = employee.cidade;
+    document.getElementById('state').value = employee.estado;
     document.getElementById('employee-status-toggle').checked = employee.is_active;
 
-    // Preenche o perfil e aguarda a conclusão
-    document.getElementById('perfil-select').value = employee.perfil_id;
-    
-    // Dispara o evento 'change' para carregar as dependências
-    document.getElementById('perfil-select').dispatchEvent(new Event('change'));
-
-    // Aguarda um pequeno intervalo para os campos dependentes serem populados
-    await new Promise(resolve => setTimeout(resolve, 300));
-
-    // Preenche os campos dependentes
-    if (employee.regional_id) {
-        document.getElementById('regional-select').value = employee.regional_id;
-        document.getElementById('regional-select').dispatchEvent(new Event('change'));
-        await new Promise(resolve => setTimeout(resolve, 300)); // Aguarda lojas carregarem
-    }
-    if (employee.loja_id) {
-        document.getElementById('loja-select').value = employee.loja_id;
-    }
-    if (employee.gerente_id) {
-        document.getElementById('lider-select').value = employee.gerente_id;
-    }
-
-    // Busca o vínculo mais recente para preencher as datas
-    const { data: vinculo, error } = await supabase
-        .from('historico_vinculos')
-        .select('*')
-        .eq('funcionario_id', employee.id)
-        .is('data_saida', null) // Busca o vínculo ativo
-        .single();
-    
+    const { data: vinculo } = await supabase.from('historico_vinculos').select('*').eq('funcionario_id', employee.id).order('data_admissao', { ascending: false }).limit(1).single();
     if (vinculo) {
         document.getElementById('vinculo-id').value = vinculo.id;
         document.getElementById('admission-date').value = vinculo.data_admissao;
         document.getElementById('exit-date').value = vinculo.data_saida || '';
     }
 
-    // Ajusta a UI para o modo de edição
+    document.getElementById('perfil-select').value = employee.perfil_id;
+    document.getElementById('perfil-select').dispatchEvent(new Event('change'));
+
+    await new Promise(resolve => setTimeout(resolve, 300));
+    if (employee.regional_id) {
+        document.getElementById('regional-select').value = employee.regional_id;
+        document.getElementById('regional-select').dispatchEvent(new Event('change'));
+        await new Promise(resolve => setTimeout(resolve, 300));
+    }
+    if (employee.loja_id) document.getElementById('loja-select').value = employee.loja_id;
+    if (employee.gerente_id) document.getElementById('lider-select').value = employee.gerente_id;
+
     document.getElementById('form-title').textContent = 'Editar Cadastro';
     document.getElementById('form-subtitle').textContent = `Você está editando o perfil de ${employee.nome_completo}.`;
     document.getElementById('form-action-btn').textContent = 'Atualizar Cadastro';
     document.getElementById('clear-form-btn').classList.remove('hidden');
-
-    // Rola a tela para o formulário
     document.getElementById('form-title').scrollIntoView({ behavior: 'smooth' });
 }
 
 // --- Funções de Carregamento de Dados ---
+async function populatePerfis() {
+    const select = document.getElementById('perfil-select');
+    const { data, error } = await supabase.from('perfis').select('id, nome').order('id');
+    if (error) { select.innerHTML = '<option value="">Erro ao carregar</option>'; return; }
+    select.innerHTML = '<option value="">Selecione o perfil</option>';
+    data.forEach(p => select.add(new Option(p.nome, p.id)));
+}
 
-async function populatePerfis() { /* ... (código existente, sem alterações) ... */ }
-async function populateRegionais() { /* ... (código existente, sem alterações) ... */ }
-async function populateLojas(regionalId) { /* ... (código existente, sem alterações) ... */ }
-async function populateLideres(perfilLiderNome) { /* ... (código existente, sem alterações) ... */ }
+async function populateRegionais() {
+    const select = document.getElementById('regional-select');
+    const { data, error } = await supabase.from('regionais').select('id, nome_regional').order('nome_regional');
+    if (error) { select.innerHTML = '<option value="">Erro ao carregar</option>'; return; }
+    select.innerHTML = '<option value="">Selecione a regional</option>';
+    data.forEach(r => select.add(new Option(r.nome_regional, r.id)));
+}
 
-// --- Lógica de Busca e Listagem ---
+async function populateLojas(regionalId) {
+    const select = document.getElementById('loja-select');
+    select.disabled = true;
+    const { data, error } = await supabase.from('lojas').select('id, nome').eq('regional_id', regionalId).order('nome');
+    if (error) { select.innerHTML = '<option value="">Erro</option>'; return; }
+    select.innerHTML = '<option value="">Selecione a loja</option>';
+    data.forEach(l => select.add(new Option(l.nome, l.id)));
+    select.disabled = false;
+}
 
-/**
- * Busca funcionários no banco de dados com base em um termo de pesquisa.
- */
+async function populateLideres(perfilLiderNome) {
+    const select = document.getElementById('lider-select');
+    const { data: p } = await supabase.from('perfis').select('id').eq('nome', perfilLiderNome).single();
+    if (!p) { select.innerHTML = '<option value="">Erro</option>'; return; }
+    const { data: funcs } = await supabase.from('funcionarios').select('id, nome_completo').eq('perfil_id', p.id).eq('is_active', true);
+    if (!funcs) { select.innerHTML = '<option value="">Erro</option>'; return; }
+    select.innerHTML = `<option value="">Selecione o ${perfilLiderNome.toLowerCase()}</option>`;
+    funcs.forEach(f => select.add(new Option(f.nome_completo, f.id)));
+}
+
+// --- Lógica de Busca ---
 async function searchEmployees() {
     const searchTerm = document.getElementById('search-employee-input').value.trim();
     const tbody = document.getElementById('employee-list-tbody');
-    const noResultsMessage = document.getElementById('no-employee-found-message');
-
-    tbody.innerHTML = '<tr><td colspan="5">Buscando...</td></tr>';
-    noResultsMessage.classList.add('hidden');
-
-    let query = supabase.from('funcionarios').select(`
-        id, nome_completo, email, is_active,
-        perfis ( nome ),
-        lojas ( nome )
-    `);
-
-    if (searchTerm) {
-        query = query.or(`nome_completo.ilike.%${searchTerm}%,email.ilike.%${searchTerm}%`);
-    }
-    
-    query = query.order('nome_completo');
-
-    const { data: employees, error } = await query;
+    const noResultsMsg = document.getElementById('no-employee-found-message');
 
     tbody.innerHTML = '';
-    if (error || employees.length === 0) {
-        noResultsMessage.classList.remove('hidden');
-        if(error) console.error("Erro ao buscar funcionários:", error);
+    noResultsMsg.classList.add('hidden');
+
+    if (!searchTerm) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#6c757d;">Digite para buscar um funcionário.</td></tr>';
         return;
     }
 
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Buscando...</td></tr>';
+    
+    const { data: employees, error } = await supabase
+        .from('funcionarios')
+        .select(`*, perfis(nome), lojas(nome)`)
+        .or(`nome_completo.ilike.%${searchTerm}%,cpf.ilike.%${searchTerm}%`)
+        .order('nome_completo');
+
+    tbody.innerHTML = '';
+    if (error || employees.length === 0) {
+        noResultsMsg.classList.remove('hidden');
+        if (error) console.error(error);
+        return;
+    }
+    
     employees.forEach(employee => {
         const row = tbody.insertRow();
+        const statusClass = employee.is_active ? 'status-active' : 'status-inactive';
         row.innerHTML = `
             <td>${employee.nome_completo}</td>
             <td>${employee.perfis?.nome || 'N/A'}</td>
             <td>${employee.lojas?.nome || 'N/A'}</td>
-            <td><span class="${employee.is_active ? 'status-active' : 'status-inactive'}">${employee.is_active ? 'Ativo' : 'Inativo'}</span></td>
-            <td><button class="btn btn-info btn-sm js-edit-employee" data-id="${employee.id}">Editar</button></td>
+            <td><span class="${statusClass}">${employee.is_active ? 'Ativo' : 'Inativo'}</span></td>
+            <td><button class="btn btn-info js-edit-employee" data-id="${employee.id}">Editar</button></td>
         `;
     });
 
-    // Adiciona event listeners aos novos botões de editar
     document.querySelectorAll('.js-edit-employee').forEach(button => {
-        button.addEventListener('click', async (e) => {
-            const id = e.target.dataset.id;
+        button.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
             const employeeToEdit = employees.find(emp => emp.id == id);
-            if (employeeToEdit) {
-                populateFormForEdit(employeeToEdit);
-            }
+            if (employeeToEdit) populateFormForEdit(employeeToEdit);
         });
     });
 }
 
-// --- Funções de Manipulação de Eventos ---
+// --- Handlers de Eventos ---
+function handlePerfilChange(event) {
+    const perfilTexto = event.target.options[event.target.selectedIndex]?.text || '';
+    const liderSelect = document.getElementById('lider-select');
+    const liderLabel = document.querySelector('label[for="lider-select"]');
+    const regionalSelect = document.getElementById('regional-select');
+    const lojaSelect = document.getElementById('loja-select');
+    
+    [liderSelect, regionalSelect, lojaSelect].forEach(el => { el.disabled = true; el.required = false; el.value = ''; });
+    liderLabel.textContent = 'Líder Direto';
+    
+    switch (perfilTexto) {
+        case 'Coordenador':
+            regionalSelect.disabled = false; regionalSelect.required = true;
+            break;
+        case 'Supervisor':
+            liderLabel.textContent = 'Coordenador Direto';
+            liderSelect.disabled = false; liderSelect.required = true;
+            regionalSelect.disabled = false; regionalSelect.required = true;
+            populateLideres('Coordenador');
+            break;
+        case 'Consultor':
+            liderLabel.textContent = 'Supervisor Direto';
+            liderSelect.disabled = false; liderSelect.required = true;
+            regionalSelect.disabled = false; regionalSelect.required = true;
+            populateLideres('Supervisor');
+            break;
+    }
+}
 
-function handlePerfilChange(event) { /* ... (código existente, sem alterações) ... */ }
-function handleRegionalChange(event) { /* ... (código existente, sem alterações) ... */ }
-function handleStatusToggle() { /* ... (código existente, sem alterações) ... */ }
+function handleRegionalChange(event) {
+    const regionalId = event.target.value;
+    const perfilTexto = document.getElementById('perfil-select').options[document.getElementById('perfil-select').selectedIndex]?.text || '';
+    if (regionalId && ['Supervisor', 'Consultor'].includes(perfilTexto)) {
+        document.getElementById('loja-select').required = true;
+        populateLojas(regionalId);
+    } else {
+        const lojaSelect = document.getElementById('loja-select');
+        lojaSelect.disabled = true;
+        lojaSelect.required = false;
+        lojaSelect.innerHTML = '<option value="">Selecione a regional primeiro</option>';
+    }
+}
 
-/**
- * Lida com o envio do formulário, diferenciando entre CRIAÇÃO e ATUALIZAÇÃO.
- */
 async function handleEmployeeFormSubmit(event) {
     event.preventDefault();
     const saveButton = document.getElementById('form-action-btn');
     saveButton.disabled = true;
-    const originalButtonText = saveButton.textContent;
-    saveButton.textContent = 'A salvar...';
+    saveButton.textContent = 'Aguarde...';
 
     const employeeId = document.getElementById('employee-id').value;
     const vinculoId = document.getElementById('vinculo-id').value;
 
+    const funcionarioData = {
+        nome_completo: document.getElementById('full-name').value,
+        data_nascimento: document.getElementById('birth-date').value || null,
+        nome_mae: document.getElementById('mother-name').value || null,
+        cpf: document.getElementById('cpf').value || null,
+        email: document.getElementById('employee-email').value,
+        telefone: document.getElementById('phone').value || null,
+        cep: document.getElementById('cep').value || null,
+        endereco: document.getElementById('address').value || null,
+        numero_endereco: document.getElementById('address-number').value || null,
+        complemento_endereco: document.getElementById('address-complement').value || null,
+        bairro: document.getElementById('bairro').value || null,
+        cidade: document.getElementById('city').value || null,
+        estado: document.getElementById('state').value || null,
+        perfil_id: document.getElementById('perfil-select').value,
+        regional_id: document.getElementById('regional-select').value || null,
+        loja_id: document.getElementById('loja-select').value || null,
+        gerente_id: document.getElementById('lider-select').value || null,
+        is_active: document.getElementById('employee-status-toggle').checked
+    };
+    const vinculoData = {
+        data_admissao: document.getElementById('admission-date').value,
+        data_saida: document.getElementById('exit-date').value || null
+    };
+
     try {
-        const funcionarioData = {
-            nome_completo: document.getElementById('full-name').value,
-            email: document.getElementById('employee-email').value,
-            perfil_id: document.getElementById('perfil-select').value,
-            regional_id: document.getElementById('regional-select').value || null,
-            loja_id: document.getElementById('loja-select').value || null,
-            gerente_id: document.getElementById('lider-select').value || null,
-            is_active: document.getElementById('employee-status-toggle').checked
-        };
-        const vinculoData = {
-            data_admissao: document.getElementById('admission-date').value,
-            data_saida: document.getElementById('exit-date').value || null
-        };
-        
         if (employeeId) {
-            // --- MODO DE ATUALIZAÇÃO ---
             const { error: funcError } = await supabase.from('funcionarios').update(funcionarioData).eq('id', employeeId);
             if (funcError) throw funcError;
-
-            const { error: vincError } = await supabase.from('historico_vinculos').update(vinculoData).eq('id', vinculoId);
-            if (vincError) throw vincError;
-
+            if (vinculoId) {
+                const { error: vincError } = await supabase.from('historico_vinculos').update(vinculoData).eq('id', vinculoId);
+                if (vincError) throw vincError;
+            } else {
+                const { error: vincError } = await supabase.from('historico_vinculos').insert({ ...vinculoData, funcionario_id: employeeId });
+                if (vincError) throw vincError;
+            }
             alert('Funcionário atualizado com sucesso!');
         } else {
-            // --- MODO DE CRIAÇÃO ---
-            const { data: novoFuncionario, error: funcError } = await supabase.from('funcionarios').insert(funcionarioData).select().single();
+            const { data: novoFunc, error: funcError } = await supabase.from('funcionarios').insert(funcionarioData).select().single();
             if (funcError) throw funcError;
-
-            const { error: vincError } = await supabase.from('historico_vinculos').insert({ ...vinculoData, funcionario_id: novoFuncionario.id });
+            const { error: vincError } = await supabase.from('historico_vinculos').insert({ ...vinculoData, funcionario_id: novoFunc.id });
             if (vincError) throw vincError;
-
             alert('Funcionário cadastrado com sucesso!');
         }
-        
         resetFormToCreateMode();
-        searchEmployees(); // Atualiza a lista
-
+        searchEmployees();
     } catch (error) {
         console.error('Erro ao salvar funcionário:', error);
         alert(`Ocorreu um erro: ${error.message}`);
     } finally {
         saveButton.disabled = false;
-        saveButton.textContent = originalButtonText;
+        // O texto do botão será resetado pelo resetFormToCreateMode()
     }
 }
 
-
-// --- Função Principal de Inicialização ---
+// --- Inicialização da Página ---
 async function initializePage() {
-    await Promise.all([ populatePerfis(), populateRegionais() ]);
+    await Promise.all([populatePerfis(), populateRegionais()]);
     
-    // Listeners
     document.getElementById('perfil-select')?.addEventListener('change', handlePerfilChange);
     document.getElementById('regional-select')?.addEventListener('change', handleRegionalChange);
     document.getElementById('employee-form')?.addEventListener('submit', handleEmployeeFormSubmit);
-    document.getElementById('employee-status-toggle')?.addEventListener('change', handleStatusToggle);
-    document.getElementById('search-employee-input')?.addEventListener('input', searchEmployees);
+    document.getElementById('search-employee-input')?.addEventListener('input', () => setTimeout(searchEmployees, 300));
     document.getElementById('clear-form-btn')?.addEventListener('click', resetFormToCreateMode);
-
-    // Carga inicial
-    searchEmployees(); // Busca todos os funcionários ao carregar a página
+    document.getElementById('cep')?.addEventListener('blur', consultarCEP);
+    
+    searchEmployees(); // Exibe a mensagem inicial
 }
 
-// Inicia a autenticação e, em seguida, a página.
 initializeAuth(
     (user) => { 
         showDashboard();
