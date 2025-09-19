@@ -1,6 +1,6 @@
 import { supabase } from '../../script/supabase-client.js';
 
-// Variável para guardar os dados completos do relatório
+// Variável para guardar os dados completos do relatório atual
 let completeReportData = [];
 
 function getDaysDifference(date1, date2) {
@@ -10,7 +10,8 @@ function getDaysDifference(date1, date2) {
 }
 
 /**
- * Renderiza as linhas da tabela do relatório com base nos dados fornecidos.
+ * Renderiza a tabela do relatório com base numa lista de dados.
+ * @param {Array} dataToRender A lista de funcionários a ser exibida.
  */
 function renderReportTable(dataToRender) {
     const tbody = document.getElementById('report-new-employees-tbody');
@@ -18,7 +19,7 @@ function renderReportTable(dataToRender) {
     
     if (!tbody || !noReportMessage) return;
     
-    tbody.innerHTML = '';
+    tbody.innerHTML = ''; // Limpa a tabela
 
     if (dataToRender.length === 0) {
         noReportMessage.classList.remove('hidden');
@@ -27,29 +28,35 @@ function renderReportTable(dataToRender) {
     
     noReportMessage.classList.add('hidden');
 
-    dataToRender.forEach(employeeData => {
+    const today = new Date();
+    dataToRender.forEach(vinculo => {
         const row = tbody.insertRow();
-        const admissionDate = new Date(employeeData.admissionDate);
+        const admissionDate = new Date(vinculo.data_admissao);
+        const daysInCompany = getDaysDifference(today, admissionDate);
 
-        if ((employeeData.daysInCompany >= 40 && employeeData.daysInCompany <= 45) || (employeeData.daysInCompany >= 80 && employeeData.daysInCompany <= 90)) {
+        // Adiciona a classe de destaque se o período for crítico
+        if ((daysInCompany >= 40 && daysInCompany <= 45) || (daysInCompany >= 80 && daysInCompany <= 90)) {
             row.classList.add('highlight-warning');
         }
 
+        const funcionario = vinculo.funcionarios;
+        const perfil = funcionario.perfis ? funcionario.perfis.nome : 'N/A';
+        const loja = funcionario.lojas ? funcionario.lojas.nome : 'N/A';
+
         row.innerHTML = `
-            <td>${employeeData.nome_completo}</td>
-            <td>${employeeData.perfil}</td>
-            <td>${employeeData.loja}</td>
+            <td>${funcionario.nome_completo}</td>
+            <td>${perfil}</td>
+            <td>${loja}</td>
             <td>${admissionDate.toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</td>
-            <td>${employeeData.daysInCompany} dias</td>
+            <td>${daysInCompany} dias</td>
         `;
     });
     
-    filterHighlightedRows();
+    filterHighlightedRows(); // Reaplica o filtro de destaque visual
 }
 
-
 /**
- * Filtra as linhas da tabela, mostrando apenas as que têm a classe 'highlight-warning'.
+ * Filtra as linhas visíveis da tabela, mostrando/escondendo as destacadas.
  */
 export function filterHighlightedRows() {
     const toggle = document.getElementById('highlight-only-toggle');
@@ -70,98 +77,76 @@ export function filterHighlightedRows() {
 }
 
 /**
- * Filtra os dados do relatório por nome.
+ * Filtra a lista de funcionários por nome e atualiza a tabela.
  */
 export function filterReportByName() {
-    const searchInput = document.getElementById('search-name-input');
-    if (!searchInput) return;
-
-    const searchTerm = searchInput.value.toLowerCase();
+    const searchTerm = document.getElementById('search-name-input').value.toLowerCase();
     
-    if (!searchTerm) {
-        renderReportTable(completeReportData);
-        return;
-    }
-
-    const filteredData = completeReportData.filter(employee =>
-        employee.nome_completo.toLowerCase().includes(searchTerm)
+    const filteredData = completeReportData.filter(vinculo =>
+        vinculo.funcionarios.nome_completo.toLowerCase().includes(searchTerm)
     );
 
     renderReportTable(filteredData);
 }
 
-
 /**
- * Gera os dados do relatório de novos funcionários.
+ * Busca os dados do Supabase e gera o relatório inicial.
  */
 export async function generateNewEmployeesReport(startDate, endDate) {
     const tbody = document.getElementById('report-new-employees-tbody');
     const loadingMessage = document.getElementById('loading-report-message');
+    const noReportMessage = document.getElementById('no-report-message');
     const searchInput = document.getElementById('search-name-input');
-    
-    if (!tbody || !loadingMessage) return;
 
-    completeReportData = [];
+    if (!tbody || !loadingMessage || !noReportMessage) return;
+
     tbody.innerHTML = '';
     loadingMessage.classList.remove('hidden');
-    document.getElementById('no-report-message')?.classList.add('hidden');
-    if(searchInput) searchInput.value = '';
+    noReportMessage.classList.add('hidden');
+    if (searchInput) searchInput.value = ''; // Limpa o filtro de nome
 
     try {
-        let vinculosQuery = supabase
+        let query = supabase
             .from('historico_vinculos')
-            .select('funcionario_id, data_admissao')
+            .select(`
+                data_admissao,
+                funcionarios!inner (
+                    nome_completo,
+                    perfis!left ( nome ),
+                    lojas!left ( nome )
+                )
+            `)
             .is('data_saida', null)
             .order('data_admissao', { ascending: false });
 
-        if (startDate) vinculosQuery = vinculosQuery.gte('data_admissao', startDate);
-        if (endDate) vinculosQuery = vinculosQuery.lte('data_admissao', endDate);
+        if (startDate) query = query.gte('data_admissao', startDate);
+        if (endDate) query = query.lte('data_admissao', endDate);
 
-        const { data: vinculos, error: vinculosError } = await vinculosQuery;
-        if (vinculosError) throw vinculosError;
+        const { data, error } = await query;
+        if (error) throw error;
 
-        if (!vinculos || vinculos.length === 0) {
-            renderReportTable([]);
-            return;
+        // Desduplicação para garantir que cada funcionário apareça apenas uma vez
+        const uniqueEmployeesMap = new Map();
+        if (data) {
+            data.forEach(vinculo => {
+                if (vinculo.funcionarios && !uniqueEmployeesMap.has(vinculo.funcionarios.nome_completo)) {
+                    uniqueEmployeesMap.set(vinculo.funcionarios.nome_completo, vinculo);
+                }
+            });
         }
 
-        const employeeAdmissionMap = new Map();
-        for (const vinculo of vinculos) {
-            if (vinculo.funcionario_id && !employeeAdmissionMap.has(vinculo.funcionario_id)) {
-                employeeAdmissionMap.set(vinculo.funcionario_id, vinculo.data_admissao);
-            }
-        }
-
-        const uniqueEmployeeIds = Array.from(employeeAdmissionMap.keys());
-        if (uniqueEmployeeIds.length === 0) {
-            renderReportTable([]);
-            return;
-        }
-
-        const { data: employees, error: employeesError } = await supabase
-            .from('funcionarios')
-            .select('id, nome_completo, perfis(nome), lojas(nome)')
-            .in('id', uniqueEmployeeIds);
-        if (employeesError) throw employeesError;
+        completeReportData = Array.from(uniqueEmployeesMap.values());
         
-        const today = new Date();
-        completeReportData = employees.map(employee => {
-            const admissionDate = new Date(employeeAdmissionMap.get(employee.id));
-            return {
-                ...employee,
-                admissionDate: admissionDate,
-                daysInCompany: getDaysDifference(today, admissionDate),
-                perfil: employee.perfis ? employee.perfis.nome : 'N/A',
-                loja: employee.lojas ? employee.lojas.nome : 'N/A',
-            };
-        });
-        
+        // Reordena a lista pela data de admissão (mais recente primeiro),
+        // o que corresponde a 'Dias na Empresa' em ordem crescente.
+        completeReportData.sort((a, b) => new Date(b.data_admissao) - new Date(a.data_admissao));
+
         renderReportTable(completeReportData);
 
     } catch (error) {
         console.error("Erro ao gerar relatório:", error);
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: red;">Ocorreu um erro ao carregar os dados.</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Ocorreu um erro ao carregar os dados.</td></tr>';
     } finally {
-        if(loadingMessage) loadingMessage.classList.add('hidden');
+        loadingMessage.classList.add('hidden');
     }
 }
