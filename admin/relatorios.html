@@ -43,10 +43,10 @@
                 <button id="logout-btn" class="btn btn-outline"><span class="material-icons">logout</span> Sair</button>
             </div>
         </aside>
-
         <main class="main-content">
             <header class="page-subheader"
                 style="align-items: flex-end; gap: 1rem; flex-wrap: wrap; justify-content: space-between;">
+
                 <div>
                     <h1 class="page-subheader-title">Relatório de Admissões</h1>
                     <p style="margin: 0; color: #6B7280;">Filtre os funcionários ativos por período de admissão.</p>
@@ -61,6 +61,13 @@
                         <label for="end-date">Data Final</label>
                         <input type="date" id="end-date" class="form-input" style="padding: 0.5rem 0.75rem;">
                     </div>
+
+                    <div class="filter-group">
+                        <label for="search-name-input">Buscar por Nome</label>
+                        <input type="search" id="search-name-input" class="form-input" style="padding: 0.5rem 0.75rem;"
+                            placeholder="Digite para filtrar...">
+                    </div>
+
                     <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
                         <button id="filter-40-days-btn" class="btn btn-secondary" style="padding: 10px 15px;">Até 40
                             dias</button>
@@ -85,7 +92,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Nome Completo</th>
+                                <th>Nome Completos</th>
                                 <th>Perfil</th>
                                 <th>Loja</th>
                                 <th>Data de Admissão</th>
@@ -96,7 +103,7 @@
                         </tbody>
                     </table>
                     <p id="loading-report-message">A gerar relatório...</p>
-                    <p id="no-report-message" class="hidden">Nenhum funcionário encontrado para o período selecionado.
+                    <p id="no-report-message" class="hidden">Nenhum funcionário encontrado para os filtros selecionados.
                     </p>
                 </div>
             </section>

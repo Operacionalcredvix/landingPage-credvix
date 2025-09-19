@@ -8,9 +8,6 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
-.main-content > header {
-    display: none;
-}
 
 .page-subheader {
     display: flex;

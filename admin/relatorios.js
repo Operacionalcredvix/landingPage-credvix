@@ -1,5 +1,5 @@
 import { initializeAuth } from './modules/auth.js';
-import { generateNewEmployeesReport, filterHighlightedRows } from './modules/relatorios.js';
+import { generateNewEmployeesReport, filterHighlightedRows, filterReportByName } from './modules/relatorios.js';
 
 function showDashboard() {
     document.getElementById('login-container')?.classList.add('hidden');
@@ -18,6 +18,7 @@ function initializeReportPage() {
     const filter40DaysButton = document.getElementById('filter-40-days-btn');
     const filter80DaysButton = document.getElementById('filter-80-days-btn');
     const highlightToggle = document.getElementById('highlight-only-toggle');
+    const searchNameInput = document.getElementById('search-name-input');
 
     const today = new Date();
 
@@ -29,24 +30,31 @@ function initializeReportPage() {
         generateNewEmployeesReport(startDateInput.value, endDateInput.value);
     };
 
-    filterButton.addEventListener('click', () => {
-        generateNewEmployeesReport(startDateInput.value, endDateInput.value);
-    });
+    if (filterButton) {
+        filterButton.addEventListener('click', () => {
+            generateNewEmployeesReport(startDateInput.value, endDateInput.value);
+        });
+    }
 
-    filter40DaysButton.addEventListener('click', () => {
-        setPeriodAndFilter(45); // Ajustado para incluir o intervalo de destaque
-    });
+    if (filter40DaysButton) {
+        filter40DaysButton.addEventListener('click', () => setPeriodAndFilter(45));
+    }
 
-    filter80DaysButton.addEventListener('click', () => {
-        setPeriodAndFilter(90); // Ajustado para incluir o intervalo de destaque
-    });
+    if (filter80DaysButton) {
+        filter80DaysButton.addEventListener('click', () => setPeriodAndFilter(90));
+    }
 
-    // Adiciona o evento para o novo interruptor
-    highlightToggle.addEventListener('change', () => {
-        filterHighlightedRows();
-    });
+    if (highlightToggle) {
+        highlightToggle.addEventListener('change', () => filterHighlightedRows());
+    }
+    
+    // Adiciona o 'listener' de forma segura, verificando se o elemento existe
+    if (searchNameInput) {
+        searchNameInput.addEventListener('input', () => filterReportByName());
+    } else {
+        console.error("Elemento do filtro de nome (#search-name-input) não foi encontrado.");
+    }
 
-    // Gera o relatório inicial com o período padrão de 90 dias
     setPeriodAndFilter(90);
 }
 
