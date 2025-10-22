@@ -94,10 +94,14 @@ async function uploadFile(file, storeName, candidateEmail) {
 async function registerCandidate(candidateData, filePath) {
     try {
         const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
+        // Inserção compatível com o schema informado (sem vaga_id, telefone, city ou status)
         const { error } = await supabase.from('candidatos').insert([{
-            ...candidateData,
-            curriculo_url: urlData.publicUrl,
-            status: 'pendente',
+            nome_completo: candidateData.nome_completo,
+            email: candidateData.email,
+            vaga: candidateData.vaga,
+            loja: candidateData.loja,
+            tipo_candidatura: candidateData.tipo_candidatura,
+            curriculo_url: urlData.publicUrl
         }]);
         if (error) throw error;
     } catch (error) {
@@ -111,7 +115,7 @@ async function registerCandidate(candidateData, filePath) {
  */
 async function handleFormSubmit(e) {
     e.preventDefault();
-    const jobId = e.currentTarget.dataset.jobId;
+    const jobId = e.currentTarget.dataset.jobId; // não utilizado na inserção atual
     const file = cvFileInput.files[0];
     const jobTitle = e.currentTarget.dataset.jobTitle;
     const storeName = e.currentTarget.dataset.storeName;
@@ -133,26 +137,12 @@ async function handleFormSubmit(e) {
     try {
         validateFile(file);
 
-        // ===== AQUI ESTÁ A CORREÇÃO CRÍTICA =====
-        // A consulta foi simplificada para buscar apenas da tabela 'vagas'
-        // e usamos o campo 'localidade' que já existe na vaga.
-        const { data: vaga, error: vagaError } = await supabase
-            .from('vagas')
-            .select('*')
-            .eq('id', jobId)
-            .single();
-            
-        if (vagaError) throw vagaError;
-
         const filePath = await uploadFile(file, storeName, candidateEmail);
         await registerCandidate({
-            vaga_id: jobId,
             nome_completo: candidateName,
             email: candidateEmail,
-            telefone: candidatePhone,
             vaga: jobTitle,
             loja: storeName,
-            city: vaga.localidade, // Usamos o campo 'localidade' da própria vaga
             tipo_candidatura: applicationType
         }, filePath);
 

@@ -1,5 +1,5 @@
 // CUIDADO: Este arquivo não deve ser enviado para o GitHub!
 // Ele contém as chaves secretas do projeto.
-
-export const SUPABASE_URL = 'https://multtpzqectfylgqewbb.supabase.co';
-export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11bHR0cHpxZWN0ZnlsZ3Fld2JiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUyNjQ1MjAsImV4cCI6MjA3MDg0MDUyMH0.4iO5WY6QGrcg5F6y0uWKoj_A-LOI6L8cQCs2iaxH_D0';
+export const SUPABASE_URL = 'https://hkqfltzzynilhdbuavma.supabase.co';
+export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhrcWZsdHp6eW5pbGhkYnVhdm1hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NTM0MDgsImV4cCI6MjA3NTUyOTQwOH0.4haK5Qigs0u2lurklAI5TZSwheReIdkyIF3sdmZtHZw';
+export const SUPABASE_SERVICE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhrcWZsdHp6eW5pbGhkYnVhdm1hIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTk1MzQwOCwiZXhwIjoyMDc1NTI5NDA4fQ.TmGYZqEhkRm5RNUYd2rpBekvOzA1LvTjj7vtSc2fvzw';

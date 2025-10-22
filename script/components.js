@@ -33,7 +33,7 @@ const headerHTML = `
 
                 <a href="lojas.html" target="_blank" class="nav-link">Lojas</a>
                 <a href="/vagas.html" target="_blank" class="nav-link">Trabalhe Conosco</a>
-                <a href="/admin/index.html" target="_blank" class="nav-link">Enxame</a>
+                <a href="/farol.html" target="_blank" class="nav-link">Farol CRM</a>
             </div>
         </nav>
 `;

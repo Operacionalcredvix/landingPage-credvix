@@ -128,13 +128,15 @@ details[open] > summary::after {
 /* ================================================= */
 .hero-swiper-container {
     width: 100%;
-    aspect-ratio: 16 / 9;
-    max-height: 50vh;
+    height: 70vh; /* Altura fixa baseada na viewport */
+    min-height: 400px;
+    max-height: 800px;
 }
 
 @media (max-width: 767px) {
     .hero-swiper-container {
-        aspect-ratio: 4 / 3;
+        height: 60vh;
+        min-height: 300px;
     }
 }
 
@@ -377,8 +379,10 @@ select {
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
+    background-size: contain; /* Mantém a imagem completa sem cortar */
     background-position: center;
+    background-repeat: no-repeat;
+    background-color: #000; /* Fundo preto para preencher espaços vazios */
 }
 
 #quem-somos,
