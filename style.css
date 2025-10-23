@@ -382,7 +382,7 @@ select {
     background-size: contain; /* Mantém a imagem completa sem cortar */
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #000; /* Fundo preto para preencher espaços vazios */
+    background-color: #ffffff; /* Fundo branco para preencher espaços vazios */
 }
 
 #quem-somos,

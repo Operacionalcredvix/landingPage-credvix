@@ -49,7 +49,7 @@ const footerHTML = `
                         <span class="footer-brand-btn footer-brand-help">Help!</span>
                     </div>
                     <p class="text-gray-400 text-sm mb-6">
-                        Há 13 anos oferecendo as melhores soluções em crédito consignado para servidores públicos,
+                        Há 14 anos oferecendo as melhores soluções em crédito consignado para servidores públicos,
                         aposentados e pensionistas em todo o Brasil.
                     </p>
                     <div class="flex space-x-4">
