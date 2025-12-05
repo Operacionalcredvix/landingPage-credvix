@@ -94,8 +94,8 @@ const footerHTML = `
                         </li>
                         <li class="flex items-center">
 <span class="material-icons mr-3 text-credvix-orange">email</span>
-                            <a href="mailto:contato@credvix.com"
-                                class="hover:text-white transition-colors">contato@credvix.com</a>
+                            <a href="mailto:marketing@credvix.com"
+                                class="hover:text-white transition-colors">marketing@credvix.com</a>
                         </li>
                         <li class="flex items-center">
 <span class="material-icons mr-3 text-credvix-orange">call</span>
