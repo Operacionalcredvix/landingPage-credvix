@@ -49,7 +49,7 @@ const footerHTML = `
                         <span class="footer-brand-btn footer-brand-help">Help!</span>
                     </div>
                     <p class="text-gray-400 text-sm mb-6">
-                        Há 14 anos oferecendo as melhores soluções em crédito consignado para servidores públicos,
+                        Há <span id="company-years"></span> anos oferecendo as melhores soluções em crédito consignado para servidores públicos,
                         aposentados e pensionistas em todo o Brasil.
                     </p>
                     <div class="flex space-x-4">
@@ -90,7 +90,7 @@ const footerHTML = `
                     <ul class="space-y-4 text-gray-400">
                         <li class="flex items-start">
                             <span class="material-icons mr-3 mt-1 text-credvix-orange flex-shrink-0">location_on</span>
-                            <span>Presente em  6 Estados do Brasil</span>
+                            <span><span id="store-count">+30</span> lojas presentes em 5 estados e o Distrito Federal</span>
                         </li>
                         <li class="flex items-center">
 <span class="material-icons mr-3 text-credvix-orange">email</span>
@@ -140,5 +140,51 @@ export function loadFooter() {
     const footerElement = document.getElementById('main-footer');
     if (footerElement) {
         footerElement.innerHTML = footerHTML;
+        
+        // Atualiza o ano dinamicamente
+        const yearElement = document.getElementById('year');
+        if (yearElement) {
+            yearElement.textContent = new Date().getFullYear();
+        }
+        
+        // Calcula anos desde a fundação (10/08/2011)
+        const companyYearsElement = document.getElementById('company-years');
+        if (companyYearsElement) {
+            const foundationDate = new Date('2011-08-10');
+            const today = new Date();
+            let yearsInBusiness = today.getFullYear() - foundationDate.getFullYear();
+            
+            // Se ainda não passou a data de aniversário este ano, subtrai 1
+            const hasPassedAnniversary = (today.getMonth() > foundationDate.getMonth()) || 
+                (today.getMonth() === foundationDate.getMonth() && today.getDate() >= foundationDate.getDate());
+            
+            if (!hasPassedAnniversary) {
+                yearsInBusiness--;
+            }
+            
+            companyYearsElement.textContent = yearsInBusiness;
+        }
+        
+        // Busca quantidade de lojas ativas do banco de dados
+        updateStoreCount();
+    }
+}
+
+async function updateStoreCount() {
+    try {
+        const { supabase } = await import('./supabase-client.js');
+        const { count, error } = await supabase
+            .from('lojas')
+            .select('*', { count: 'exact', head: true })
+            .eq('is_active', true);
+        
+        if (!error && count !== null) {
+            const storeCountElement = document.getElementById('store-count');
+            if (storeCountElement) {
+                storeCountElement.textContent = `+${count}`;
+            }
+        }
+    } catch (error) {
+        console.error('Erro ao buscar contagem de lojas:', error);
     }
 }
