@@ -11,7 +11,6 @@ h1, h2, h3, h4, h5, h6 {
 :root {
     --primary-color: rgb(242, 99, 34); /* Cor principal */
     --secondary-color: #4B5563; /* Cinza escuro */
-    --accent-color: #72A0C1; /* Azul claro */
     --text-color: #374151; /* Cinza escuro para texto */
     --background-color: #F9FAFB; /* Cinza muito claro */
 }
@@ -20,7 +19,6 @@ h1, h2, h3, h4, h5, h6 {
 .bg-gray-50 {
     background-color: #f9fafb;
 }
-.bg-credvix-orange { --primary-color: rgb(243, 112, 33); }
 .text-credvix-orange { color: rgb(243, 112, 33); }
 .border-credvix-orange { border-color: rgb(243, 112, 33); }
 .bg-help-purple { background-color: rgb(72, 43, 116); }
@@ -91,36 +89,6 @@ h1, h2, h3, h4, h5, h6 {
 .animate-on-scroll.is-visible {
     opacity: 1;
     transform: translateY(0) scale(1);
-}
-
-/* --- Acordeão do FAQ --- */
-details {
-    border: 1px solid #e5e7eb;
-    transition: background-color 0.3s ease;
-}
-details:hover {
-    background-color: #f9fafb;
-}
-details > summary {
-    list-style: none;
-}
-details > summary::-webkit-details-marker {
-    display: none;
-}
-details > summary::after {
-    content: '+';
-    float: right;
-    font-size: 1.5em;
-    font-weight: 400; /* Mais fino */
-    line-height: 1;
-    transition: transform 0.3s ease-in-out;
-    color: #000000;
-}
-details[open] {
-    border-color: rgb(242, 99, 34);
-}
-details[open] > summary::after {
-    transform: rotate(45deg);
 }
 
 /* ================================================= */
@@ -264,11 +232,6 @@ details[open] > summary::after {
     display: block;
     object-fit: contain;
 }
-.testimonial-img-alt {
-    width: 40%;
-    object-fit: cover;
-    flex-shrink: 0;
-}
 .testimonial-content-alt {
     padding: 1rem;
     display: flex;
@@ -282,10 +245,6 @@ details[open] > summary::after {
     .testimonial-card-alt {
         flex-direction: column;
         min-height: auto;
-    }
-    .testimonial-img-alt {
-        width: 100%;
-        height: 250px;
     }
     .testimonial-content-alt {
         padding: 1.5rem;
@@ -319,23 +278,6 @@ details[open] > summary::after {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/* --- Imagem do Card de Loja (Store Card) --- */
-.store-card-image-wrapper {
-    overflow: hidden;
-    height: 12rem;
-    background-color: #e5e7eb;
-    border-radius: 1rem 1rem 0 0;
-}
-.store-card-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease, filter 0.4s ease;
-}
-.store-card-image-wrapper:hover .store-card-image {
-    transform: scale(1.05);
 }
 
 /* --- Rodapé --- */
@@ -390,8 +332,7 @@ select {
     background-color: #ffffff;
 }
 
-#encontre,
-.faq-section {
+#encontre {
     background-color: #f9fafb;
 }
 
@@ -428,26 +369,19 @@ select {
 
 /* Estilos específicos para os botões na seção HERO */
 #hero .cta-button {
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.6);
     margin-top: 5rem;
-}
-
-#hero .cta-button.bg-help-purple {
-    background-color: rgba(74, 36, 109, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #ffffff;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 #hero .cta-button:hover {
-    background-color: rgba(255, 255, 255, 0.4);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-
-#hero .cta-button.bg-help-purple:hover {
-    background-color: rgba(74, 36, 109, 0.4);
+    background-color: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-3px);
 }
 
 /* =============================================== */
