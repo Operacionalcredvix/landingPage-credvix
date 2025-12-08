@@ -32,14 +32,23 @@ function normalizeApplicationType(type) {
 
 /**
  * Verifica se o bucket 'curriculos' existe e está acessível
+ * Tenta acessar diretamente sem listar todos os buckets
  */
 async function checkBucketExists() {
     try {
-        const { data: buckets, error } = await supabase.storage.listBuckets();
-        if (error) throw error;
-        return buckets.some(b => b.name === 'curriculos');
+        const { data: files, error: listError } = await supabase.storage
+            .from('curriculos')
+            .list('', { limit: 1 });
+        
+        if (listError) {
+            if (listError.message?.includes('not found') || listError.statusCode === '404') {
+                return false;
+            }
+            throw listError;
+        }
+        
+        return true;
     } catch (error) {
-        console.error('Erro ao verificar buckets:', error);
         return false;
     }
 }
@@ -64,6 +73,11 @@ function validateFile(file) {
  */
 async function uploadFile(file, storeName, candidateEmail) {
     try {
+        const bucketExists = await checkBucketExists();
+        if (!bucketExists) {
+            throw new Error('BUCKET_NOT_FOUND');
+        }
+
         const fileExt = file.name.split('.').pop();
         const fileName = `${candidateEmail.split('@')[0]}_${Date.now()}.${fileExt}`;
         const safeStoreName = storeName.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
@@ -75,15 +89,14 @@ async function uploadFile(file, storeName, candidateEmail) {
         });
         
         if (uploadError) {
-            if (uploadError.message.includes('Bucket not found')) {
-                throw new Error('Bucket "curriculos" não encontrado. O sistema pode estar em manutenção.');
+            if (uploadError.message.includes('Bucket not found') || uploadError.message.includes('not found')) {
+                throw new Error('BUCKET_NOT_FOUND');
             }
             throw uploadError;
         }
         
         return filePath;
     } catch (error) {
-        console.error('Erro no upload:', error);
         throw error;
     }
 }
@@ -94,7 +107,7 @@ async function uploadFile(file, storeName, candidateEmail) {
 async function registerCandidate(candidateData, filePath) {
     try {
         const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
-        // Inserção compatível com o schema informado (sem vaga_id, telefone, city ou status)
+        
         const { error } = await supabase.from('candidatos').insert([{
             nome_completo: candidateData.nome_completo,
             email: candidateData.email,
@@ -103,9 +116,9 @@ async function registerCandidate(candidateData, filePath) {
             tipo_candidatura: candidateData.tipo_candidatura,
             curriculo_url: urlData.publicUrl
         }]);
+        
         if (error) throw error;
     } catch (error) {
-        console.error('Erro ao registrar candidato:', error);
         throw error;
     }
 }
@@ -146,22 +159,53 @@ async function handleFormSubmit(e) {
             tipo_candidatura: applicationType
         }, filePath);
 
-        modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><p class="text-green-600 font-bold text-xl mb-2">Currículo enviado com sucesso!</p><p class="text-sm text-gray-500">Agradecemos seu interesse. Entraremos em contato em breve.</p></div>`;
+        modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><p class="text-green-600 font-bold text-xl mb-2" style="color: #059669 !important;">Currículo enviado com sucesso!</p><p class="text-gray-700 text-sm" style="color: #374151 !important;">Agradecemos seu interesse. Entraremos em contato em breve.</p></div>`;
         setTimeout(closeModal, 4000);
 
     } catch (error) {
-        console.error('Erro no processo de candidatura:', error);
         
         let errorMessage = 'Não foi possível enviar seu currículo.';
-        if (error.message.includes('Bucket')) {
-            errorMessage = 'Sistema temporariamente indisponível. Por favor, tente novamente mais tarde.';
+        let errorDetails = '';
+        
+        if (error.message === 'BUCKET_NOT_FOUND' || error.message.includes('Bucket')) {
+            errorMessage = '🛠️ Sistema em Configuração';
+            errorDetails = `
+                <div class="text-left bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+                    <p class="text-sm text-gray-700 mb-3">
+                        <strong>O sistema de upload automático está sendo configurado.</strong>
+                    </p>
+                    <p class="text-sm text-gray-600 mb-2">📧 Por favor, envie seu currículo diretamente para:</p>
+                    <a href="mailto:rh@credvix.com?subject=Candidatura: ${encodeURIComponent(jobTitle)}&body=Nome: ${encodeURIComponent(candidateName)}%0AEmail: ${encodeURIComponent(candidateEmail)}%0ATelefone: ${encodeURIComponent(candidatePhone)}" 
+                       class="text-help-purple font-bold hover:underline break-all">
+                        rh@credvix.com
+                    </a>
+                    <p class="text-xs text-gray-500 mt-2">
+                        ℹ️ Anexe seu currículo e mencione a vaga: <strong>${jobTitle}</strong>
+                    </p>
+                </div>
+            `;
         } else if (error.message.includes('Tamanho máximo')) {
             errorMessage = error.message;
+            errorDetails = '<p class="text-sm text-gray-500 mt-2">ℹ️ Tente comprimir o arquivo ou salvar em formato PDF.</p>';
         } else if (error.message.includes('Formato inválido')) {
+            errorMessage = error.message;
+            errorDetails = '<p class="text-sm text-gray-500 mt-2">ℹ️ Aceitamos apenas arquivos PDF, DOC ou DOCX.</p>';
+        } else if (error.message.includes('selecione um arquivo')) {
             errorMessage = error.message;
         }
         
-        modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-red-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg><p class="text-red-600 font-bold text-xl mb-2">Ocorreu um erro</p><p class="text-sm text-gray-500 mb-4">${errorMessage}</p><button onclick="location.reload()" class="text-help-purple font-semibold mt-2 px-4 py-2 border border-help-purple rounded-lg hover:bg-help-purple hover:text-white transition-colors">Tentar novamente</button></div>`;
+        modalContentStatus.innerHTML = `
+            <div class="flex flex-col items-center">
+                <svg class="h-12 w-12 text-orange-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <p class="text-orange-600 font-bold text-xl mb-2">${errorMessage}</p>
+                ${errorDetails}
+                <button onclick="location.reload()" class="mt-6 text-help-purple font-semibold px-6 py-2 border-2 border-help-purple rounded-lg hover:bg-help-purple hover:text-white transition-colors">
+                    🔄 Tentar Novamente
+                </button>
+            </div>
+        `;
     }
 }
 
@@ -188,6 +232,35 @@ export function openUploadModal(jobTitle, storeName, jobId, applicationType) {
         modalContentForm.classList.remove('hidden');
         modalContentStatus.classList.add('hidden');
         uploadForm.reset();
+        
+        // Aplicar cores baseadas no tipo de vaga
+        const modalHeader = uploadModal.querySelector('.bg-gradient-to-r');
+        const submitButton = uploadModal.querySelector('button[type="submit"]');
+        const normalizedType = normalizeApplicationType(applicationType);
+        
+        // Remover classes anteriores
+        uploadModal.classList.remove('modal-open-position', 'modal-talent-pool');
+        
+        if (normalizedType === APLICATION_TYPE.OPEN_POSITION) {
+            // Vaga Aberta - Laranja
+            uploadModal.classList.add('modal-open-position');
+            if (modalHeader) {
+                modalHeader.style.background = 'linear-gradient(to right, #F37021, #d97829)';
+            }
+            if (submitButton) {
+                submitButton.style.background = 'linear-gradient(to right, #F37021, #d97829)';
+            }
+        } else {
+            // Banco de Talentos - Roxo
+            uploadModal.classList.add('modal-talent-pool');
+            if (modalHeader) {
+                modalHeader.style.background = 'linear-gradient(to right, #6938B0, #5b21b6)';
+            }
+            if (submitButton) {
+                submitButton.style.background = 'linear-gradient(to right, #6938B0, #5b21b6)';
+            }
+        }
+        
         uploadModal.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
     }

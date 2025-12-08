@@ -8,11 +8,12 @@ Site responsivo e moderno desenvolvido para apresentar a empresa, suas lojas, va
 
 ### ✨ Principais Funcionalidades
 
-- **🏠 Home**: Carousel hero com imagens responsivas, história da empresa e valores
-- **🏪 Lojas**: Localizador de lojas com filtros por estado e busca por cidade
-- **💼 Trabalhe Conosco**: Portal de vagas com sistema de candidatura online
-- **📄 Currículo**: Upload de currículos (PDF/DOCX) para vaga storage do Supabase
-- **🎨 Design Responsivo**: Totalmente adaptado para mobile, tablet e desktop
+- **🏠 Home**: Carousel hero com imagens responsivas (desktop/mobile automático), história da empresa e valores
+- **🏪 Lojas**: Localizador de lojas com filtros por estado, busca por cidade e contador dinâmico (+32 lojas)
+- **💼 Trabalhe Conosco**: Portal de vagas com categorias visuais (Abertas/Banco de Talentos) e sistema de candidatura online
+- **📄 Currículo**: Upload de currículos (PDF/DOCX) para bucket storage do Supabase com validação de arquivo
+- **🎨 Design Responsivo**: Totalmente adaptado para mobile, tablet e desktop com imagens otimizadas por dispositivo
+- **♿ Acessibilidade**: Painel completo com controle de fonte, contraste, espaçamento e suporte VLibras
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -34,9 +35,19 @@ Site responsivo e moderno desenvolvido para apresentar a empresa, suas lojas, va
 
 ```sql
 -- Tabelas principais
-public.lojas       -- Cadastro de lojas/unidades
-public.vagas       -- Vagas de emprego ativas
-public.candidatos  -- Candidaturas recebidas
+public.lojas       -- Cadastro de lojas/unidades (filtrado por "Matriz" = 32 lojas ativas)
+public.vagas       -- Vagas de emprego com categorias (Aberta/Banco de Talentos)
+public.candidatos  -- Candidaturas recebidas com URL do currículo
+public.auditoria   -- Log de ações no sistema
+```
+
+### Storage
+
+```
+curriculos/
+  ├── nome-da-loja/
+  │   ├── candidato_timestamp.pdf
+  │   └── candidato_timestamp.docx
 ```
 
 ## 📁 Estrutura do Projeto
@@ -46,19 +57,28 @@ landingPage/
 ├── index.html              # Página principal
 ├── lojas.html             # Localizador de lojas
 ├── vagas.html             # Portal de vagas
+├── farol.html             # Página institucional Farol
 ├── enxame.html            # Página "Em Construção" (CRM)
+├── sitemap.xml            # Sitemap para SEO
 ├── style.css              # Estilos globais customizados
 ├── img/                   # Imagens e assets
+│   ├── banner.jpeg              # Hero desktop slide 1
+│   ├── banner-mobile.jpeg       # Hero mobile slide 1
+│   ├── quem-somos.jpg           # Hero desktop slide 2
+│   ├── quem-somos-mobile.jpg    # Hero mobile slide 2
+│   ├── somos-help.jpg           # Hero desktop slide 3
+│   └── somos-help-mobile.jpg    # Hero mobile slide 3
 └── script/
     ├── main.js                  # Inicialização e orquestração
     ├── config.js                # Credenciais Supabase (gitignored)
     ├── supabase-client.js       # Cliente Supabase
     ├── components.js            # Header e Footer reutilizáveis
-    ├── storeLocator.js          # Lógica de listagem de lojas
-    ├── jobBoard.js              # Lógica de vagas
-    ├── modalHandler.js          # Upload de currículos
-    ├── hero-swiper.js           # Carousel principal
+    ├── storeLocator.js          # Lógica de listagem de lojas com contador dinâmico
+    ├── jobBoard.js              # Lógica de vagas com categorização visual
+    ├── modalHandler.js          # Upload de currículos com cores dinâmicas
+    ├── hero-swiper.js           # Carousel principal com imagens responsivas
     ├── testimonial-swiper.js    # Carousel de depoimentos
+    ├── accessibility.js         # Sistema de acessibilidade (WCAG)
     └── animations.js            # Animações on-scroll
 ```
 
@@ -79,57 +99,104 @@ Edite as variáveis CSS em `style.css`:
 }
 
 .bg-help-purple { 
-    background-color: rgb(72, 43, 116);   /* Roxo Help! */
+    background-color: rgb(105, 56, 176);  /* Roxo Help! (#6938B0) */
 }
+
+.text-credvix-orange { 
+    color: rgb(243, 112, 33);             /* Laranja principal (#F37021) */
+}
+```
+
+**Cores dinâmicas do modal (modalHandler.js):**
+```javascript
+// Vaga Aberta
+background: 'linear-gradient(to right, #F37021, #d97829)'
+
+// Banco de Talentos
+background: 'linear-gradient(to right, #6938B0, #5b21b6)'
 ```
 
 ### Imagens do Hero
 
-Substitua as imagens em `img/` e atualize em `index.html`:
+O sistema possui **detecção automática** de dispositivo e troca as imagens conforme a tela:
 
-```html
-<div class="slide-background" 
-     style="background-image: url('img/sua-imagem.jpg');">
-</div>
+```javascript
+// hero-swiper.js detecta automaticamente
+const isMobile = window.innerWidth <= 768;
 ```
 
-**Tamanhos recomendados:**
-- Desktop: 2560×1440px ou 1920×1080px (16:9)
-- Mobile: 1080×1440px (3:4)
+Substitua as imagens em `img/` mantendo os pares desktop/mobile:
+
+**Slide 1 - Banner Principal:**
+- Desktop: `img/banner.jpeg` (recomendado: 1920×1080px)
+- Mobile: `img/banner-mobile.jpeg` (recomendado: 720×630px)
+
+**Slide 2 - Quem Somos:**
+- Desktop: `img/quem-somos.jpg` (recomendado: 1920×1080px)
+- Mobile: `img/quem-somos-mobile.jpg` (recomendado: 720×630px)
+
+**Slide 3 - Trabalhe Conosco:**
+- Desktop: `img/somos-help.jpg` (recomendado: 1920×1080px)
+- Mobile: `img/somos-help-mobile.jpg` (recomendado: 720×630px)
+
+**Proporções CSS aplicadas:**
+- Desktop: Flexível com `background-size: cover`
+- Mobile: Flexível com `background-size: cover` e ajustes de posição
 
 ## 📊 Funcionalidades Detalhadas
 
 ### 1. Localizador de Lojas
 
+- **Contador dinâmico**: Exibe "+32 lojas" em tempo real (total - Matriz)
 - Filtro por estado (dropdown)
 - Busca por nome ou cidade
 - Cards com WhatsApp e Instagram
+- Badge "Mais Próxima" baseada em geolocalização
 - Integração em tempo real com `public.lojas`
+- Filtro automático: exclui loja "Matriz" da contagem
 
 ### 2. Portal de Vagas
 
-- Listagem de vagas ativas
-- Filtros: localidade, título, categoria (Aberta/Banco de Talentos)
-- Modal de candidatura com validação
-- Upload de currículo (máx 5MB, PDF/DOC/DOCX)
+- **Categorias visuais**: Cards com cores distintas
+  - 🟠 **Vagas Abertas**: Gradiente laranja (#F37021)
+  - 🟣 **Banco de Talentos**: Gradiente roxo (#6938B0)
+- Listagem de vagas ativas com lazy loading
+- Filtros: localidade, título, categoria
+- **Modal dinâmico**: Muda de cor conforme tipo de vaga
+- Upload de currículo com validação (máx 5MB, PDF/DOC/DOCX)
+- Feedback visual de sucesso/erro
 
 ### 3. Sistema de Candidatura
 
-**Fluxo:**
-1. Usuário preenche formulário (nome, email, telefone)
-2. Seleciona arquivo de currículo
-3. Upload para Supabase Storage (`curriculos/`)
-4. Registro em `public.candidatos` com URL pública do arquivo
-5. Feedback visual de sucesso/erro
+**Fluxo completo:**
+1. Usuário clica em "Candidatar-se" (botão colorido por categoria)
+2. Modal abre com **header personalizado** (laranja ou roxo)
+3. Preenche formulário moderno com ícones:
+   - Nome completo
+   - E-mail
+   - Telefone (WhatsApp) com validação
+4. Seleciona arquivo de currículo (drag-and-drop estilizado)
+5. **Validações aplicadas:**
+   - Tipo de arquivo (PDF, DOC, DOCX)
+   - Tamanho máximo (5MB)
+   - Campos obrigatórios
+6. Upload para Supabase Storage (`curriculos/nome-da-loja/`)
+7. Registro em `public.candidatos` com:
+   - Dados do candidato
+   - URL pública do currículo
+   - Tipo de candidatura normalizado
+   - Timestamp automático
+8. Feedback visual com animação de sucesso
+9. Modal fecha automaticamente após 4 segundos
 
-## 🔒 Segurança
+**Recursos visuais do modal:**
+- Header com gradiente personalizado por categoria
+- Ícones SVG em todos os campos
+- Badge do WhatsApp com ícone oficial
+- Botão de envio com gradiente animado
+- Estados de loading, sucesso e erro
+- Design glassmorphism no header
 
-### ⚠️ Importante
-
-- **NUNCA** commite `script/config.js` (já está no `.gitignore`)
-- Use apenas `SUPABASE_ANON_KEY` no frontend
-- `SUPABASE_SERVICE_KEY` deve ficar apenas no backend/servidor
-- RLS está ativo em todas as tabelas públicas
 
 ### Boas Práticas
 
@@ -137,55 +204,96 @@ Substitua as imagens em `img/` e atualize em `index.html`:
 - ✅ Limite de tamanho (5MB) para uploads
 - ✅ Políticas RLS restritivas
 - ✅ HTTPS obrigatório em produção
+- ✅ Sanitização de nomes de arquivo (remove acentos e caracteres especiais)
+- ✅ Timestamps únicos para evitar sobrescrita de arquivos
 
 ## 📱 Responsividade
 
-O site é totalmente responsivo com breakpoints:
+O site é totalmente responsivo com breakpoints e recursos adaptativos:
+
+### Breakpoints
 
 - **Mobile**: < 768px
 - **Tablet**: 768px - 1024px
 - **Desktop**: > 1024px
 
-Componentes testados em:
-- iPhone (Safari)
-- Android (Chrome)
-- iPad
-- Desktop (Chrome, Firefox, Safari, Edge)
+### Recursos Responsivos
+
+**Hero Carousel:**
+- Detecção automática de dispositivo
+- Imagens otimizadas por tamanho de tela
+- Swap dinâmico em tempo de execução
+- Event listener em resize para ajuste em tempo real
+
+**Cards de Vagas:**
+- Layout adaptável (grid → coluna única)
+- Badges responsivos
+- Botões full-width em mobile
+
+**Modal de Candidatura:**
+- Largura ajustável (max-w-lg)
+- Padding reduzido em telas pequenas
+- Upload de arquivo otimizado para touch
+- Teclado virtual considerado
+
+**Localizador de Lojas:**
+- Grid responsivo de cards
+- Filtros empilhados verticalmente em mobile
+- Mapa adaptável (futuro)
+
+### Dispositivos Testados
+
+- ✅ iPhone SE, 12, 13, 14 (Safari)
+- ✅ Samsung Galaxy S21, S22 (Chrome)
+- ✅ iPad Air, Pro (Safari)
+- ✅ Desktop HD, Full HD, 4K (Chrome, Firefox, Safari, Edge)
+- ✅ Surface Pro (Edge)
 
 ## 🚀 Deploy
 
-### Netlify (Recomendado)
+### Hostinger (Produção Atual)
 
-1. Conecte o repositório GitHub
-2. Configure variáveis de ambiente:
+O deploy é realizado automaticamente via **integração Git da Hostinger**:
+
+1. **Configuração Inicial:**
+   - Acesse o painel da Hostinger
+   - Vá em **Websites** → Seu domínio
+   - Ative **Git Deployment** nas configurações
+
+2. **Conectar Repositório:**
+   - Conecte com GitHub (Operacionalcredvix/landingPage-credvix)
+   - Selecione a branch `main`
+   - Configure o diretório de deploy (geralmente `/public_html`)
+
+3. **Deploy Automático:**
+   ```bash
+   # Faça suas alterações localmente
+   git add .
+   git commit -m "feat: sua alteração"
+   git push origin main
+   
+   # A Hostinger detecta o push e faz deploy automático
    ```
-   SUPABASE_URL=https://seu-projeto.supabase.co
-   SUPABASE_ANON_KEY=sua-chave-anon
-   ```
-3. Deploy automático a cada push
 
-### Vercel
+4. **Variáveis de Ambiente:**
+   - Configure no painel: **Configurações Avançadas** → **Variáveis de Ambiente**
+   - Adicione:
+     - `SUPABASE_URL`
+     - `SUPABASE_ANON_KEY`
 
-```bash
-npm i -g vercel
-vercel --prod
-```
+5. **Domínio e SSL:**
+   - Domínio: credvix.com
+   - SSL: Configurado automaticamente pela Hostinger (Let's Encrypt)
 
-### GitHub Pages
+**Status do Deploy:**
+- ✅ Auto-deploy ativo na branch `main`
+- ✅ SSL/HTTPS habilitado
+- ✅ CDN otimizado da Hostinger
+- ✅ Cache automático de assets
 
-```bash
-# Configure branch gh-pages
-git checkout -b gh-pages
-git push origin gh-pages
-```
 
-## 🤝 Contribuindo
 
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
-3. Commit suas mudanças (`git commit -m 'feat: adiciona nova funcionalidade'`)
-4. Push para a branch (`git push origin feature/nova-funcionalidade`)
-5. Abra um Pull Request
+Este é um projeto **privado e interno da Credvix**. Acesso restrito aos colaboradores autorizados.
 
 ### Padrão de Commits
 
@@ -198,31 +306,36 @@ Seguimos [Conventional Commits](https://www.conventionalcommits.org/):
 - `docs:` Documentação
 - `chore:` Tarefas de build/configuração
 
+### Fluxo de Trabalho
+
+1. Crie uma branch para sua feature (`git checkout -b feature/nome-da-feature`)
+2. Commit suas mudanças seguindo o padrão acima
+3. Push para o repositório (`git push origin feature/nome-da-feature`)
+4. Deploy automático via Hostinger após merge na `main`
+
 ## 📝 Roadmap
 
-- [ ] Sistema de newsletter
-- [ ] Chat online (WhatsApp Business)
-- [ ] Calculadora de crédito consignado
-- [ ] Integração com Google Analytics
-- [ ] PWA (Progressive Web App)
-- [ ] Dashboard administrativo (Enxame CRM)
+- [x] Sistema de candidaturas com upload de currículos
+- [x] Contador dinâmico de lojas (+32)
+- [x] Imagens responsivas no hero (desktop/mobile)
+- [x] Categorização visual de vagas (cores por tipo)
+- [x] Modal de candidatura com cores dinâmicas
+- [x] Sistema de acessibilidade (WCAG 2.1)
+- [x] Painel de controle de fonte e contraste
+- [x] Integração VLibras (Libras virtual)
+
 
 ## 📄 Licença
 
-Este projeto é propriedade da **Credvix** e do **Grupo Apis**. Todos os direitos reservados.
+**Projeto Privado** - Propriedade exclusiva da **Credvix** e do **Grupo Apis**.  
+Todos os direitos reservados. Uso interno apenas.
 
-## 👥 Equipe
+## 👥 Equipe de Desenvolvimento
 
-- **Desenvolvimento**: Operacional Credvix
+- **Desenvolvimento**: Equipe Operacional Credvix
 - **Design**: Equipe Credvix
 - **Conteúdo**: Marketing Credvix
-
-## 📞 Contato
-
-- **Site**: [credvix.com](https://credvix.com)
-- **Email**: markenting@credvix.com
-- **Telefone**: (27) 3020-8584
-- **Instagram**: [@credvix](https://instagram.com/credvix)
+- **Infraestrutura**: TI Credvix
 
 ---
 

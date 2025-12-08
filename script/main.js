@@ -2,10 +2,11 @@
 import { initHeroSwiper } from './hero-swiper.js'; // Alterado
 import { initTestimonialSwiper } from './testimonial-swiper.js'; // Alterado
 import { initStoreLocator } from './storeLocator.js';
-import { initJobBoard } from './jobBoard.js';
+import { initJobBoard, initializeTalentBankForm } from './jobBoard.js';
 import { initModalHandler } from './modalHandler.js';
 import { observeElements } from './animations.js';
 import { loadHeader, loadFooter } from './components.js';
+import { initAccessibility } from './accessibility.js';
 
 function initializePage() {
     console.log("Página carregando, inicializando módulos...");
@@ -13,6 +14,9 @@ function initializePage() {
     // Carrega componentes reutilizáveis primeiro
     loadHeader();
     loadFooter();
+    
+    // Inicializa acessibilidade
+    initAccessibility();
 
     // Módulos que devem rodar em quase todas as páginas
     initModalHandler();
@@ -41,6 +45,12 @@ function initializePage() {
     if (document.getElementById('job-list')) {
         console.log("Inicializando Mural de Vagas...");
         initJobBoard();
+    }
+
+    // Só inicializa o formulário do Banco de Talentos se existir
+    if (document.getElementById('talent-bank-form')) {
+        console.log("Inicializando formulário Banco de Talentos...");
+        initializeTalentBankForm();
     }
     
     // Atualiza o ano no rodapé

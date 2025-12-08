@@ -21,16 +21,38 @@
     <header id="main-header" class="bg-white shadow-sm sticky top-0 z-50">
         </header>
 
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="container mx-auto px-6">
+            <div id="breadcrumb-container" class="breadcrumb-container"></div>
+        </div>
+    </div>
+
     <main>
-        <section id="mapa-lojas" class="py-16 md:py-20 bg-white">
-            <div class="container mx-auto px-6 text-center">
-                <h1 class="section-title animate-on-scroll">Encontre nossa loja mais próxima</h1>
-                <div class="my-8 animate-on-scroll">
-                    <img src="/img/Mapa.png" alt="Mapa do Brasil com os estados de atuação da Credvix" class="mx-auto max-w-lg w-full h-auto">
+        <!-- Hero Section -->
+        <section class="relative py-20 md:py-28" style="background-image: url('/img/Mapa.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+            <div class="absolute inset-0 bg-black opacity-60"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="max-w-4xl mx-auto text-center">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-6 animate-on-scroll text-white">🗺️ Encontre Nossa Loja</h1>
+                    <p class="text-xl md:text-2xl mb-8 animate-on-scroll text-white opacity-90">
+                        Maior franqueado ES da HELP! Presentes em 6 estados
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-3 mb-8 animate-on-scroll">
+                        <span class="bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-white cursor-pointer transition-all duration-300 hover:bg-opacity-40 hover:scale-110 hover:shadow-lg">📍 Espírito Santo</span>
+                        <span class="bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-white cursor-pointer transition-all duration-300 hover:bg-opacity-40 hover:scale-110 hover:shadow-lg">📍 Minas Gerais</span>
+                        <span class="bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-white cursor-pointer transition-all duration-300 hover:bg-opacity-40 hover:scale-110 hover:shadow-lg">📍 Goiás</span>
+                        <span class="bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-white cursor-pointer transition-all duration-300 hover:bg-opacity-40 hover:scale-110 hover:shadow-lg">📍 Bahia</span>
+                        <span class="bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-white cursor-pointer transition-all duration-300 hover:bg-opacity-40 hover:scale-110 hover:shadow-lg">📍 Mato Grosso</span>
+                        <span class="bg-white bg-opacity-20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-white cursor-pointer transition-all duration-300 hover:bg-opacity-40 hover:scale-110 hover:shadow-lg">📍 Distrito Federal</span>
+                    </div>
+                    <a href="#encontre" class="inline-flex items-center gap-2 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg" style="background-color: rgb(243, 112, 33);">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Buscar Loja Mais Próxima
+                    </a>
                 </div>
-                <p class="text-lg font-semibold text-gray-600 animate-on-scroll">
-                    Maior franqueado ES da HELP! Onde chegamos: ES, MG, GO, BA, MT, DF
-                </p>
             </div>
         </section>
         
@@ -38,43 +60,75 @@
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="section-title animate-on-scroll">Busque por sua cidade ou estado</h2>
-                    <p class="section-subtitle animate-on-scroll">Estamos presentes em 5 Estados e no Distrito Federal. Encontre a unidade
+                    <p class="section-subtitle animate-on-scroll">Estamos presentes em 6 Estados. Encontre a unidade
                         mais próxima de você e fale com nossos especialistas.</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12 animate-on-scroll">
-                    <div>
-                        <label for="state-select" class="block text-sm font-medium text-gray-700 mb-2">Filtrar por
-                            Estado:</label>
-                        <select id="state-select"
-                            class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 ring-help-purple">
-                            <option value="todos">Todos os Estados</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="search-input" class="block text-sm font-medium text-gray-700 mb-2">Buscar por cidade
-                            ou nome:</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                
+                <!-- Filtros e Busca -->
+                <div class="max-w-5xl mx-auto mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 animate-on-scroll">
+                        <div>
+                            <label for="state-select" class="block text-sm font-semibold text-gray-700 mb-3">📍 Filtrar por Estado:</label>
+                            <select id="state-select"
+                                class="w-full p-4 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-help-purple focus:border-transparent transition-all">
+                                <option value="todos">🗺️ Todos os Estados</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="search-input" class="block text-sm font-semibold text-gray-700 mb-3">🔍 Buscar por cidade ou nome:</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <input type="text" id="search-input"
+                                    class="w-full p-4 pl-12 border-2 border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-help-purple focus:border-transparent transition-all"
+                                    placeholder="Digite para buscar...">
                             </div>
-                            <input type="text" id="search-input"
-                                class="w-full p-3 pl-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 ring-help-purple"
-                                placeholder="Digite para buscar...">
                         </div>
                     </div>
+                    
+                    <!-- Contador e Botão Ver Todas -->
+                    <div class="flex flex-wrap items-center justify-between gap-4 animate-on-scroll">
+                        <div id="store-counter" class="bg-white px-6 py-3 rounded-xl shadow-md border-l-4 border-help-purple hidden">
+                            <span class="text-sm text-gray-600">Exibindo </span>
+                            <span class="text-lg font-bold text-help-purple" id="store-count">0</span>
+                            <span class="text-sm text-gray-600"> loja(s)</span>
+                        </div>
+                        <button id="show-all-stores" class="text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center gap-2" style="background: linear-gradient(135deg, rgb(105, 56, 176) 0%, rgb(88, 28, 135) 100%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                            Ver Todas as Lojas
+                        </button>
+                    </div>
                 </div>
+                
+                <!-- Mensagens de Estado -->
                 <div id="initial-store-prompt"
-                    class="text-center text-gray-500 mt-8 p-8 border-2 border-dashed rounded-lg">
-                    <p>Selecione um estado ou busque pelo nome para ver as lojas.</p>
+                    class="text-center text-gray-500 mt-8 p-12 border-2 border-dashed border-gray-300 rounded-2xl bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <p class="text-lg font-semibold mb-2">Selecione um filtro ou clique em "Ver Todas"</p>
+                    <p class="text-sm">Use os filtros acima ou busque pelo nome da loja</p>
                 </div>
+                
+                <!-- Lista de Lojas -->
                 <div id="store-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-                <div id="no-stores-message" class="text-center text-gray-500 mt-8 hidden">
-                    <p>Nenhuma loja encontrada para a sua busca.</p>
+                
+                <!-- Mensagem de Nenhuma Loja -->
+                <div id="no-stores-message" class="text-center text-gray-500 mt-8 p-12 bg-white rounded-2xl shadow-md hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <p class="text-lg font-semibold mb-2">Nenhuma loja encontrada</p>
+                    <p class="text-sm">Tente ajustar os filtros ou termos de busca</p>
                 </div>
             </div>
         </section>
