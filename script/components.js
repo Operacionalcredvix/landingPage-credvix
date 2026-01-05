@@ -1,10 +1,10 @@
 const headerHTML = `
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <a href="index.html"><img src="/img/logo-credvix.webp" alt="Logo Grupo Credvix" width="150" height="40" class="h-8 md:h-10"
+                <a href="index.html"><img src="/img/logo-credvix.webp" alt="Logo Grupo Credvix" width="122" height="40" class="h-8 md:h-10"
                         onerror="this.onerror=null;this.src='https://placehold.co/150x40/f37021/ffffff?text=Credvix';"></a>
                 <span class="text-gray-300 text-2xl font-light">|</span>
-                <a href="index.html"><img src="/img/logo-help.webp" alt="Logo Help!" width="100" height="40" class="h-8 md:h-10"
+                <a href="index.html"><img src="/img/logo-help.webp" alt="Logo Help!" width="70" height="40" class="h-8 md:h-10"
                         onerror="this.onerror=null;this.src='https://placehold.co/100x40/000000/ffffff?text=Help!';"></a>
                 <div class="hidden md:flex space-x-4 pl-4">
                     <a href="https://www.facebook.com/credvix.oficial/?locale=pt_BR" aria-label="Facebook"
@@ -179,7 +179,7 @@ const footerHTML = `
             <div class="mt-10 pt-6 border-t border-gray-700 text-center">
                 <p class="text-gray-400 text-sm mb-3">Uma empresa do</p>
                 <a href="#" target="_blank" rel="noopener noreferrer">
-                    <img src="/img/apis.webp" alt="Logo Apis Grupo" width="150" height="50" class="h-12 mx-auto"
+                    <img src="/img/apis.webp" alt="Logo Apis Grupo" width="85" height="48" class="h-12 mx-auto"
                         onerror="this.onerror=null;this.src='https://placehold.co/150x50/ffffff/000000?text=Apis+Grupo';">
                 </a>
             </div>
