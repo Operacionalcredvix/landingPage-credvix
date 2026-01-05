@@ -1,8 +1,4 @@
 // Caminho: script/main.js
-import { initHeroSwiper } from './hero-swiper.js'; // Alterado
-import { initTestimonialSwiper } from './testimonial-swiper.js'; // Alterado
-import { initStoreLocator } from './storeLocator.js';
-import { initJobBoard, initializeTalentBankForm } from './jobBoard.js';
 import { initModalHandler } from './modalHandler.js';
 import { observeElements } from './animations.js';
 import { loadHeader, loadFooter } from './components.js';
@@ -22,35 +18,35 @@ function initializePage() {
     initModalHandler();
     observeElements();
 
-    // --- Verificações condicionais ---
+    // --- Verificações condicionais com imports dinâmicos ---
     // Só inicializa o Swiper do Hero se o elemento existir
     if (document.querySelector('.hero-swiper')) {
         console.log("Inicializando Swiper do Hero...");
-        initHeroSwiper(); // Alterado
+        import('./hero-swiper.js').then(module => module.initHeroSwiper());
     }
 
     // Só inicializa o Swiper de Depoimentos se o elemento existir
     if (document.querySelector('.testimonial-swiper')) {
         console.log("Inicializando Swiper de Depoimentos...");
-        initTestimonialSwiper();
+        import('./testimonial-swiper.js').then(module => module.initTestimonialSwiper());
     }
 
     // Só inicializa o Localizador de Lojas se o elemento existir
     if (document.getElementById('store-list')) {
         console.log("Inicializando Localizador de Lojas...");
-        initStoreLocator();
+        import('./storeLocator.js').then(module => module.initStoreLocator());
     }
 
     // Só inicializa o Mural de Vagas se o elemento existir
     if (document.getElementById('job-list')) {
         console.log("Inicializando Mural de Vagas...");
-        initJobBoard();
+        import('./jobBoard.js').then(module => module.initJobBoard());
     }
 
     // Só inicializa o formulário do Banco de Talentos se existir
     if (document.getElementById('talent-bank-form')) {
         console.log("Inicializando formulário Banco de Talentos...");
-        initializeTalentBankForm();
+        import('./jobBoard.js').then(module => module.initializeTalentBankForm());
     }
     
     // Atualiza o ano no rodapé
