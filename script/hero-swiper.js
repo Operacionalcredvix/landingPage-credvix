@@ -1,4 +1,6 @@
 // script/hero-swiper.js
+// Importar apenas os módulos necessários do Swiper via ESM
+import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
 
 // Função para atualizar imagem de fundo baseada no tamanho da tela
 function updateBackgroundImages() {

@@ -1,4 +1,6 @@
 // script/testimonial-swiper.js
+// Importar apenas os módulos necessários do Swiper via ESM
+import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.mjs';
 
 export function initTestimonialSwiper() {
     new Swiper('.testimonial-swiper', {
