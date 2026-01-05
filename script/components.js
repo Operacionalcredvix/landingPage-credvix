@@ -142,13 +142,13 @@ const footerHTML = `
                         </li>
                         <li class="flex items-start">
 <span class="material-icons mr-3 mt-1 text-credvix-orange flex-shrink-0">schedule</span>
-                            <span>Matriz: Segunda a Sexta, 9h às 18h<br><span class="text-xs text-gray-500">Demais lojas
+                            <span>Matriz: Segunda a Sexta, 9h às 18h<br><span class="text-xs text-gray-400">Demais lojas
                                     seguem o horário local.</span></span>
                         </li>
                     </ul>
                 </div>
             </div>
-            <div class="border-t border-gray-700 pt-6 mt-6 text-center text-gray-500 text-sm">
+            <div class="border-t border-gray-700 pt-6 mt-6 text-center text-gray-400 text-sm">
                 <p class="mb-2">&copy; <span id="year"></span> Credvix. Todos os direitos reservados. Operando como
                     franqueada oficial da Help! BMG.</p>
                 <p class="mb-3">O crédito consignado está sujeito à análise e aprovação. As condições apresentadas podem variar
@@ -171,7 +171,7 @@ const footerHTML = `
                     </button>
                 </div>
                 
-                <p class="text-xs text-gray-500">
+                <p class="text-xs text-gray-400">
                     🔒 Seus dados estão protegidos conforme a LGPD (Lei Geral de Proteção de Dados Pessoais - Lei nº 13.709/2018)
                 </p>
             </div>
