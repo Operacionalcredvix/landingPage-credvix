@@ -1,10 +1,10 @@
 const headerHTML = `
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <a href="index.html"><img src="/img/logo-credvix.png" alt="Logo Grupo Credvix" class="h-8 md:h-10"
+                <a href="index.html"><img src="/img/logo-credvix.webp" alt="Logo Grupo Credvix" class="h-8 md:h-10"
                         onerror="this.onerror=null;this.src='https://placehold.co/150x40/f37021/ffffff?text=Credvix';"></a>
                 <span class="text-gray-300 text-2xl font-light">|</span>
-                <a href="index.html"><img src="/img/logo-help.png" alt="Logo Help!" class="h-8 md:h-10"
+                <a href="index.html"><img src="/img/logo-help.webp" alt="Logo Help!" class="h-8 md:h-10"
                         onerror="this.onerror=null;this.src='https://placehold.co/100x40/000000/ffffff?text=Help!';"></a>
                 <div class="hidden md:flex space-x-4 pl-4">
                     <a href="https://www.facebook.com/credvix.oficial/?locale=pt_BR" aria-label="Facebook"
