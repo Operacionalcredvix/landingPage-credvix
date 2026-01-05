@@ -1,0 +1,15 @@
+# robots.txt para Credvix & Help!
+# Permite que todos os rastreadores acessem o site
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://credvix.com/sitemap.xml
+
+# Bloquear áreas administrativas ou de teste (se houver)
+# Disallow: /admin/
+# Disallow: /test/
+
+# Otimizar rastreamento
+Crawl-delay: 1

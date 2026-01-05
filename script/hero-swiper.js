@@ -8,9 +8,9 @@ function updateBackgroundImages() {
     const slide1 = document.querySelector('.slide-banner');
     if (slide1) {
         if (isMobile) {
-            slide1.style.backgroundImage = "url('img/banner-mobile.jpeg')";
+            slide1.style.backgroundImage = "url('img/banner-mobile.webp')";
         } else {
-            slide1.style.backgroundImage = "url('img/banner.jpeg')";
+            slide1.style.backgroundImage = "url('img/banner.webp')";
         }
     }
     
@@ -18,9 +18,9 @@ function updateBackgroundImages() {
     const slide2 = document.querySelector('.slide-quem-somos');
     if (slide2) {
         if (isMobile) {
-            slide2.style.backgroundImage = "url('img/quem-somos-mobile.jpeg')";
+            slide2.style.backgroundImage = "url('img/quem-somos-mobile.webp')";
         } else {
-            slide2.style.backgroundImage = "url('img/quem-somos.jpeg')";
+            slide2.style.backgroundImage = "url('img/quem-somos.webp')";
         }
     }
     
@@ -28,9 +28,9 @@ function updateBackgroundImages() {
     const slide3 = document.querySelector('.slide-trabalhe-conosco');
     if (slide3) {
         if (isMobile) {
-            slide3.style.backgroundImage = "url('img/somos-help-mobile.jpeg')";
+            slide3.style.backgroundImage = "url('img/somos-help-mobile.webp')";
         } else {
-            slide3.style.backgroundImage = "url('img/somos-help.jpeg')";
+            slide3.style.backgroundImage = "url('img/somos-help.webp')";
         }
     }
 }

@@ -4,15 +4,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Credvix & Help! - Crédito Consignado com as melhores taxas. Franquia oficial Help! Banco BMG para empréstimos consignados.">
+    <meta name="theme-color" content="#6938B0">
+    <link rel="canonical" href="https://credvix.com/">
     <title>Credvix & Help! - Crédito Consignado</title>
-    <link rel="icon" type="image/png" href="/img/favicon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- Performance: Preconnect para recursos externos -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Performance: Preload recursos críticos -->
+    <link rel="preload" href="style.css" as="style">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" as="style">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" sizes="any">
+    
+    <!-- CSS Crítico inline para First Paint -->
+    <style>
+        body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;color:#374151}
+        .hero-swiper{min-height:400px;background:#f3f4f6}
+        #main-header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    </style>
+    
+    <!-- CSS Principal -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Fontes otimizadas com display=swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    </noscript>
+    
+    <!-- Swiper CSS com loading otimizado -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
 
 </head>
 
@@ -89,8 +120,8 @@
             <div class="container mx-auto px-6">
                 <div class="grid md:grid-cols-2 gap-12 items-center">
                     <div class="animate-on-scroll">
-                        <img src="img/nossahistoria.jpg" alt="Escritório da Credvix"
-                            class="rounded-lg shadow-xl w-full">
+                        <img src="/img/nossahistoria.webp" alt="Escritório da Credvix"
+                            class="rounded-lg shadow-xl w-full" loading="lazy" decoding="async">
                     </div>
                     <div class="animate-on-scroll space-y-6 text-gray-700">
                         <h2 class="section-title text-left">Nossa História</h2>
@@ -213,7 +244,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                         <div class="association-card animate-on-scroll">
                             <div class="association-logo">
-                                <img src="/img/logo-help.png" alt="Help! BMG" class="h-16 mx-auto object-contain" 
+                                <img src="/img/logo-help.webp" alt="Help! BMG" class="h-16 mx-auto object-contain" loading="lazy" decoding="async"
                                      onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\'text-4xl font-bold text-help-purple\'>Help!</div>';">
                             </div>
                             <h4 class="font-bold text-xl mb-2 text-help-purple">Help! Banco BMG</h4>
@@ -242,7 +273,7 @@
                         
                         <div class="association-card animate-on-scroll">
                             <div class="association-logo">
-                                <img src="/img/apis.png" alt="Apis Grupo" class="h-16 mx-auto object-contain"
+                                <img src="/img/apis.webp" alt="Apis Grupo" class="h-16 mx-auto object-contain" loading="lazy" decoding="async"
                                      onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\'text-4xl font-bold text-gray-700\'>APIS</div>';">
                             </div>
                             <h4 class="font-bold text-xl mb-2 text-gray-700">Apis Grupo</h4>
@@ -392,9 +423,12 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 
     <script type="module" src="script/main.js"></script>
+    
+    <!-- Tailwind carrega por último de forma não-bloqueante -->
+    <script src="https://cdn.tailwindcss.com" async></script>
 </body>
 
 </html>

@@ -179,7 +179,7 @@ const footerHTML = `
             <div class="mt-10 pt-6 border-t border-gray-700 text-center">
                 <p class="text-gray-400 text-sm mb-3">Uma empresa do</p>
                 <a href="#" target="_blank" rel="noopener noreferrer">
-                    <img src="/img/apis.png" alt="Logo Apis Grupo" class="h-12 mx-auto"
+                    <img src="/img/apis.webp" alt="Logo Apis Grupo" class="h-12 mx-auto"
                         onerror="this.onerror=null;this.src='https://placehold.co/150x50/ffffff/000000?text=Apis+Grupo';">
                 </a>
             </div>

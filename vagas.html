@@ -4,16 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Trabalhe na Credvix & Help! Veja nossas vagas disponíveis e faça parte de um time de sucesso no mercado de crédito consignado.">
+    <meta name="theme-color" content="#6938B0">
+    <link rel="canonical" href="https://credvix.com/vagas.html">
     <title>Trabalhe Conosco - Credvix & Help!</title>
 
-    <link rel="icon" type="image/png" href="/img/favicon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- Performance: Preconnect -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Performance: Preload -->
+    <link rel="preload" href="style.css" as="style">
+    
+        <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" sizes="any">
+    
+    <!-- CSS Crítico -->
+    <style>
+        body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;color:#374151}
+        .testimonial-swiper{min-height:300px}
+        #main-header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    </style>
+    
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Fontes otimizadas -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    </noscript>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
 </head>
 
 <body class="bg-white text-gray-800 scroll-smooth">
@@ -42,16 +69,16 @@
                             <div class="swiper-slide h-auto">
                                 <figure class="testimonial-card-alt">
                                     <div class="testimonial-content-alt">
-                                        <img src="/img/gismara.jpg" alt="Depoimento da Gismara"
-                                            class="testimonial-content-img" />
+                                        <img src="/img/gismara.webp" alt="Depoimento da Gismara"
+                                            class="testimonial-content-img" loading="lazy" decoding="async" />
                                     </div>
                                 </figure>
                             </div>
                             <div class="swiper-slide h-auto">
                                 <figure class="testimonial-card-alt">
                                     <div class="testimonial-content-alt">
-                                        <img src="/img/daielly.jpg" alt="Depoimento da Daielly"
-                                            class="testimonial-content-img" />
+                                        <img src="/img/daielly.webp" alt="Depoimento da Daielly"
+                                            class="testimonial-content-img" loading="lazy" decoding="async" />
                                     </div>
                                 </figure>
                             </div>
@@ -184,7 +211,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
                         <div class="category-card animate-on-scroll">
                             <div class="relative">
-                                <img src="/img/supervisor.png" alt="Vaga de supervisor" class="category-image">
+                                <img src="/img/supervisor.webp" alt="Vaga de supervisor" class="category-image" loading="lazy" decoding="async">
                                 <div class="category-title-bar">
                                     <h3 class="text-xl font-bold">Supervisor de Vendas</h3>
                                 </div>
@@ -196,7 +223,7 @@
                         </div>
                         <div class="category-card animate-on-scroll">
                             <div class="relative">
-                                <img src="/img/consultor.png" alt="Vaga de consultor" class="category-image">
+                                <img src="/img/consultor.webp" alt="Vaga de consultor" class="category-image" loading="lazy" decoding="async">
                                 <div class="category-title-bar">
                                     <h3 class="text-xl font-bold">Consultor de Vendas</h3>
                                 </div>
@@ -208,7 +235,7 @@
                         </div>
                         <div class="category-card animate-on-scroll">
                             <div class="relative">
-                                <img src="/img/comercial.png" alt="Vaga Administrativa" class="category-image">
+                                <img src="/img/comercial.webp" alt="Vaga Administrativa" class="category-image" loading="lazy" decoding="async">
                                 <div class="category-title-bar">
                                     <h3 class="text-xl font-bold">Comercial</h3>
                                 </div>
@@ -220,7 +247,7 @@
                         </div>
                         <div class="category-card animate-on-scroll">
                             <div class="relative">
-                                <img src="/img/admin.png" alt="Vaga Administrativa" class="category-image">
+                                <img src="/img/admin.webp" alt="Vaga Administrativa" class="category-image" loading="lazy" decoding="async">
                                 <div class="category-title-bar">
                                     <h3 class="text-xl font-bold">Matriz</h3>
                                 </div>
@@ -384,8 +411,11 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
     <script type="module" src="script/main.js"></script>
+    
+    <!-- Tailwind carrega por último de forma não-bloqueante -->
+    <script src="https://cdn.tailwindcss.com" async></script>
 </body>
 
 </html>

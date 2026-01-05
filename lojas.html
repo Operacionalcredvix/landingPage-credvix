@@ -4,16 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Encontre a loja Credvix & Help! mais próxima. Presente em 6 estados brasileiros com atendimento especializado em crédito consignado.">
+    <meta name="theme-color" content="#6938B0">
+    <link rel="canonical" href="https://credvix.com/lojas.html">
     <title>Nossas Lojas - Credvix & Help!</title>
     
-    <link rel="icon" type="image/png" href="/img/favicon.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <!-- Performance: Preconnect -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Performance: Preload -->
+    <link rel="preload" href="style.css" as="style">
+    
+       <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico" sizes="any">
+    
+    <!-- CSS Crítico -->
+    <style>
+        body{margin:0;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff;color:#374151}
+        #main-header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+    </style>
+    
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Fontes otimizadas -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    </noscript>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
 </head>
 
 <body class="bg-white text-gray-800 scroll-smooth">
@@ -30,7 +56,7 @@
 
     <main>
         <!-- Hero Section -->
-        <section class="relative py-20 md:py-28" style="background-image: url('/img/Mapa.png'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <section class="relative py-20 md:py-28" style="background-image: url('/img/Mapa.webp'); background-size: cover; background-position: center; background-repeat: no-repeat;">
             <div class="absolute inset-0 bg-black opacity-60"></div>
             <div class="container mx-auto px-6 relative z-10">
                 <div class="max-w-4xl mx-auto text-center">
@@ -137,8 +163,11 @@
     <footer id="main-footer" class="footer-bg text-white pt-16 pb-8">
         </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
     <script type="module" src="script/main.js"></script>
+    
+    <!-- Tailwind carrega por último de forma não-bloqueante -->
+    <script src="https://cdn.tailwindcss.com" async></script>
 </body>
 
 </html>
