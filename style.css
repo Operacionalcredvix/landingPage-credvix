@@ -37,7 +37,7 @@ h1, h2, h3, h4, h5, h6 {
 .nav-link {
     color: #4B5563;
     font-weight: 500;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
     padding-bottom: 4px;
     border-bottom: 2px solid transparent;
     position: relative;
@@ -54,7 +54,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* --- Header Scroll Effects --- */
 #main-header {
-    transition: all 0.3s ease;
+    transition: box-shadow 0.3s ease;
 }
 #main-header.scrolled {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -68,8 +68,9 @@ h1, h2, h3, h4, h5, h6 {
     width: 24px;
     height: 2px;
     background-color: #4B5563;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
     border-radius: 2px;
+    will-change: transform;
 }
 .hamburger-line:not(:last-child) {
     margin-bottom: 5px;
@@ -124,11 +125,10 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
     font-size: 18px;
     border-bottom: 1px solid #e5e7eb;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
 }
 .mobile-menu-link:hover {
-    color: #F37021;
-    padding-left: 8px;
+    opacity: 0.8;
 }
 .mobile-menu-link.active {
     color: #F37021;
@@ -148,10 +148,11 @@ h1, h2, h3, h4, h5, h6 {
 .social-icon {
     position: relative;
     color: #4B5563;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    will-change: transform;
 }
 .social-icon:hover {
     color: #F37021;
@@ -171,8 +172,9 @@ h1, h2, h3, h4, h5, h6 {
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
     z-index: 100;
+    will-change: transform, opacity;
 }
 .social-icon::after {
     content: '';
@@ -183,7 +185,8 @@ h1, h2, h3, h4, h5, h6 {
     border: 6px solid transparent;
     border-bottom-color: #1f2937;
     opacity: 0;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    will-change: transform, opacity;
 }
 .social-icon:hover::before,
 .social-icon:hover::after {
@@ -209,7 +212,8 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
 }
 .accessibility-button:hover,
 .accessibility-toggle:hover {
@@ -241,7 +245,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 .breadcrumb-item a {
     color: #6b7280;
-    transition: color 0.3s ease;
 }
 .breadcrumb-item a:hover {
     color: #F37021;
@@ -282,7 +285,8 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 0.5rem;
     box-shadow: 0 4px 14px 0 rgba(0,0,0,0.1);
     display: inline-block;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
 }
 .cta-button:hover {
     transform: translateY(-2px);
@@ -545,13 +549,12 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
     font-weight: 500;
     font-size: 0.9rem;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
+    will-change: opacity;
 }
 
 .feature-item:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.4);
-    transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 .feature-icon {
@@ -578,9 +581,10 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1rem;
     font-weight: 700;
     border-radius: 50px;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
     text-decoration: none;
     border: 2px solid transparent;
+    will-change: transform;
 }
 
 .cta-primary {
