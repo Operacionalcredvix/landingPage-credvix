@@ -5,3 +5,4 @@
 script/config.js
 
 docs/
+.env.local

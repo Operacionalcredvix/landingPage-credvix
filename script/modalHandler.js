@@ -107,18 +107,30 @@ async function uploadFile(file, storeName, candidateEmail) {
 async function registerCandidate(candidateData, filePath) {
     try {
         const { data: urlData } = supabase.storage.from('curriculos').getPublicUrl(filePath);
+        console.log('📎 URL do currículo:', urlData.publicUrl);
         
-        const { error } = await supabase.from('candidatos').insert([{
+        const insertData = {
             nome_completo: candidateData.nome_completo,
             email: candidateData.email,
+            telefone: candidateData.telefone,
             vaga: candidateData.vaga,
             loja: candidateData.loja,
             tipo_candidatura: candidateData.tipo_candidatura,
             curriculo_url: urlData.publicUrl
-        }]);
+        };
+        console.log('💾 Inserindo dados:', insertData);
         
-        if (error) throw error;
+        const { data, error } = await supabase.from('candidatos').insert([insertData]);
+        
+        if (error) {
+            console.error('❌ Erro ao inserir no banco:', error);
+            throw error;
+        }
+        
+        console.log('✅ Dados inseridos com sucesso:', data);
+        return data;
     } catch (error) {
+        console.error('❌ Erro em registerCandidate:', error);
         throw error;
     }
 }
@@ -148,21 +160,28 @@ async function handleFormSubmit(e) {
     modalContentStatus.innerHTML = `<div class="animate-pulse flex flex-col items-center"><svg class="animate-spin h-8 w-8 text-help-purple mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="text-lg">Enviando seu currículo...</p></div>`;
 
     try {
+        console.log('🚀 Iniciando envio de currículo...');
         validateFile(file);
+        console.log('✅ Arquivo validado');
 
         const filePath = await uploadFile(file, storeName, candidateEmail);
+        console.log('✅ Upload concluído:', filePath);
+        
         await registerCandidate({
             nome_completo: candidateName,
             email: candidateEmail,
+            telefone: candidatePhone,
             vaga: jobTitle,
             loja: storeName,
             tipo_candidatura: applicationType
         }, filePath);
+        console.log('✅ Candidato registrado no banco');
 
         modalContentStatus.innerHTML = `<div class="flex flex-col items-center"><svg class="h-12 w-12 text-green-500 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg><p class="text-green-600 font-bold text-xl mb-2" style="color: #059669 !important;">Currículo enviado com sucesso!</p><p class="text-gray-700 text-sm" style="color: #374151 !important;">Agradecemos seu interesse. Entraremos em contato em breve.</p></div>`;
         setTimeout(closeModal, 4000);
 
     } catch (error) {
+        console.error('❌ Erro ao enviar currículo:', error);
         
         let errorMessage = 'Não foi possível enviar seu currículo.';
         let errorDetails = '';
