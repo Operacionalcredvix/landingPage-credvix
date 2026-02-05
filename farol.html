@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="0; url=https://app.credvix.com">
     <link rel="canonical" href="https://app.credvix.com">
     <title>Redirecionando para Farol CRM...</title>
     <style>
@@ -18,7 +17,19 @@
         <h1>Redirecionando para Farol CRM...</h1>
         <p>Se não for redirecionado automaticamente, <a href="https://app.credvix.com" style="color:#6938B0">clique aqui</a>.</p>
     </div>
-    <script>window.location.href='https://app.credvix.com';</script>
+    <script>
+        // Só redireciona em produção (não em localhost/127.0.0.1)
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1' || 
+                           window.location.hostname.includes('.local');
+        
+        if (!isLocalhost) {
+            window.location.href = 'https://app.credvix.com';
+        } else {
+            document.querySelector('.loader h1').textContent = 'Farol CRM (Modo Desenvolvimento)';
+            document.querySelector('.loader p').innerHTML = 'Em produção, esta página redireciona para <a href="https://app.credvix.com" style="color:#6938B0">app.credvix.com</a>';
+        }
+    </script>
 </body>
 
 </html>
