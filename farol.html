@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://app.credvix.com">
+    <title>Redirecionando para Farol CRM...</title>
+    <style>
+        body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f9fafb;display:flex;align-items:center;justify-content:center;min-height:100vh}
+        .loader{text-align:center;color:#6938B0}
+    </style>
+</head>
+
+<body>
+    <div class="loader">
+        <h1>Redirecionando para Farol CRM...</h1>
+        <p>Se não for redirecionado automaticamente, <a href="https://app.credvix.com" style="color:#6938B0">clique aqui</a>.</p>
+    </div>
+    <script>
+        // Só redireciona em produção (não em localhost/127.0.0.1)
+        const isLocalhost = window.location.hostname === 'localhost' || 
+                           window.location.hostname === '127.0.0.1' || 
+                           window.location.hostname.includes('.local');
+        
+        if (!isLocalhost) {
+            window.location.href = 'https://app.credvix.com';
+        } else {
+            document.querySelector('.loader h1').textContent = 'Farol CRM (Modo Desenvolvimento)';
+            document.querySelector('.loader p').innerHTML = 'Em produção, esta página redireciona para <a href="https://app.credvix.com" style="color:#6938B0">app.credvix.com</a>';
+        }
+    </script>
+</body>
+
+</html>
